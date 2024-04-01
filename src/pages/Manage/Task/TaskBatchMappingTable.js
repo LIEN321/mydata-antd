@@ -193,7 +193,7 @@ class TaskBatchParamTable extends React.Component {
       k: '',
       v: '',
       op: 'fix',
-      step: 0,
+      step: 1,
       key: count,
     };
     this.setState({
