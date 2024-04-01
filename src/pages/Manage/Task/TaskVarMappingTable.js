@@ -139,7 +139,12 @@ class TaskVarMappingTable extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     let { varMappings } = nextProps;
-    if (!varMappings) {
+    if (varMappings) {
+      let i = 0;
+      varMappings.map(mapping => {
+        mapping.key = i++;
+      });
+    } else {
       varMappings = [];
     }
 
