@@ -1,4 +1,4 @@
-import { Form, Input, Button, Table, Switch, Popconfirm, InputNumber } from 'antd';
+import { Form, Input, Button, Table, Switch, Popconfirm, InputNumber, Select } from 'antd';
 import React from 'react';
 import style from './StandardData.less';
 
@@ -51,11 +51,25 @@ class EditableCell extends React.Component {
     handleSwitchIsId(record.key, record.isId);
   };
 
+  handleSelectFieldType = (fieldType) => {
+    const { record } = this.props;
+    record.fieldType = fieldType;
+  }
+
   getInput = () => {
     if (this.props.inputType === 'number') {
       return <InputNumber />;
-    } if (this.props.inputType === 'switch') {
+    }
+    if (this.props.inputType === 'switch') {
       return <Switch ref={node => (this.input = node)} checked={this.props.record.isId === 1} checkedChildren="是" unCheckedChildren="否" onClick={() => this.handleSwitchIsId()} />
+    }
+    if (this.props.dataIndex === 'fieldType') {
+      return <Select ref={node => (this.input = node)} onChange={this.handleSelectFieldType} placeholder={`请输入${this.props.title}`} defaultValue="default">
+        <Select.Option value="default">默认</Select.Option>
+        <Select.Option value="int">整数</Select.Option>
+        <Select.Option value="string">字符串</Select.Option>
+        <Select.Option value="date">日期</Select.Option>
+      </Select>;
     }
     return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入${this.props.title}`} />;
   };
@@ -67,12 +81,12 @@ class EditableCell extends React.Component {
     return editing ? (
       <Form.Item style={{ margin: 0 }}>
         {form.getFieldDecorator(dataIndex, {
-          rules: [
-            {
-              required: true,
+          // rules: [
+          //   {
+              // required: true,
               message: `请输入${title}`,
-            },
-          ],
+            // },
+          // ],
           initialValue: record[dataIndex],
         })(
           // <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />
@@ -127,19 +141,24 @@ class EditableTable extends React.Component {
       {
         title: '字段编号',
         dataIndex: 'fieldCode',
-        width: '33%',
+        width: '28%',
         editable: !this.state.readonly,
       },
       {
         title: '字段名称',
         dataIndex: 'fieldName',
-        width: '33%',
+        width: '28%',
+        editable: !this.state.readonly,
+      },
+      {
+        title: '数据类型',
+        dataIndex: 'fieldType',
         editable: !this.state.readonly,
       },
       {
         title: '是否标识',
         dataIndex: 'isId',
-        width: '15%',
+        width: '100px',
         render: (text, record) => {
           return record.isId === 1 ? "是" : "否";
         },
@@ -166,8 +185,9 @@ class EditableTable extends React.Component {
 
     let { dataFields } = nextProps;
     if (dataFields) {
+      let i = 0;
       dataFields.map(field => {
-        field.key = field.id;
+        field.key = i++;
       });
     } else {
       dataFields = [];
@@ -190,6 +210,7 @@ class EditableTable extends React.Component {
       id: '',
       fieldCode: '',
       fieldName: '',
+      fieldType: 'default',
       isId: 0,
       key: count,
     };

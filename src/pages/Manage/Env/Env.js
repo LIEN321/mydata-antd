@@ -111,6 +111,7 @@ class Env extends PureComponent {
       {
         title: '所属项目',
         dataIndex: 'projectName',
+        width: '200px',
       },
       {
         title: '顺序',
@@ -120,6 +121,7 @@ class Env extends PureComponent {
       {
         title: '环境名称',
         dataIndex: 'envName',
+        width: '200px',
       },
       {
         title: '前置路径',
@@ -128,12 +130,12 @@ class Env extends PureComponent {
       {
         title: '编辑时间',
         dataIndex: 'updateTime',
-        width: '150px',
+        width: '160px',
       },
       {
         title: '同步任务时间',
         dataIndex: 'syncTaskTime',
-        width: '250px',
+        width: '200px',
         render: (text, record) => {
           const { id, syncTaskTime, updateTime } = record;
           let color = 'green';

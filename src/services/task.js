@@ -60,3 +60,7 @@ export async function copyTask(params) {
     body: func.toFormData(params),
   });
 }
+
+export async function logDetail(params) {
+  return request(`/api/mydata-manage/task/log_detail?${stringify(params)}`);
+}

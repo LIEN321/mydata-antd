@@ -127,7 +127,7 @@ class TaskDataFilterTable extends React.Component {
 
     this.columns = [
       {
-        title: '字段编号',
+        title: '数据字段编号',
         dataIndex: 'k',
         width: '25%',
         editable: !this.state.readonly,

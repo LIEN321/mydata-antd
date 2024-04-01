@@ -39,7 +39,7 @@ class ProjectData extends PureComponent {
       // 数据项表单可见性
       dataFormVisible: false,
       // 数据项记录
-      detail: {},
+      detail: { id: '' },
       // 数据项字段
       dataFields: [],
       // 查询参数
@@ -529,7 +529,7 @@ class ProjectData extends PureComponent {
                     },
                   ],
                   initialValue: detail.dataCode || '',
-                })(<Input placeholder="请输入数据编号，长度不超过64位" maxLength={64} readOnly={detail.id != null} />)}
+                })(<Input placeholder="请输入数据编号，长度不超过64位" maxLength={64} readOnly={detail.id != ''} />)}
               </FormItem>
               <FormItem {...formItemLayout} label="数据名称">
                 {getFieldDecorator('dataName', {
