@@ -5,7 +5,7 @@ import { connect } from "dva";
 import FormItem from "antd/lib/form/FormItem";
 import mdStyle from '../../../../layouts/Mydata.less';
 import styles from './style.less';
-import { executeTask, startTask, stopTask, remove, copyTask } from '../../../../services/task';
+import { executeTask, startTask, stopTask, remove, copyTask, logDetail } from '../../../../services/task';
 import { TASK_LOG_LIST, TASK_STATUS_RUNNING, TASK_TYPE_PRODUCER } from '../../../../actions/task';
 
 @connect(({ task, loading }) => ({
@@ -22,9 +22,11 @@ class TaskCard extends PureComponent {
         this.state = {
             logModalVisible: false,
             copyModalVisible: false,
+            logDetailModalVisible: false,
 
             taskId: null,
             envId: null,
+            logDetail: null,
         };
     }
 
@@ -177,6 +179,18 @@ class TaskCard extends PureComponent {
         });
     }
 
+    openLogDetail = id => {
+        logDetail({ id }).then(resp => {
+            if (resp.success) {
+                this.setState({ logDetail: resp.data, logDetailModalVisible: true });
+            }
+        });
+    }
+
+    closeLogDetail = () => {
+        this.setState({ logDetail: null, logDetailModalVisible: false });
+    }
+
     render() {
         const {
             form: { getFieldDecorator },
@@ -186,7 +200,7 @@ class TaskCard extends PureComponent {
             envList,
         } = this.props;
 
-        const { copyModalVisible } = this.state;
+        const { copyModalVisible, logDetailModalVisible, logDetail } = this.state;
 
         const formItemLayout = {
             labelCol: {
@@ -225,6 +239,13 @@ class TaskCard extends PureComponent {
                         </Tag>
                     );
                 },
+            },
+            {
+                title: '操作',
+                width: 100,
+                render: (text, record) => (
+                    <a onClick={() => { this.openLogDetail(record.id) }}>日志详情</a>
+                ),
             },
         ];
 
@@ -312,6 +333,30 @@ class TaskCard extends PureComponent {
                     </FormItem>
                 </Form>
             </Modal>}
+
+            {logDetailModalVisible && <Modal
+                title="日志详情"
+                visible={logDetailModalVisible}
+                footer={[<Button key="back" onClick={this.closeLogDetail}>关闭</Button>]}
+                onCancel={this.closeLogDetail}
+                width="60%"
+            >
+                <Form style={{ marginTop: 8 }}>
+                    <FormItem {...formItemLayout} label="开始时间">
+                        <span>{logDetail.taskStartTime}</span>
+                    </FormItem>
+                    <FormItem {...formItemLayout} label="结束时间">
+                        <span>{logDetail.taskEndTime}</span>
+                    </FormItem>
+                    <FormItem {...formItemLayout} label="执行结果">
+                        <span>{logDetail.taskResult === 0 ? '失败' : '成功'}</span>
+                    </FormItem>
+                    <FormItem {...formItemLayout} label="日志内容">
+                        <div style={{ overflowWrap: 'anywhere', height: '400px', overflow: 'scroll' }} dangerouslySetInnerHTML={{ __html: `${logDetail.taskDetail.replaceAll('\n', '</br>')}`, }} />
+                    </FormItem>
+                </Form>
+            </Modal>}
+
         </>
     }
 }
