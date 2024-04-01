@@ -185,8 +185,9 @@ class EditableTable extends React.Component {
 
     let { dataFields } = nextProps;
     if (dataFields) {
+      let i = 0;
       dataFields.map(field => {
-        field.key = field.id;
+        field.key = i++;
       });
     } else {
       dataFields = [];
