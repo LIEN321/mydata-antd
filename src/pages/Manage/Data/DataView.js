@@ -66,9 +66,9 @@ class DataView extends PureComponent {
             <FormItem {...formItemLayout} label="数据名称">
               <span>{detail.dataName}</span>
             </FormItem>
-            <FormItem {...formItemLayout} label="数据量">
+            {/* <FormItem {...formItemLayout} label="数据量">
               <span>{detail.dataCount}</span>
-            </FormItem>
+            </FormItem> */}
             <FormItem {...formItemLayout} label="字段列表">
               <EditableTable
                 dataFields={detail.dataFields}
