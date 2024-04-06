@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Form, Input, Card, Select, Radio, Modal, message, notification, Tabs, Switch, InputNumber } from 'antd';
 import { connect } from 'dva';
 import styles from '../../../../layouts/Sword.less';
-import { TASK_SUBSCRIBED, TASK_TYPE_PRODUCER, TASK_INIT, TASK_TYPE_CONSUMER } from '../../../../actions/task';
+import { TASK_SUBSCRIBED, TASK_TYPE_PRODUCER, TASK_INIT, TASK_TYPE_CONSUMER, TASK_INIT_API } from '../../../../actions/task';
 import { submit as submitTask, detail as taskDetail } from '../../../../services/task';
 import TaskFieldMappingTable from '../../Task/TaskFieldMappingTable';
 import { dataFields } from '../../../../services/data';
@@ -18,28 +18,44 @@ const { TabPane } = Tabs;
   submitting: loading.effects['task/submit'],
 }))
 @Form.create()
+// 数据集成的任务表单
 class DataTaskForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      // 任务记录详情
       detail: null,
+      // api完整地址
       apiUrl: '',
-
+      // 其他环境列表
       envList: [],
-      currentEnv: null,
+      // 当前所选环境
+      selectedEnv: null,
 
+      // API列表
       apiList: [],
-      currentApi: null,
+      // 当前所选API
+      selectedApi: null,
 
+      // 数据字段列表
       dataFieldList: [],
+      // 字段映射
       fieldMappings: {},
+
+      // 过滤条件列表
       filters: [],
+
+      // 变量映射
       varMappings: [],
+      // 批处理参数
       batchParams: [],
 
+      // 是否显示订阅
       isShowSubscribed: false,
+      // 是否显示任务周期
       isShowTaskPeriod: true,
 
+      // 是否启用批处理
       isBatchEnabled: false,
     };
   }
@@ -84,7 +100,6 @@ class DataTaskForm extends PureComponent {
     const {
       task: {
         init: { envList, apiList },
-        // detail,
       },
     } = nextProps;
 
@@ -92,61 +107,37 @@ class DataTaskForm extends PureComponent {
       envList,
       apiList,
     });
-
-    const { initStatus, detail } = this.state;
-
-    // if (!apiUrl && detail) {
-    //   this.setState({ apiUrl: detail.apiUrl });
-    // }
-
-    if (!initStatus && detail && detail.id) {
-      // this.setState({
-      //   fieldMappings: detail.fieldMapping,
-      //   isShowSubscribed: detail.opType != TASK_TYPE_PRODUCER,
-      //   isShowTaskPeriod: detail.isSubscribed != TASK_SUBSCRIBED,
-      //   initStatus: true,
-      //   filters: detail.dataFilter,
-      //   varMappings: detail.fieldVarMapping,
-      // });
-
-      // this.renderWarning(detail);
-    }
   }
 
   handleChangeEnv = envId => {
-    const currentEnv = this.findEnv(envId);
-    this.setState({ currentEnv });
+    const selectedEnv = this.findEnv(envId);
+    this.setState({ selectedEnv });
     this.updateApiUrl();
   }
 
   handleChangeApi = apiId => {
     const api = this.findApi(apiId);
-    this.state.currentApi = api;
-    // if (api) {
-    //   this.state.opType = api.opType == 1 ? "提供数据" : "消费数据";
-    // } else {
-    //   this.state.opType = "";
-    // }
+    this.state.selectedApi = api;
     this.updateApiUrl();
   }
 
   updateApiUrl() {
     const { form, env } = this.props;
-    let { currentApi } = this.state;
-    const { currentEnv } = this.state;
+    let { selectedApi } = this.state;
+    const { selectedEnv } = this.state;
 
     let apiUrl = '';
 
-    if (currentApi == null) {
+    if (selectedApi == null) {
       const appApiId = form.getFieldValue("apiId");
-      currentApi = this.findApi(appApiId);
+      selectedApi = this.findApi(appApiId);
     }
-    if (currentApi) {
-      apiUrl = currentApi.apiUri;
+    if (selectedApi) {
+      apiUrl = selectedApi.apiUri;
     }
 
-    if (currentEnv != null) {
-      apiUrl = currentEnv.envPrefix + apiUrl;
+    if (selectedEnv != null) {
+      apiUrl = selectedEnv.envPrefix + apiUrl;
     }
     else if (env != null) {
       apiUrl = env.envPrefix + apiUrl;
@@ -286,7 +277,7 @@ class DataTaskForm extends PureComponent {
     const newApiList = [...this.state.apiList];
     const index = newApiList.findIndex(api => api.id === apiId);
     const api = newApiList[index];
-    this.state.currentApi = api;
+    this.state.selectedApi = api;
     return api;
   }
 
@@ -294,7 +285,7 @@ class DataTaskForm extends PureComponent {
     const newEnvList = [...this.state.envList];
     const index = newEnvList.findIndex(env => env.id === envId);
     const env = newEnvList[index];
-    this.state.currentEnv = env;
+    this.state.selectedEnv = env;
     return env;
   }
 
@@ -344,6 +335,7 @@ class DataTaskForm extends PureComponent {
       },
       opType,
       isRefEnv,
+      env,
     } = this.props;
 
     const { apiUrl, detail, isBatchEnabled } = this.state;
@@ -359,6 +351,12 @@ class DataTaskForm extends PureComponent {
         md: { span: 14 },
       },
     };
+
+    // 从环境列表中排除当前环境
+    let otherEnvList = envList;
+    if(envList){
+      otherEnvList = envList.filter(e => e.id !== env.id);
+    }
 
     return (
 
@@ -396,7 +394,7 @@ class DataTaskForm extends PureComponent {
                   initialValue: detail ? detail.refEnvId : '',
                 })(
                   <Select allowClear placeholder="请选择其他环境" onChange={this.handleChangeEnv}>
-                    {envList.map(e => (
+                    {otherEnvList.map(e => (
                       <Select.Option key={e.id} value={e.id}>
                         {e.envName} ({e.envPrefix})
                       </Select.Option>
