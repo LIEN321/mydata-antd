@@ -66,6 +66,7 @@ class EditableCell extends React.Component {
     if (this.props.dataIndex === 'fieldType') {
       return <Select ref={node => (this.input = node)} onChange={this.handleSelectFieldType} placeholder={`请输入${this.props.title}`} defaultValue="default">
         <Select.Option value="default">默认</Select.Option>
+        <Select.Option value="number">数值</Select.Option>
         <Select.Option value="int">整数</Select.Option>
         <Select.Option value="string">字符串</Select.Option>
         <Select.Option value="date">日期</Select.Option>
