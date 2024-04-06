@@ -61,10 +61,10 @@ export function TASK_REMOVE(payload) {
   };
 }
 
-export function TASK_INIT() {
+export function TASK_INIT(payload) {
   return {
     type: `${TASK_NAMESPACE}/fetchInit`,
-    payload: {},
+    payload,
   };
 }
 
