@@ -43,3 +43,7 @@ export async function bizFieldList(params) {
 export async function bizDataList(params) {
   return request(`/api/mydata-manage/biz_data/data_list?${stringify(params)}`);
 }
+
+export async function deleteBizDataByEnv(params) {
+  return request(`/api/mydata-manage/biz_data/delete_by_env?${stringify(params)}`);
+}

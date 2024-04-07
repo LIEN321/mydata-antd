@@ -1,10 +1,10 @@
 import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Modal, Table, Card, message, Divider, Icon, Select, Drawer } from 'antd';
+import { Button, Col, Form, Input, Row, Modal, Table, Card, message, Divider, Icon, Select, Drawer, Popconfirm } from 'antd';
 import { router } from 'umi';
 import { BIZ_FIELD_LIST, BIZ_DATA_LIST, PROJECT_DATA_LIST, DATA_INIT } from '../../../../actions/data';
 import Grid from '../../../../components/Sword/Grid';
-import { detail as dataDetail, submit as submitData, remove as removeData } from '../../../../services/data';
+import { detail as dataDetail, submit as submitData, remove as removeData, deleteBizDataByEnv } from '../../../../services/data';
 import { detail as envVarDetail } from '../../../../services/envvar';
 import { projectEnv } from '../../../../services/env';
 import styles from '../../../../layouts/Sword.less';
@@ -173,6 +173,19 @@ class ProjectData extends PureComponent {
     const { currentData } = this.state;
     const envId = this.state.currentEnv.id;
     dispatch(BIZ_DATA_LIST({ ...pagination, dataId: currentData.id, projectId, envId }));
+  };
+
+  handleDeleteBizData = () => {
+    const { currentData, currentEnv } = this.state;
+    deleteBizDataByEnv({ dataId: currentData.id, envId: currentEnv.id }).then(resp => {
+      if (resp.success) {
+        message.info(resp.msg);
+        this.closeBizData();
+        this.handleChangeEnv(currentEnv.id);
+      } else {
+        message.error(resp.msg);
+      }
+    });
   };
 
   closeBizData = () => {
@@ -565,6 +578,19 @@ class ProjectData extends PureComponent {
           ]}
           onCancel={this.closeBizData}
         >
+          <Row justify='end' style={{marginBottom:"24px"}}>
+            <Col>
+              <div style={{ float: 'right' }}>
+                <Popconfirm
+                  title="删除数据是不可逆操作，确认要删除吗？"
+                  icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+                  onConfirm={this.handleDeleteBizData}
+                >
+                  <Button type='danger'>全部删除</Button>
+                </Popconfirm>
+              </div>
+            </Col>
+          </Row>
           <Table
             columns={bizDataColumns}
             dataSource={bizData.list}
