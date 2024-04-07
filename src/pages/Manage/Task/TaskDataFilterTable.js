@@ -27,13 +27,28 @@ class EditableCell extends React.Component {
     });
   };
 
+  handleSelectField = (fieldCode) => {
+    const { record } = this.props;
+    record.k = fieldCode;
+  }
+
   handleSelectOp = (op) => {
     const { record } = this.props;
     record.op = op;
   }
 
   getInput = () => {
-    if (this.props.inputType === 'select') {
+    if (this.props.dataIndex === 'k') {
+      const { dataFieldList } = this.props;
+      return <Select ref={node => (this.input = node)} onChange={this.handleSelectField} placeholder={`请输入${this.props.title}`}>
+        {dataFieldList.map(f => (
+          <Select.Option key={f.fieldCode} value={f.fieldCode}>
+            {f.fieldName} ({f.fieldCode})
+          </Select.Option>
+        ))}
+      </Select>;
+    }
+    if (this.props.dataIndex === 'op') {
       return <Select ref={node => (this.input = node)} onChange={this.handleSelectOp} placeholder={`请输入${this.props.title}`}>
         <Select.Option value="=">=</Select.Option>
         <Select.Option value="!=">!=</Select.Option>
@@ -53,7 +68,7 @@ class EditableCell extends React.Component {
     const { children, dataIndex, record, title } = this.props;
     const { editing } = this.state;
     return editing ? (
-      (dataIndex == 'k' || dataIndex == 'op' || (dataIndex == 'v'&& record.op != '' && record.op != 'nn' && record.op != 'ne')) ?
+      (dataIndex == 'k' || dataIndex == 'op' || (dataIndex == 'v' && record.op != '' && record.op != 'nn' && record.op != 'ne')) ?
         <Form.Item style={{ margin: 0 }}>
           {form.getFieldDecorator(dataIndex, {
             rules: [
@@ -114,7 +129,7 @@ class TaskDataFilterTable extends React.Component {
       {
         title: '数据字段编号',
         dataIndex: 'k',
-        width: '25%',
+        width: '40%',
         editable: !this.state.readonly,
       },
       {
@@ -208,6 +223,8 @@ class TaskDataFilterTable extends React.Component {
       },
     };
 
+    const { dataFieldList } = this.props;
+
     const columns = this.columns.map(col => {
       if (!col.editable) {
         return col;
@@ -221,6 +238,7 @@ class TaskDataFilterTable extends React.Component {
           title: col.title,
           handleSave: this.handleSave,
           inputType: col.dataIndex === 'op' ? 'select' : 'text',
+          dataFieldList: dataFieldList,
         }),
       };
     });
