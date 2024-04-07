@@ -11,23 +11,10 @@ const EditableRow = ({ form, index, ...props }) => (
 const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
-  //   state = {
-  //     editing: false,
-  //   };
-
   constructor(props) {
     super(props);
     this.state = { editing: props.editable };
   }
-
-  toggleEdit = () => {
-    // const editing = !this.state.editing;
-    // this.setState({ editing }, () => {
-    //   if (editing) {
-    //     this.input.focus();
-    //   }
-    // });
-  };
 
   save = e => {
     const { record, handleSave } = this.props;
@@ -35,9 +22,7 @@ class EditableCell extends React.Component {
       if (error && error[e.currentTarget.id]) {
         return;
       }
-      this.toggleEdit();
       handleSave(record.key, this.props.dataIndex, e.currentTarget.value);
-      // ----------------------------------------------------------
     });
   };
 
@@ -68,7 +53,6 @@ class EditableCell extends React.Component {
       <div
         className={style.editableCellValueWrap}
         style={{ paddingRight: 24 }}
-        onClick={this.toggleEdit}
       >
         {children}
       </div>
@@ -126,30 +110,25 @@ class TaskFieldMappingTable extends React.Component {
         width: '50%',
         editable: !this.state.readonly,
       },
-      // {
-      //   title: '是否标识',
-      //   dataIndex: 'isId',
-      //   width: '15%',
-      //   render: (text, record) => {
-      //     return record.isId == 1 ? "是" : "否";
-      //   },
-      //   editable: !this.state.readonly,
-      // },
     ];
 
-    // if(!this.state.readonly){
-    //   this.columns.push({
-    //     title: '操作',
-    //     dataIndex: 'operation',
-    //     render: (text, record) => 
-    //       this.state.fieldMappingList.length >= 1 ? (
-    //         <Popconfirm title="确认删除吗?" onConfirm={() => this.handleDelete(record.key)}>
-    //           <a>删除</a>
-    //         </Popconfirm>
-    //       ) : null
-    //     ,
-    //   });
-    // }
+    const fieldMappings = [];
+    const { dataFieldList, initFieldMappings } = this.props;
+
+    if (dataFieldList) {
+      dataFieldList.map(dataField => {
+        const mapping = {
+          key: dataField.fieldCode
+          , dataFieldCode: dataField.fieldCode
+          , dataFieldName: dataField.fieldName
+          , apiFieldCode: (initFieldMappings ? (initFieldMappings[dataField.fieldCode] ? initFieldMappings[dataField.fieldCode] : null) : null)
+        };
+
+        fieldMappings.push(mapping);
+      });
+    }
+
+    this.setState({ fieldMappings });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -180,43 +159,15 @@ class TaskFieldMappingTable extends React.Component {
     this.setState({ fieldMappings: [] });
   }
 
-  // handleAdd = () => {
-  //   const { count, fieldMappings } = this.state;
-  //   const newDataField = {
-  //     id: '',
-  //     fieldCode: '',
-  //     fieldName: '',
-  //     isId: 0,
-  //     key: count,
-  //   };
-  //   this.setState({
-  //     fieldMappings: [...fieldMappings, newDataField],
-  //     count: count + 1,
-  //   });
-
-  //   this.props.handleSave(newDataField);
-  // };
-
   handleSave = (key, dataIndex, value) => {
     const newData = [...this.state.fieldMappings];
     const index = newData.findIndex(item => key === item.key);
     const item = newData[index];
     item[dataIndex] = value;
-    // newData.splice(index, 1, {
-    //   ...item,
-    //   ...row,
-    // });
     this.setState({ fieldMappings: newData });
 
     this.props.handleSave(item);
   };
-
-  // handleDelete = key => {
-  //   const fieldMappings = [...this.state.fieldMappings];
-  //   this.setState({ fieldMappings: fieldMappings.filter(item => item.key !== key) });
-
-  //   this.props.handleDelete(key);
-  // };
 
   render() {
 
@@ -246,9 +197,6 @@ class TaskFieldMappingTable extends React.Component {
 
     return (
       <div>
-        {/* <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, display: this.state.readonly ? 'none' : 'block' }}>
-          添加字段
-        </Button> */}
         <Table
           components={components}
           rowClassName={() => { style.editableRow }}
