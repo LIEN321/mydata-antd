@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Button } from 'antd';
+import { Form, Input, Card, Button, Select } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { ENV_DETAIL, ENV_SUBMIT } from '../../../actions/env';
+import { ENV_DETAIL, ENV_INIT, ENV_SUBMIT } from '../../../actions/env';
 import EnvEditableTable from './EnvEditableTable';
 
 const FormItem = Form.Item;
@@ -30,6 +30,7 @@ class EnvEdit extends PureComponent {
       },
     } = this.props;
     dispatch(ENV_DETAIL(id));
+    dispatch(ENV_INIT());
   }
 
   componentWillReceiveProps(nextProps) {
@@ -125,7 +126,10 @@ class EnvEdit extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      env: { detail },
+      env: {
+        init: { projectList },
+        detail
+      },
       submitting,
     } = this.props;
 
@@ -151,6 +155,25 @@ class EnvEdit extends PureComponent {
       <Panel title="修改" back="/manage/env" action={action}>
         <Form hideRequiredMark style={{ marginTop: 8 }}>
           <Card className={styles.card} bordered={false}>
+            <FormItem {...formItemLayout} label="选择项目">
+              {getFieldDecorator('projectId', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择项目',
+                  },
+                ],
+                initialValue: detail.projectId,
+              })(
+                <Select allowClear placeholder="请选择项目">
+                  {projectList.map(p => (
+                    <Select.Option key={p.id} value={p.id}>
+                      {p.projectName} ({p.projectCode})
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
             <FormItem {...formItemLayout} label="环境名称">
               {getFieldDecorator('envName', {
                 rules: [
