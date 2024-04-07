@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Form, Icon, message, Modal, Popover, Select, Table, Tag } from "antd";
+import { Button, Card, Form, Icon, message, Modal, Popover, Select, Table, Tag, Tooltip } from "antd";
 import { PureComponent } from "react";
 import { connect } from "dva";
 import FormItem from "antd/lib/form/FormItem";
@@ -198,6 +198,7 @@ class TaskCard extends PureComponent {
             env,
             currentTask,
             envList,
+            loading,
         } = this.props;
 
         const { copyModalVisible, logDetailModalVisible, logDetail } = this.state;
@@ -302,6 +303,7 @@ class TaskCard extends PureComponent {
                     pagination={logs.pagination}
                     onChange={this.handleSearchLog}
                     expandedRowRender={record => <div style={{ 'overflow-wrap': 'anywhere' }} dangerouslySetInnerHTML={{ __html: `${record.taskDetail.replaceAll('\n', '</br>')}`, }} />}
+                    loading={loading}
                 />}
             </Modal>
 
