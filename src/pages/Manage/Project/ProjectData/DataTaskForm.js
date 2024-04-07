@@ -2,13 +2,14 @@ import React, { PureComponent } from 'react';
 import { Form, Input, Card, Select, Radio, Modal, message, notification, Tabs, Switch, InputNumber } from 'antd';
 import { connect } from 'dva';
 import styles from '../../../../layouts/Sword.less';
-import { TASK_SUBSCRIBED, TASK_TYPE_PRODUCER, TASK_INIT, TASK_TYPE_CONSUMER, TASK_INIT_API } from '../../../../actions/task';
+import { TASK_SUBSCRIBED, TASK_TYPE_PRODUCER, TASK_INIT, TASK_TYPE_CONSUMER, TASK_INIT_API, TASK_CONSUME_MODE_API, TASK_CONSUME_MODE_EMAIL } from '../../../../actions/task';
 import { submit as submitTask, detail as taskDetail } from '../../../../services/task';
 import TaskFieldMappingTable from '../../Task/TaskFieldMappingTable';
-import { dataFields } from '../../../../services/data';
+import { dataFields as loadDataFields } from '../../../../services/data';
 import TaskDataFilterTable from '../../Task/TaskDataFilterTable';
 import TaskVarMappingTable from '../../Task/TaskVarMappingTable';
 import TaskBatchParamTable from '../../Task/TaskBatchMappingTable';
+import TaskFieldSelectTable from '../../Task/TaskFieldSelectTable';
 
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
@@ -40,7 +41,7 @@ class DataTaskForm extends PureComponent {
       // 数据字段列表
       dataFieldList: [],
       // 字段映射
-      fieldMappings: {},
+      fieldMapping: {},
 
       // 过滤条件列表
       filters: [],
@@ -51,12 +52,18 @@ class DataTaskForm extends PureComponent {
       batchParams: [],
 
       // 是否显示订阅
+      isSubscribed: 0,
       isShowSubscribed: false,
       // 是否显示任务周期
       isShowTaskPeriod: true,
 
       // 是否启用批处理
       isBatchEnabled: false,
+
+      // 消费模式
+      consumeMode: 1,
+      // 发送邮件选择的字段
+      selectedFields: [],
     };
   }
 
@@ -72,7 +79,7 @@ class DataTaskForm extends PureComponent {
           this.setState({ detail });
           this.setState({ apiUrl: detail.apiUrl });
           this.setState({
-            fieldMappings: detail.fieldMapping,
+            fieldMapping: detail.fieldMapping,
             isShowSubscribed: detail.opType !== TASK_TYPE_PRODUCER,
             isShowTaskPeriod: detail.isSubscribed !== TASK_SUBSCRIBED,
             initStatus: true,
@@ -80,6 +87,7 @@ class DataTaskForm extends PureComponent {
             varMappings: detail.fieldVarMapping,
             isBatchEnabled: detail.batchStatus === 1,
             batchParams: detail.batchParams,
+            consumeMode: detail.consumeMode,
           });
           this.renderWarning(detail);
         }
@@ -89,10 +97,10 @@ class DataTaskForm extends PureComponent {
 
     if (opType === TASK_TYPE_PRODUCER) {
       // 提供数据
-      this.setState({ isShowSubscribed: false, isShowTaskPeriod: true });
+      this.setState({ isShowSubscribed: false });
     } else {
       // 消费数据
-      this.setState({ isShowSubscribed: true, isShowTaskPeriod: false });
+      this.setState({ isShowSubscribed: true });
     }
   }
 
@@ -147,7 +155,7 @@ class DataTaskForm extends PureComponent {
   }
 
   async loadDataFieldList(dataId) {
-    const dataFieldResponse = await dataFields({ dataId });
+    const dataFieldResponse = await loadDataFields({ dataId });
     if (dataFieldResponse.success) {
       this.setState({ dataFieldList: dataFieldResponse.data });
     }
@@ -162,16 +170,30 @@ class DataTaskForm extends PureComponent {
   };
 
   handleSaveMapping = mapping => {
-    const { fieldMappings } = this.state;
+    const { fieldMapping } = this.state;
     const key = mapping.dataFieldCode;
     if (key) {
-      fieldMappings[key] = mapping.apiFieldCode;
+      fieldMapping[key] = mapping.apiFieldCode;
+    }
+  };
+
+  // 消费模式是发送邮件时，选择字段
+  handleSelectField = mapping => {
+    const { fieldMapping } = this.state;
+    const key = mapping.dataFieldCode;
+    if (key) {
+      if (mapping.isSelect === 1) {
+        fieldMapping[key] = mapping.dataFieldName;
+      }
+      else {
+        delete fieldMapping[key];
+      }
     }
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    const { form, env, data, projectId, closeTaskForm, currentTask } = this.props;
+    const { form, env, data, projectId, closeTaskForm, currentTask, opType } = this.props;
 
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -182,12 +204,13 @@ class DataTaskForm extends PureComponent {
           params.id = currentTask.id;
           // params.refEnvId = currentTask.refEnvId;
         }
-        params.fieldMapping = this.state.fieldMappings;
+        params.fieldMapping = this.state.fieldMapping;
         params.dataFilter = this.state.filters;
         // params.fieldVarMapping = this.state.varMappings;
         params.envId = env.id;
         params.dataId = data.id;
         params.projectId = projectId;
+        params.opType = opType;
 
         const fieldVarMapping = {};
         const { varMappings } = this.state;
@@ -216,14 +239,16 @@ class DataTaskForm extends PureComponent {
 
   handleChangeSubscribed = e => {
     const targetValue = e.target.value;
-    if (targetValue === TASK_SUBSCRIBED) {
-      // 订阅
-      this.setState({ isShowTaskPeriod: false });
-    } else {
-      // 不订阅
-      this.setState({ isShowTaskPeriod: true });
-    }
+    this.setState({ isShowTaskPeriod: targetValue !== TASK_SUBSCRIBED, isSubscribed: targetValue });
   };
+
+  handleChangeConsumeMode = e => {
+    const consumeMode = e.target.value;
+
+    this.setState({ consumeMode });
+    // 显示周期
+    this.setState({ isShowTaskPeriod: true });
+  }
 
   handleSaveFilter = filter => {
     const newData = [...this.state.filters];
@@ -338,7 +363,7 @@ class DataTaskForm extends PureComponent {
       env,
     } = this.props;
 
-    const { apiUrl, detail, isBatchEnabled } = this.state;
+    const { apiUrl, detail, isBatchEnabled, consumeMode, isSubscribed } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -354,7 +379,7 @@ class DataTaskForm extends PureComponent {
 
     // 从环境列表中排除当前环境
     let otherEnvList = envList;
-    if(envList){
+    if (envList) {
       otherEnvList = envList.filter(e => e.id !== env.id);
     }
 
@@ -371,7 +396,11 @@ class DataTaskForm extends PureComponent {
         <Form hideRequiredMark style={{ marginTop: 8 }}>
           <Tabs defaultActiveKey='1'>
             <TabPane tab="基本信息" key='1'>
-              {/* <Card className={styles.card} bordered={false}> */}
+              {/* 任务类型 */}
+              <FormItem {...formItemLayout} label="任务类型">
+                {opType === TASK_TYPE_PRODUCER ? "提供数据" : "消费数据"}
+              </FormItem>
+              {/* 任务名称 */}
               <FormItem {...formItemLayout} label="任务名称">
                 {getFieldDecorator('taskName', {
                   rules: [
@@ -383,115 +412,173 @@ class DataTaskForm extends PureComponent {
                   initialValue: detail ? detail.taskName : '',
                 })(<Input placeholder="请输入任务名称" />)}
               </FormItem>
-              {(isRefEnv || (detail && detail.refEnvId)) ? (<FormItem {...formItemLayout} label="选择其他环境">
-                {getFieldDecorator('refEnvId', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请选择其他环境',
-                    },
-                  ],
-                  initialValue: detail ? detail.refEnvId : '',
-                })(
-                  <Select allowClear placeholder="请选择其他环境" onChange={this.handleChangeEnv}>
-                    {otherEnvList.map(e => (
-                      <Select.Option key={e.id} value={e.id}>
-                        {e.envName} ({e.envPrefix})
-                      </Select.Option>
-                    ))}
-                  </Select>
-                )}
-              </FormItem>) : <></>}
-              <FormItem {...formItemLayout} label="选择API">
-                {getFieldDecorator('apiId', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请选择API',
-                    },
-                  ],
-                  initialValue: detail ? detail.apiId : '',
-                })(
-                  <Select allowClear placeholder="请选择API" onChange={this.handleChangeApi}>
-                    {apiList.map(a => (
-                      <Select.Option key={a.id} value={a.id}>
-                        {a.apiName} ({a.apiUri})
-                      </Select.Option>
-                    ))}
-                  </Select>
-                )}
-              </FormItem>
-              <FormItem {...formItemLayout} label="API完整地址">
-                {apiUrl}
-              </FormItem>
-              <FormItem {...formItemLayout} label="任务类型">
-                {opType === TASK_TYPE_PRODUCER ? "提供数据" : "消费数据"}
-              </FormItem>
-              {this.state.isShowSubscribed && (<FormItem {...formItemLayout} label="订阅数据" extra="订阅模式：区别于定时模式，只当有提供新数据后才推送数据；">
-                {getFieldDecorator('isSubscribed', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请选择是否为订阅任务',
-                    },
-                  ],
-                  initialValue: detail ? detail.isSubscribed : 1,
-                })(
-                  // <Input placeholder="请输入是否为订阅任务：0-不订阅，1-订阅" />
-                  <Radio.Group buttonStyle="solid" onChange={this.handleChangeSubscribed}>
-                    <Radio.Button value={1}>订阅</Radio.Button>
-                    <Radio.Button value={0}>不订阅</Radio.Button>
-                  </Radio.Group>
-                )}
-              </FormItem>)}
-
-              {this.state.isShowTaskPeriod && (<FormItem {...formItemLayout} label="任务周期">
-                {getFieldDecorator('taskPeriod', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入任务周期',
-                    },
-                  ],
-                  initialValue: detail ? detail.taskPeriod : '',
-                })(
-                  // <Input placeholder="请输入任务周期" />
-                  <Radio.Group buttonStyle="solid">
-                    <Radio.Button value="0 0/1 * * * ?">1m</Radio.Button>
-                    <Radio.Button value="0 0/10 * * * ?">10m</Radio.Button>
-                    <Radio.Button value="0 0/30 * * * ?">30m</Radio.Button>
-                    <Radio.Button value="0 0 * * * ?">1h</Radio.Button>
-                    <Radio.Button value="0 0 0/2 * * ?">2h</Radio.Button>
-                    <Radio.Button value="0 0 0/6 * * ?">6h</Radio.Button>
-                    <Radio.Button value="0 0 0/12 * * ?">12h</Radio.Button>
-                    <Radio.Button value="0 0 0 * * ?">1d</Radio.Button>
-                    <Radio.Button value="0 0 0 1/2 * ?">2d</Radio.Button>
-                    <Radio.Button value="0 0 0 1/7 * ?">7d</Radio.Button>
-                  </Radio.Group>
-                )}
-              </FormItem>)}
-              <FormItem {...formItemLayout} label="字段映射">
-                <TaskFieldMappingTable
-                  dataFieldList={this.state.dataFieldList}
-                  handleSave={this.handleSaveMapping}
-                  initFieldMappings={detail ? detail.fieldMapping : {}}
-                />
-              </FormItem>
-              {/* </Card> */}
+              {/* 选择消费模式 */}
+              {opType === TASK_TYPE_CONSUMER ? (
+                <FormItem {...formItemLayout} label="消费模式">
+                  {getFieldDecorator('consumeMode', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择消费模式',
+                      },
+                    ],
+                    initialValue: detail ? detail.consumeMode : 1,
+                  })(
+                    <Radio.Group buttonStyle="solid" onChange={this.handleChangeConsumeMode}>
+                      <Radio.Button value={1}>调用API</Radio.Button>
+                      <Radio.Button value={2}>发送邮件</Radio.Button>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+              ) : <></>}
+              {consumeMode === TASK_CONSUME_MODE_API ?
+                <>
+                  {/* 选择其他环境 */}
+                  {(isRefEnv || (detail && detail.refEnvId)) ? (<FormItem {...formItemLayout} label="选择其他环境">
+                    {getFieldDecorator('refEnvId', {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择其他环境',
+                        },
+                      ],
+                      initialValue: detail ? detail.refEnvId : '',
+                    })(
+                      <Select allowClear placeholder="请选择其他环境" onChange={this.handleChangeEnv}>
+                        {otherEnvList.map(e => (
+                          <Select.Option key={e.id} value={e.id}>
+                            {e.envName} ({e.envPrefix})
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    )}
+                  </FormItem>) : <></>}
+                  {/* 选择API */}
+                  <FormItem {...formItemLayout} label="选择API">
+                    {getFieldDecorator('apiId', {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择API',
+                        },
+                      ],
+                      initialValue: detail ? detail.apiId : '',
+                    })(
+                      <Select allowClear placeholder="请选择API" onChange={this.handleChangeApi}>
+                        {apiList.map(a => (
+                          <Select.Option key={a.id} value={a.id}>
+                            {a.apiName} ({a.apiUri})
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    )}
+                  </FormItem>
+                  {/* API完整地址 */}
+                  <FormItem {...formItemLayout} label="API完整地址">
+                    {apiUrl}
+                  </FormItem>
+                  {/* 是否订阅 */}
+                  {this.state.isShowSubscribed && (
+                    <FormItem {...formItemLayout} label="订阅数据" extra="订阅模式：区别于定时模式，只当有提供新数据后才推送数据；">
+                      {getFieldDecorator('isSubscribed', {
+                        rules: [
+                          {
+                            required: true,
+                            message: '请选择是否为订阅任务',
+                          },
+                        ],
+                        initialValue: detail ? detail.isSubscribed : isSubscribed,
+                      })(
+                        // <Input placeholder="请输入是否为订阅任务：0-不订阅，1-订阅" />
+                        <Radio.Group buttonStyle="solid" onChange={this.handleChangeSubscribed}>
+                          <Radio.Button value={1}>订阅</Radio.Button>
+                          <Radio.Button value={0}>不订阅</Radio.Button>
+                        </Radio.Group>
+                      )}
+                    </FormItem>)
+                  }
+                </>
+                :
+                <>
+                  {/* 收件人邮箱 */}
+                  <FormItem {...formItemLayout} label="收件人邮箱">
+                    {getFieldDecorator('consumeEmail', {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请输入收件人邮箱',
+                        },
+                      ],
+                      initialValue: detail ? detail.consumeEmail : '',
+                    })(<Input placeholder="请输入收件人邮箱" />)}
+                  </FormItem>
+                </>
+              }
+              {/* 任务周期 */}
+              {this.state.isShowTaskPeriod && (
+                <FormItem {...formItemLayout} label="任务周期">
+                  {getFieldDecorator('taskPeriod', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请输入任务周期',
+                      },
+                    ],
+                    initialValue: detail ? detail.taskPeriod : '',
+                  })(
+                    // <Input placeholder="请输入任务周期" />
+                    <Radio.Group buttonStyle="solid">
+                      <Radio.Button value="0 0/1 * * * ?">1m</Radio.Button>
+                      <Radio.Button value="0 0/10 * * * ?">10m</Radio.Button>
+                      <Radio.Button value="0 0/30 * * * ?">30m</Radio.Button>
+                      <Radio.Button value="0 0 * * * ?">1h</Radio.Button>
+                      <Radio.Button value="0 0 0/2 * * ?">2h</Radio.Button>
+                      <Radio.Button value="0 0 0/6 * * ?">6h</Radio.Button>
+                      <Radio.Button value="0 0 0/12 * * ?">12h</Radio.Button>
+                      <Radio.Button value="0 0 0 * * ?">1d</Radio.Button>
+                      <Radio.Button value="0 0 0 1/2 * ?">2d</Radio.Button>
+                      <Radio.Button value="0 0 0 1/7 * ?">7d</Radio.Button>
+                    </Radio.Group>
+                  )}
+                </FormItem>)
+              }
+              {consumeMode === TASK_CONSUME_MODE_API ?
+                <>
+                  {/* 字段映射 */}
+                  <FormItem {...formItemLayout} label="字段映射">
+                    <TaskFieldMappingTable
+                      dataFieldList={this.state.dataFieldList}
+                      handleSave={this.handleSaveMapping}
+                      initFieldMappings={this.state.fieldMapping}
+                    />
+                  </FormItem>
+                </>
+                :
+                <>
+                  {/* 选择字段 */}
+                  <FormItem {...formItemLayout} label="选择字段">
+                    <TaskFieldSelectTable
+                      dataFieldList={this.state.dataFieldList}
+                      handleSave={this.handleSelectField}
+                      initFieldMappings={this.state.fieldMapping}
+                    />
+                  </FormItem>
+                </>
+              }
             </TabPane>
             <TabPane tab="数据过滤" key='2' forceRender>
-              {/* <Card className={styles.card} bordered={false}> */}
+              {/* 数据过滤 */}
               <FormItem {...formItemLayout} label="数据过滤条件">
                 <TaskDataFilterTable
                   filters={this.state.filters}
                   handleSave={this.handleSaveFilter}
                   handleDelete={this.handleDeleteFilter}
+                  dataFieldList={this.state.dataFieldList}
                 />
               </FormItem>
-              {/* </Card> */}
             </TabPane>
             <TabPane tab="变量配置" key='3' forceRender>
-              {/* <Card className={styles.card} bordered={false}> */}
+              {/* 变量映射 */}
               <FormItem {...formItemLayout} label="数据存入变量">
                 <TaskVarMappingTable
                   varMappings={this.state.varMappings}
@@ -499,10 +586,9 @@ class DataTaskForm extends PureComponent {
                   handleDelete={this.handleDeleteVarMapping}
                 />
               </FormItem>
-              {/* </Card> */}
             </TabPane>
             <TabPane tab="分批配置" key='4' forceRender>
-              {/* <Card className={styles.card} bordered={false}> */}
+              {/* 分批配置 */}
               <FormItem {...formItemLayout} label="启用分批">
                 {getFieldDecorator('batchStatus', {
                   initialValue: detail ? detail.batchStatus : 0,
@@ -532,7 +618,6 @@ class DataTaskForm extends PureComponent {
                 </>
                 : <></>
               }
-              {/* </Card> */}
             </TabPane>
           </Tabs>
         </Form>

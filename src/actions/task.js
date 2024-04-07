@@ -11,6 +11,10 @@ export const TASK_STATUS_RUNNING = 1;
 export const TASK_STATUS_FAILED = 2;
 /** 停止状态 */
 export const TASK_STATUS_STOPPED = 3;
+/** 消费模式，调用API */
+export const TASK_CONSUME_MODE_API = 1;
+/** 消费模式，发送邮件 */
+export const TASK_CONSUME_MODE_EMAIL = 2;
 
 export function TASK_LIST(payload) {
   return {
