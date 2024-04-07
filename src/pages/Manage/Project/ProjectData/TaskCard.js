@@ -278,7 +278,7 @@ class TaskCard extends PureComponent {
                     <></>}
             >
                 {/* {currentTask.refEnvId ? <p>其他环境：{currentTask.refEnvName}</p> : <></>} */}
-                <p>{currentTask.apiUrl.replace(env.envPrefix, '')}</p>
+                {currentTask.apiUrl && <Tooltip title={currentTask.apiUrl}><p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{currentTask.apiUrl.replace(env.envPrefix, '')}</p></Tooltip>}
                 {currentTask.consumeEmail && <p>发送邮件：{currentTask.consumeEmail}</p>}
                 <p>运行周期：{currentTask.taskPeriod}</p>
                 <p>最后执行：{currentTask.lastRunTime}</p>
