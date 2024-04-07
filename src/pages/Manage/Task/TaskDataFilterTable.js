@@ -11,23 +11,11 @@ const EditableRow = ({ form, index, ...props }) => (
 const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
-  //   state = {
-  //     editing: false,
-  //   };
 
   constructor(props) {
     super(props);
     this.state = { editing: props.editable };
   }
-
-  toggleEdit = () => {
-    // const editing = !this.state.editing;
-    // this.setState({ editing }, () => {
-    //   if (editing) {
-    //     this.input.focus();
-    //   }
-    // });
-  };
 
   save = e => {
     const { record, handleSave } = this.props;
@@ -35,9 +23,7 @@ class EditableCell extends React.Component {
       if (error && error[e.currentTarget.key]) {
         return;
       }
-      this.toggleEdit();
       handleSave(record.key, this.props.dataIndex, e.target.value);
-      // ----------------------------------------------------------
     });
   };
 
@@ -85,7 +71,6 @@ class EditableCell extends React.Component {
       <div
         className={style.editableCellValueWrap}
         style={{ paddingRight: 24 }}
-        onClick={this.toggleEdit}
       >
         {children}
       </div>
