@@ -5,6 +5,7 @@ import styles from '../../../../layouts/Sword.less';
 import { TASK_INIT_API, TASK_SUBSCRIBED, TASK_TYPE_PRODUCER } from '../../../../actions/task';
 import { submit as submitTask, detail as taskDetail } from '../../../../services/task';
 import TaskVarMappingTable from '../../Task/TaskVarMappingTable';
+import Cron from 'antd-cron';
 
 const FormItem = Form.Item;
 
@@ -284,18 +285,19 @@ class EnvTaskForm extends PureComponent {
                 initialValue: detail ? detail.taskPeriod : '',
               })(
                 // <Input placeholder="请输入任务周期" />
-                <Radio.Group buttonStyle="solid">
-                  <Radio.Button value="0 0/1 * * * ?">1m</Radio.Button>
-                  <Radio.Button value="0 0/10 * * * ?">10m</Radio.Button>
-                  <Radio.Button value="0 0/30 * * * ?">30m</Radio.Button>
-                  <Radio.Button value="0 0 * * * ?">1h</Radio.Button>
-                  <Radio.Button value="0 0 0/2 * * ?">2h</Radio.Button>
-                  <Radio.Button value="0 0 0/6 * * ?">6h</Radio.Button>
-                  <Radio.Button value="0 0 0/12 * * ?">12h</Radio.Button>
-                  <Radio.Button value="0 0 0 * * ?">1d</Radio.Button>
-                  <Radio.Button value="0 0 0 1/2 * ?">2d</Radio.Button>
-                  <Radio.Button value="0 0 0 1/7 * ?">7d</Radio.Button>
-                </Radio.Group>
+                // <Radio.Group buttonStyle="solid">
+                //   <Radio.Button value="0 0/1 * * * ?">1m</Radio.Button>
+                //   <Radio.Button value="0 0/10 * * * ?">10m</Radio.Button>
+                //   <Radio.Button value="0 0/30 * * * ?">30m</Radio.Button>
+                //   <Radio.Button value="0 0 * * * ?">1h</Radio.Button>
+                //   <Radio.Button value="0 0 0/2 * * ?">2h</Radio.Button>
+                //   <Radio.Button value="0 0 0/6 * * ?">6h</Radio.Button>
+                //   <Radio.Button value="0 0 0/12 * * ?">12h</Radio.Button>
+                //   <Radio.Button value="0 0 0 * * ?">1d</Radio.Button>
+                //   <Radio.Button value="0 0 0 1/2 * ?">2d</Radio.Button>
+                //   <Radio.Button value="0 0 0 1/7 * ?">7d</Radio.Button>
+                // </Radio.Group>
+                <Cron />
               )}
             </FormItem>)}
             <FormItem {...formItemLayout} label="数据存入变量">

@@ -10,6 +10,7 @@ import TaskDataFilterTable from '../../Task/TaskDataFilterTable';
 import TaskVarMappingTable from '../../Task/TaskVarMappingTable';
 import TaskBatchParamTable from '../../Task/TaskBatchMappingTable';
 import TaskFieldSelectTable from '../../Task/TaskFieldSelectTable';
+import Cron from 'antd-cron';
 
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
@@ -527,18 +528,19 @@ class DataTaskForm extends PureComponent {
                     initialValue: detail ? detail.taskPeriod : '',
                   })(
                     // <Input placeholder="请输入任务周期" />
-                    <Radio.Group buttonStyle="solid">
-                      <Radio.Button value="0 0/1 * * * ?">1m</Radio.Button>
-                      <Radio.Button value="0 0/10 * * * ?">10m</Radio.Button>
-                      <Radio.Button value="0 0/30 * * * ?">30m</Radio.Button>
-                      <Radio.Button value="0 0 * * * ?">1h</Radio.Button>
-                      <Radio.Button value="0 0 0/2 * * ?">2h</Radio.Button>
-                      <Radio.Button value="0 0 0/6 * * ?">6h</Radio.Button>
-                      <Radio.Button value="0 0 0/12 * * ?">12h</Radio.Button>
-                      <Radio.Button value="0 0 0 * * ?">1d</Radio.Button>
-                      <Radio.Button value="0 0 0 1/2 * ?">2d</Radio.Button>
-                      <Radio.Button value="0 0 0 1/7 * ?">7d</Radio.Button>
-                    </Radio.Group>
+                    // <Radio.Group buttonStyle="solid">
+                    //   <Radio.Button value="0 0/1 * * * ?">1m</Radio.Button>
+                    //   <Radio.Button value="0 0/10 * * * ?">10m</Radio.Button>
+                    //   <Radio.Button value="0 0/30 * * * ?">30m</Radio.Button>
+                    //   <Radio.Button value="0 0 * * * ?">1h</Radio.Button>
+                    //   <Radio.Button value="0 0 0/2 * * ?">2h</Radio.Button>
+                    //   <Radio.Button value="0 0 0/6 * * ?">6h</Radio.Button>
+                    //   <Radio.Button value="0 0 0/12 * * ?">12h</Radio.Button>
+                    //   <Radio.Button value="0 0 0 * * ?">1d</Radio.Button>
+                    //   <Radio.Button value="0 0 0 1/2 * ?">2d</Radio.Button>
+                    //   <Radio.Button value="0 0 0 1/7 * ?">7d</Radio.Button>
+                    // </Radio.Group>
+                    <Cron/>
                   )}
                 </FormItem>)
               }
