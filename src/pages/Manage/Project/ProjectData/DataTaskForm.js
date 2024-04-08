@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Select, Radio, Modal, message, notification, Tabs, Switch, InputNumber } from 'antd';
+import { Form, Input, Card, Select, Radio, Modal, message, notification, Tabs, Switch, InputNumber, Tooltip, Icon } from 'antd';
 import { connect } from 'dva';
 import styles from '../../../../layouts/Sword.less';
 import { TASK_SUBSCRIBED, TASK_TYPE_PRODUCER, TASK_INIT, TASK_TYPE_CONSUMER, TASK_INIT_API, TASK_CONSUME_MODE_API, TASK_CONSUME_MODE_EMAIL } from '../../../../actions/task';
@@ -601,13 +601,25 @@ class DataTaskForm extends PureComponent {
                       initialValue: detail && detail.batchInterval ? detail.batchInterval : 2,
                     })(<InputNumber min={1} max={100} placeholder="请输入间隔" />)}<span className="ant-form-text"> 秒</span>
                   </FormItem>
-                  {opType === TASK_TYPE_CONSUMER ?
+                  {opType === TASK_TYPE_CONSUMER &&
                     <FormItem {...formItemLayout} label="分批数量">
                       {getFieldDecorator('batchSize', {
                         initialValue: detail && detail.batchSize ? detail.batchSize : 1000,
                       })(<InputNumber min={1} max={1000} placeholder="请输入数量" />)}
                     </FormItem>
-                    : <></>}
+                  }
+                  {opType === TASK_TYPE_PRODUCER &&
+                    <FormItem {...formItemLayout} label="特殊情况">
+                      {getFieldDecorator('skipError', {
+                        initialValue: detail ? detail.skipError : 0,
+                      })(
+                        <Radio.Group buttonStyle="solid">
+                          <Radio.Button value={0}>无</Radio.Button>
+                          <Radio.Button value={1}><Tooltip title="API两次返回相同数据时，任务正常结束 不报错中止">数据相同则不报错<Icon type="question-circle" /></Tooltip></Radio.Button>
+                        </Radio.Group>
+                      )}
+                    </FormItem>
+                  }
                   <FormItem {...formItemLayout} label="分批参数">
                     <TaskBatchParamTable
                       batchParams={this.state.batchParams}
