@@ -1,6 +1,8 @@
-import { Form, Input, Button, Table, Select, Popconfirm } from 'antd';
+import { Form, Input, Button, Table, Select, Popconfirm, Icon, Row, Col } from 'antd';
 import React from 'react';
 import style from './StandardData.less';
+import { TASK_FILTER_TYPE_VALUE, TASK_FILTER_TYPE_FIELD } from '../../../actions/task';
+import Column from 'antd/lib/table/Column';
 
 const EditableContext = React.createContext();
 const EditableRow = ({ form, index, ...props }) => (
@@ -37,9 +39,15 @@ class EditableCell extends React.Component {
     record.op = op;
   }
 
+  handleSelectValue = (value) => {
+    const { record } = this.props;
+    record.v = value;
+  }
+
   getInput = () => {
+    const { record } = this.props;
+    const { dataFieldList } = this.props;
     if (this.props.dataIndex === 'k') {
-      const { dataFieldList } = this.props;
       return <Select ref={node => (this.input = node)} onChange={this.handleSelectField} placeholder={`请输入${this.props.title}`}>
         {dataFieldList.map(f => (
           <Select.Option key={f.fieldCode} value={f.fieldCode}>
@@ -56,8 +64,17 @@ class EditableCell extends React.Component {
         <Select.Option value=">=">&gt;=</Select.Option>
         <Select.Option value="<">&lt;</Select.Option>
         <Select.Option value="<=">&lt;=</Select.Option>
-        <Select.Option value="nn">not null</Select.Option>
-        <Select.Option value="ne">not empty</Select.Option>
+        {(record.t === TASK_FILTER_TYPE_VALUE) && <Select.Option value="nn">not null</Select.Option>}
+        {(record.t === TASK_FILTER_TYPE_VALUE) && <Select.Option value="ne">not empty</Select.Option>}
+      </Select>;
+    }
+    if (record.t === TASK_FILTER_TYPE_FIELD) {
+      return <Select ref={node => (this.input = node)} onChange={this.handleSelectValue} placeholder={`请输入${this.props.title}`}>
+        {dataFieldList.map(f => (
+          <Select.Option key={f.fieldCode} value={f.fieldCode}>
+            {f.fieldName} ({f.fieldCode})
+          </Select.Option>
+        ))}
       </Select>;
     }
     return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入${this.props.title}`} />;
@@ -68,7 +85,14 @@ class EditableCell extends React.Component {
     const { children, dataIndex, record, title } = this.props;
     const { editing } = this.state;
     return editing ? (
-      (dataIndex == 'k' || dataIndex == 'op' || (dataIndex == 'v' && record.op != '' && record.op != 'nn' && record.op != 'ne')) ?
+      /*
+       * 根据以下情况 显示单元格的组件，否则单元格为空:
+       * k 数据字段
+       * op 条件比较方式
+       * v 条件值 当选择了比较方式 且不为not null和not empty
+       * t 为字段对比类型TASK_FILTER_TYPE_FIELD
+       */
+      (dataIndex == 'k' || dataIndex == 'op' || (dataIndex == 'v' && record.op != '' && record.op != 'nn' && record.op != 'ne') || record.t === TASK_FILTER_TYPE_FIELD) ?
         <Form.Item style={{ margin: 0 }}>
           {form.getFieldDecorator(dataIndex, {
             rules: [
@@ -127,21 +151,21 @@ class TaskDataFilterTable extends React.Component {
 
     this.columns = [
       {
-        title: '数据字段编号',
+        title: '数据字段',
         dataIndex: 'k',
-        width: '40%',
+        width: '35%',
         editable: !this.state.readonly,
       },
       {
-        title: '条件比较方式',
+        title: '条件操作',
         dataIndex: 'op',
-        width: '25%',
+        width: '18%',
         editable: !this.state.readonly,
       },
       {
         title: '条件值',
         dataIndex: 'v',
-        width: '25%',
+        width: '35%',
         editable: !this.state.readonly,
       },
     ];
@@ -150,6 +174,7 @@ class TaskDataFilterTable extends React.Component {
       this.columns.push({
         title: '操作',
         dataIndex: 'operation',
+        width: '12%',
         render: (text, record) =>
           this.state.filters.length >= 1 ? (
             <Popconfirm title="确认删除吗?" onConfirm={() => this.handleDelete(record.key)}>
@@ -163,14 +188,20 @@ class TaskDataFilterTable extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     let { filters } = nextProps;
-    if (!filters) {
+    let count = 0;
+    let i = 0;
+    if (filters) {
+      count = filters.length;
+      filters.map(f => {
+        f.key = i++;
+      });
+    } else {
       filters = [];
     }
 
     this.setState({
       filters,
-      count: filters.length,
-      readonly: nextProps.readonly ? nextProps.readonly : false,
+      count,
     });
   }
 
@@ -178,13 +209,14 @@ class TaskDataFilterTable extends React.Component {
     this.setState({ filters: [], count: 0 });
   }
 
-  handleAdd = () => {
+  handleAdd = (type) => {
     const { count, filters } = this.state;
     const newFilter = {
       k: '',
       op: '',
       v: '',
       key: count,
+      t: type,
     };
     this.setState({
       filters: [...filters, newFilter],
@@ -215,6 +247,7 @@ class TaskDataFilterTable extends React.Component {
   };
 
   render() {
+    window.a = this.state;
 
     const components = {
       body: {
@@ -245,8 +278,11 @@ class TaskDataFilterTable extends React.Component {
 
     return (
       <div>
-        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, display: this.state.readonly ? 'none' : 'block' }}>
-          添加
+        <Button onClick={() => this.handleAdd(TASK_FILTER_TYPE_VALUE)} type="primary" style={{ marginBottom: 12, marginRight: 12 }} icon="plus">
+          添加值参
+        </Button>
+        <Button onClick={() => this.handleAdd(TASK_FILTER_TYPE_FIELD)} type="primary" style={{ marginBottom: 12 }} icon="plus">
+          字段对比
         </Button>
         <Table
           components={components}

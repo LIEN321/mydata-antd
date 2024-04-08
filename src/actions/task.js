@@ -15,6 +15,10 @@ export const TASK_STATUS_STOPPED = 3;
 export const TASK_CONSUME_MODE_API = 1;
 /** 消费模式，发送邮件 */
 export const TASK_CONSUME_MODE_EMAIL = 2;
+/** 任务过滤条件值类型 - 值类型    */
+export const TASK_FILTER_TYPE_VALUE = 1;
+/** 任务过滤条件值类型 - 字段名*/
+export const TASK_FILTER_TYPE_FIELD = 2;
 
 export function TASK_LIST(payload) {
   return {
