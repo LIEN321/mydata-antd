@@ -578,7 +578,7 @@ class ProjectData extends PureComponent {
           ]}
           onCancel={this.closeBizData}
         >
-          <Row justify='end' style={{marginBottom:"24px"}}>
+          <Row justify='end' style={{ marginBottom: 12 }}>
             <Col>
               <div style={{ float: 'right' }}>
                 <Popconfirm

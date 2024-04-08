@@ -70,9 +70,9 @@ class EditableCell extends React.Component {
         {form.getFieldDecorator(dataIndex, {
           // rules: [
           //   {
-              // required: true,
-              message: `请输入${title}`,
-            // },
+          // required: true,
+          message: `请输入${title}`,
+          // },
           // ],
           initialValue: record[dataIndex],
         })(
@@ -270,7 +270,7 @@ class EditableTable extends React.Component {
 
     return (
       <div>
-        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, display: this.state.readonly ? 'none' : 'block' }}>
+        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 12 }}>
           添加字段
         </Button>
         <Table
