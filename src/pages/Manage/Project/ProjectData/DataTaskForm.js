@@ -594,7 +594,7 @@ class DataTaskForm extends PureComponent {
               <FormItem {...formItemLayout} label="启用分批">
                 {getFieldDecorator('batchStatus', {
                   initialValue: detail ? detail.batchStatus : 0,
-                })(<Switch checked={isBatchEnabled} onChange={this.handleChangeBatchStatus} />)}
+                })(<Switch checked={isBatchEnabled} onChange={this.handleChangeBatchStatus} disabled={consumeMode === TASK_CONSUME_MODE_EMAIL} />)}
               </FormItem>
               {isBatchEnabled ?
                 <>
