@@ -47,6 +47,9 @@ class EditableCell extends React.Component {
   getInput = () => {
     const { record } = this.props;
     const { dataFieldList } = this.props;
+    if (!record.t) {
+      record.t = TASK_FILTER_TYPE_VALUE;
+    }
     if (this.props.dataIndex === 'k') {
       return <Select ref={node => (this.input = node)} onChange={this.handleSelectField} placeholder={`请输入${this.props.title}`}>
         {dataFieldList.map(f => (
