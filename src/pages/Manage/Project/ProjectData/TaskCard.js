@@ -291,6 +291,9 @@ class TaskCard extends PureComponent {
                 width="60%"
                 visible={this.state.logModalVisible}
                 footer={[
+                    <Button key="refresh" onClick={() => this.handleSearchLog({ current: 1, pageSize: 10 })}>
+                        刷新
+                    </Button>,
                     <Button key="back" onClick={this.closeLogList}>
                         关闭
                     </Button>,
