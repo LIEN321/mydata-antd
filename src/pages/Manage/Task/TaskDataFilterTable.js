@@ -156,19 +156,19 @@ class TaskDataFilterTable extends React.Component {
       {
         title: '数据字段',
         dataIndex: 'k',
-        width: '35%',
+        width: '34%',
         editable: !this.state.readonly,
       },
       {
         title: '条件操作',
         dataIndex: 'op',
-        width: '18%',
+        width: '22%',
         editable: !this.state.readonly,
       },
       {
         title: '条件值',
         dataIndex: 'v',
-        width: '35%',
+        width: '34%',
         editable: !this.state.readonly,
       },
     ];
@@ -177,7 +177,7 @@ class TaskDataFilterTable extends React.Component {
       this.columns.push({
         title: '操作',
         dataIndex: 'operation',
-        width: '12%',
+        width: '10%',
         render: (text, record) =>
           this.state.filters.length >= 1 ? (
             <Popconfirm title="确认删除吗?" onConfirm={() => this.handleDelete(record.key)}>
