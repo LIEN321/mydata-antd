@@ -11,23 +11,11 @@ const EditableRow = ({ form, index, ...props }) => (
 const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
-  //   state = {
-  //     editing: false,
-  //   };
 
   constructor(props) {
     super(props);
     this.state = { editing: props.editable };
   }
-
-  toggleEdit = () => {
-    // const editing = !this.state.editing;
-    // this.setState({ editing }, () => {
-    //   if (editing) {
-    //     this.input.focus();
-    //   }
-    // });
-  };
 
   save = e => {
     const { record } = this.props;
@@ -35,9 +23,7 @@ class EditableCell extends React.Component {
       if (error && error[e.currentTarget.id]) {
         return;
       }
-      this.toggleEdit();
       record[this.props.dataIndex] = e.target.value;
-      // ----------------------------------------------------------
     });
   };
 
@@ -66,6 +52,7 @@ class EditableCell extends React.Component {
     if (this.props.dataIndex === 'fieldType') {
       return <Select ref={node => (this.input = node)} onChange={this.handleSelectFieldType} placeholder={`请输入${this.props.title}`} defaultValue="default">
         <Select.Option value="default">默认</Select.Option>
+        <Select.Option value="number">数值</Select.Option>
         <Select.Option value="int">整数</Select.Option>
         <Select.Option value="string">字符串</Select.Option>
         <Select.Option value="date">日期</Select.Option>
@@ -83,9 +70,9 @@ class EditableCell extends React.Component {
         {form.getFieldDecorator(dataIndex, {
           // rules: [
           //   {
-              // required: true,
-              message: `请输入${title}`,
-            // },
+          // required: true,
+          message: `请输入${title}`,
+          // },
           // ],
           initialValue: record[dataIndex],
         })(
@@ -97,7 +84,6 @@ class EditableCell extends React.Component {
       <div
         className={style.editableCellValueWrap}
         style={{ paddingRight: 24 }}
-        onClick={this.toggleEdit}
       >
         {children}
       </div>
@@ -284,7 +270,7 @@ class EditableTable extends React.Component {
 
     return (
       <div>
-        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, display: this.state.readonly ? 'none' : 'block' }}>
+        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 12 }}>
           添加字段
         </Button>
         <Table

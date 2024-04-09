@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Form, Icon, message, Modal, Popover, Select, Table, Tag } from "antd";
+import { Button, Card, Form, Icon, message, Modal, Popover, Select, Table, Tag, Tooltip } from "antd";
 import { PureComponent } from "react";
 import { connect } from "dva";
 import FormItem from "antd/lib/form/FormItem";
@@ -198,6 +198,7 @@ class TaskCard extends PureComponent {
             env,
             currentTask,
             envList,
+            loading,
         } = this.props;
 
         const { copyModalVisible, logDetailModalVisible, logDetail } = this.state;
@@ -278,7 +279,8 @@ class TaskCard extends PureComponent {
                     <></>}
             >
                 {/* {currentTask.refEnvId ? <p>其他环境：{currentTask.refEnvName}</p> : <></>} */}
-                <p>{currentTask.apiUrl.replace(env.envPrefix, '')}</p>
+                {currentTask.apiUrl && <Tooltip title={currentTask.apiUrl}><p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{currentTask.apiUrl.replace(env.envPrefix, '')}</p></Tooltip>}
+                {currentTask.consumeEmail && <p>发送邮件：{currentTask.consumeEmail}</p>}
                 <p>运行周期：{currentTask.taskPeriod}</p>
                 <p>最后执行：{currentTask.lastRunTime}</p>
                 <p>最后成功：{currentTask.lastSuccessTime}</p>
@@ -289,6 +291,9 @@ class TaskCard extends PureComponent {
                 width="60%"
                 visible={this.state.logModalVisible}
                 footer={[
+                    <Button key="refresh" onClick={() => this.handleSearchLog({ current: 1, pageSize: 10 })}>
+                        刷新
+                    </Button>,
                     <Button key="back" onClick={this.closeLogList}>
                         关闭
                     </Button>,
@@ -301,6 +306,7 @@ class TaskCard extends PureComponent {
                     pagination={logs.pagination}
                     onChange={this.handleSearchLog}
                     expandedRowRender={record => <div style={{ 'overflow-wrap': 'anywhere' }} dangerouslySetInnerHTML={{ __html: `${record.taskDetail.replaceAll('\n', '</br>')}`, }} />}
+                    loading={loading}
                 />}
             </Modal>
 

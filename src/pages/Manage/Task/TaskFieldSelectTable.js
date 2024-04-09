@@ -1,4 +1,4 @@
-import { Form, Input, Table } from 'antd';
+import { Form, Input, Table, Switch } from 'antd';
 import React from 'react';
 import style from './StandardData.less';
 
@@ -11,6 +11,7 @@ const EditableRow = ({ form, index, ...props }) => (
 const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = { editing: props.editable };
@@ -26,7 +27,21 @@ class EditableCell extends React.Component {
     });
   };
 
+  handleSwitchIsSelect = () => {
+    const { record, handleSave } = this.props;
+    if (record.isSelect === 1) {
+      record.isSelect = 0;
+    } else {
+      record.isSelect = 1;
+    }
+    handleSave(record.key, this.props.dataIndex, record.isSelect);
+  };
+
   getInput = () => {
+    if (this.props.inputType === 'switch') {
+      console.info("TaskFieldSelectTable record.isSelect = " + this.props.record.isSelect);
+      return <Switch ref={node => (this.input = node)} checked={this.props.record.isSelect === 1} checkedChildren="是" unCheckedChildren="否" onClick={() => this.handleSwitchIsSelect()} />
+    }
     return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入${this.props.title}`} />;
   };
 
@@ -82,12 +97,11 @@ class EditableCell extends React.Component {
   }
 }
 
-class TaskFieldMappingTable extends React.Component {
+class TaskFieldSelectTable extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      fieldMappings: [],
       readonly: props.readonly ? props.readonly : false
     };
 
@@ -95,19 +109,22 @@ class TaskFieldMappingTable extends React.Component {
       {
         title: '数据字段编号',
         dataIndex: 'dataFieldCode',
-        width: '25%',
+        width: '40%',
         editable: false,
       },
       {
         title: '数据字段名称',
         dataIndex: 'dataFieldName',
-        width: '25%',
+        width: '40%',
         editable: false,
       },
       {
-        title: '接口字段',
-        dataIndex: 'apiFieldCode',
-        width: '50%',
+        title: '是否导出',
+        dataIndex: 'isSelect',
+        width: '20%',
+        render: (text, record) => {
+          return record.isSelect == 1 ? "是" : "否";
+        },
         editable: !this.state.readonly,
       },
     ];
@@ -121,38 +138,13 @@ class TaskFieldMappingTable extends React.Component {
           key: dataField.fieldCode
           , dataFieldCode: dataField.fieldCode
           , dataFieldName: dataField.fieldName
-          , apiFieldCode: (initFieldMappings ? (initFieldMappings[dataField.fieldCode] ? initFieldMappings[dataField.fieldCode] : null) : null)
+          , isSelect: (initFieldMappings && initFieldMappings[dataField.fieldCode]) ? 1 : 0
         };
 
         fieldMappings.push(mapping);
       });
     }
-
-    this.setState({ fieldMappings });
-  }
-
-  componentWillReceiveProps(nextProps) {
-
-    const fieldMappings = [];
-
-    const { dataFieldList, initFieldMappings } = nextProps;
-    if (dataFieldList) {
-      dataFieldList.map(dataField => {
-        const mapping = {
-          key: dataField.fieldCode
-          , dataFieldCode: dataField.fieldCode
-          , dataFieldName: dataField.fieldName
-          , apiFieldCode: (initFieldMappings ? (initFieldMappings[dataField.fieldCode] ? initFieldMappings[dataField.fieldCode] : null) : null)
-        };
-
-        fieldMappings.push(mapping);
-      });
-    }
-
-    this.setState({
-      fieldMappings,
-      readonly: nextProps.readonly ? nextProps.readonly : false,
-    });
+    this.state = {fieldMappings};
   }
 
   componentWillUnmount() {
@@ -169,8 +161,13 @@ class TaskFieldMappingTable extends React.Component {
     this.props.handleSave(item);
   };
 
-  render() {
+  handleDelete = key => {
+    const fieldMappings = [...this.state.fieldMappings];
+    this.setState({ fieldMappings: fieldMappings.filter(item => item.key !== key) });
+    this.props.handleDelete(key);
+  };
 
+  render() {
     const components = {
       body: {
         row: EditableFormRow,
@@ -190,7 +187,7 @@ class TaskFieldMappingTable extends React.Component {
           dataIndex: col.dataIndex,
           title: col.title,
           handleSave: this.handleSave,
-          inputType: col.dataIndex === 'isId' ? 'switch' : 'text',
+          inputType: col.dataIndex === 'isSelect' ? 'switch' : 'text',
         }),
       };
     });
@@ -215,4 +212,4 @@ class TaskFieldMappingTable extends React.Component {
   }
 }
 
-export default TaskFieldMappingTable;
+export default TaskFieldSelectTable;
