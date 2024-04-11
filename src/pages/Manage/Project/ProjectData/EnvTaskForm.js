@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Button, Select, Radio, Modal, message, notification } from 'antd';
+import { Form, Input, Card, Button, Select, Radio, Modal, message, notification, Popover } from 'antd';
 import { connect } from 'dva';
 import styles from '../../../../layouts/Sword.less';
 import { TASK_INIT_API, TASK_SUBSCRIBED, TASK_TYPE_PRODUCER } from '../../../../actions/task';
 import { submit as submitTask, detail as taskDetail } from '../../../../services/task';
 import TaskVarMappingTable from '../../Task/TaskVarMappingTable';
-import Cron from 'antd-cron';
+import Cron from "qnn-react-cron";
 
 const FormItem = Form.Item;
 
@@ -30,6 +30,9 @@ class EnvTaskForm extends PureComponent {
       varMappings: [{ key: 0 }],
 
       isShowTaskPeriod: true,
+
+      // cron组件显示状态
+      cronVisible: false,
     };
   }
 
@@ -204,7 +207,7 @@ class EnvTaskForm extends PureComponent {
 
   render() {
     const {
-      form: { getFieldDecorator },
+      form,
       submitting,
       task: {
         init: { apiList },
@@ -226,6 +229,9 @@ class EnvTaskForm extends PureComponent {
         md: { span: 10 },
       },
     };
+
+    let cronRef;
+    const { getFieldValue, setFieldsValue, getFieldDecorator } = form;
 
     return (
 
@@ -284,20 +290,42 @@ class EnvTaskForm extends PureComponent {
                 ],
                 initialValue: detail ? detail.taskPeriod : '',
               })(
-                // <Input placeholder="请输入任务周期" />
-                // <Radio.Group buttonStyle="solid">
-                //   <Radio.Button value="0 0/1 * * * ?">1m</Radio.Button>
-                //   <Radio.Button value="0 0/10 * * * ?">10m</Radio.Button>
-                //   <Radio.Button value="0 0/30 * * * ?">30m</Radio.Button>
-                //   <Radio.Button value="0 0 * * * ?">1h</Radio.Button>
-                //   <Radio.Button value="0 0 0/2 * * ?">2h</Radio.Button>
-                //   <Radio.Button value="0 0 0/6 * * ?">6h</Radio.Button>
-                //   <Radio.Button value="0 0 0/12 * * ?">12h</Radio.Button>
-                //   <Radio.Button value="0 0 0 * * ?">1d</Radio.Button>
-                //   <Radio.Button value="0 0 0 1/2 * ?">2d</Radio.Button>
-                //   <Radio.Button value="0 0 0 1/7 * ?">7d</Radio.Button>
-                // </Radio.Group>
-                <Cron />
+                <Input readOnly placeholder="请输入任务周期" addonAfter={(
+                  <Popover
+                    placement="right"
+                    visible={this.state.cronVisible}
+                    content={
+                      <div style={{ width: 500 }}>
+                        <Cron
+                          style={{ boxShadow: 'none' }}
+                          value={getFieldValue('taskPeriod')}
+                          getCronFns={fns => cronRef = fns}
+                          footer={[
+                            <Button type="primary" onClick={() => {
+                              setFieldsValue({ taskPeriod: cronRef.getValue() });
+                              this.setState({ cronVisible: false });
+                            }
+                            }>确认</Button>
+                          ]}
+                          panesShow={{
+                            second: false,
+                            minute: true,
+                            hour: true,
+                            day: true,
+                            month: true,
+                            week: true,
+                            year: true,
+                          }}
+                          defaultTab={"minute"}
+                        />
+                      </div>}
+                    trigger="click">
+                    <Button
+                      type='primary'
+                      style={{ margin: '-1px -12px' }}
+                      onClick={() => { this.setState({ cronVisible: true }); }}>编辑</Button>
+                  </Popover>
+                )} />
               )}
             </FormItem>)}
             <FormItem {...formItemLayout} label="数据存入变量">

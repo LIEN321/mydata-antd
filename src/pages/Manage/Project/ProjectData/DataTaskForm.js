@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Select, Radio, Modal, message, notification, Tabs, Switch, InputNumber, Tooltip, Icon } from 'antd';
+import { Form, Input, Card, Select, Radio, Modal, message, notification, Tabs, Switch, InputNumber, Tooltip, Icon, Button, Popover } from 'antd';
 import { connect } from 'dva';
 import styles from '../../../../layouts/Sword.less';
 import { TASK_SUBSCRIBED, TASK_TYPE_PRODUCER, TASK_INIT, TASK_TYPE_CONSUMER, TASK_INIT_API, TASK_CONSUME_MODE_API, TASK_CONSUME_MODE_EMAIL } from '../../../../actions/task';
@@ -10,7 +10,7 @@ import TaskDataFilterTable from '../../Task/TaskDataFilterTable';
 import TaskVarMappingTable from '../../Task/TaskVarMappingTable';
 import TaskBatchParamTable from '../../Task/TaskBatchMappingTable';
 import TaskFieldSelectTable from '../../Task/TaskFieldSelectTable';
-import Cron from 'antd-cron';
+import Cron from "qnn-react-cron";
 
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
@@ -65,6 +65,9 @@ class DataTaskForm extends PureComponent {
       consumeMode: 1,
       // 发送邮件选择的字段
       selectedFields: [],
+
+      // cron组件显示状态
+      cronVisible: false,
     };
   }
 
@@ -354,7 +357,7 @@ class DataTaskForm extends PureComponent {
 
   render() {
     const {
-      form: { getFieldDecorator },
+      form,
       task: {
         init: { envList, apiList },
         //   detail,
@@ -383,6 +386,9 @@ class DataTaskForm extends PureComponent {
     if (envList) {
       otherEnvList = envList.filter(e => e.id !== env.id);
     }
+
+    let cronRef;
+    const { getFieldValue, setFieldsValue, getFieldDecorator } = form;
 
     return (
 
@@ -527,20 +533,42 @@ class DataTaskForm extends PureComponent {
                     ],
                     initialValue: detail ? detail.taskPeriod : '',
                   })(
-                    // <Input placeholder="请输入任务周期" />
-                    // <Radio.Group buttonStyle="solid">
-                    //   <Radio.Button value="0 0/1 * * * ?">1m</Radio.Button>
-                    //   <Radio.Button value="0 0/10 * * * ?">10m</Radio.Button>
-                    //   <Radio.Button value="0 0/30 * * * ?">30m</Radio.Button>
-                    //   <Radio.Button value="0 0 * * * ?">1h</Radio.Button>
-                    //   <Radio.Button value="0 0 0/2 * * ?">2h</Radio.Button>
-                    //   <Radio.Button value="0 0 0/6 * * ?">6h</Radio.Button>
-                    //   <Radio.Button value="0 0 0/12 * * ?">12h</Radio.Button>
-                    //   <Radio.Button value="0 0 0 * * ?">1d</Radio.Button>
-                    //   <Radio.Button value="0 0 0 1/2 * ?">2d</Radio.Button>
-                    //   <Radio.Button value="0 0 0 1/7 * ?">7d</Radio.Button>
-                    // </Radio.Group>
-                    <Cron/>
+                    <Input readOnly placeholder="请输入任务周期" addonAfter={(
+                      <Popover
+                        placement="right"
+                        visible={this.state.cronVisible}
+                        content={
+                          <div style={{ width: 500 }}>
+                            <Cron
+                              style={{ boxShadow: 'none' }}
+                              value={getFieldValue('taskPeriod')}
+                              getCronFns={fns => cronRef = fns}
+                              footer={[
+                                <Button type="primary" onClick={() => {
+                                  setFieldsValue({ taskPeriod: cronRef.getValue() });
+                                  this.setState({ cronVisible: false });
+                                }
+                                }>确认</Button>
+                              ]}
+                              panesShow={{
+                                second: false,
+                                minute: true,
+                                hour: true,
+                                day: true,
+                                month: true,
+                                week: true,
+                                year: true,
+                              }}
+                              defaultTab={"minute"}
+                            />
+                          </div>}
+                        trigger="click">
+                        <Button
+                          type='primary'
+                          style={{ margin: '-1px -12px' }}
+                          onClick={() => { this.setState({ cronVisible: true }); }}>编辑</Button>
+                      </Popover>
+                    )} />
                   )}
                 </FormItem>)
               }
