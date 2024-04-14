@@ -605,6 +605,12 @@ class DataTaskForm extends PureComponent {
                               value={getFieldValue('taskPeriod')}
                               getCronFns={fns => cronRef = fns}
                               footer={[
+                                <Button
+                                  style={{ marginRight: 24 }}
+                                  onClick={() => {
+                                    this.setState({ cronVisible: false });
+                                  }
+                                  }>取消</Button>,
                                 <Button type="primary" onClick={() => {
                                   setFieldsValue({ taskPeriod: cronRef.getValue() });
                                   this.setState({ cronVisible: false });
@@ -627,7 +633,9 @@ class DataTaskForm extends PureComponent {
                         <Button
                           type='primary'
                           style={{ margin: '-1px -12px' }}
-                          onClick={() => { this.setState({ cronVisible: true }); }}>编辑</Button>
+                          onClick={() => { this.setState({ cronVisible: !this.state.cronVisible }); }}>
+                          {this.state.cronVisible ? '取消' : '编辑'}
+                        </Button>
                       </Popover>
                     )} />
                   )}
