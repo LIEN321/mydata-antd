@@ -1,12 +1,13 @@
 import React from 'react';
-import { Button, Card, Form, Icon, message, Modal, Popover, Select, Table, Tag, Tooltip } from "antd";
+import { Button, Card, Col, Form, Icon, message, Modal, Popover, Row, Select, Table, Tag, Tooltip } from "antd";
 import { PureComponent } from "react";
 import { connect } from "dva";
 import FormItem from "antd/lib/form/FormItem";
 import mdStyle from '../../../../layouts/Mydata.less';
 import styles from './style.less';
 import { executeTask, startTask, stopTask, remove, copyTask, logDetail } from '../../../../services/task';
-import { TASK_LOG_LIST, TASK_STATUS_RUNNING, TASK_TYPE_PRODUCER } from '../../../../actions/task';
+import { TASK_LOG_LIST, TASK_STATUS_RUNNING, TASK_TYPE_PRODUCER, TASK_PRODUCE_MODE_PUSH } from '../../../../actions/task';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 @connect(({ task, loading }) => ({
     task,
@@ -250,6 +251,13 @@ class TaskCard extends PureComponent {
             },
         ];
 
+        const taskUrl = currentTask.produceMode === TASK_PRODUCE_MODE_PUSH
+            ?
+            'https://api.mydata.work/event/' + currentTask.apiUrl
+            :
+            // currentTask.apiUrl.replace(env.envPrefix, '');
+            currentTask.apiUrl;
+
         return <>
             <Card
                 key={currentTask.id}
@@ -269,17 +277,33 @@ class TaskCard extends PureComponent {
                 extra={currentTask.refEnvId ?
                     (currentTask.envId == env.id ?
                         (currentTask.opType === TASK_TYPE_PRODUCER ?
-                            <Popover content={`${currentTask.refEnvName}环境提供`}>{currentTask.refEnvName}<Icon type="login" /></Popover>
-                            : <Popover content={`${currentTask.refEnvName}环境消费`}><Icon type="logout" />{currentTask.refEnvName}</Popover>)
+                            <Popover content={`${currentTask.refEnvName}环境提供`}>{currentTask.refEnvName} <Icon type="login" /></Popover>
+                            : <Popover content={`${currentTask.refEnvName}环境消费`}><Icon type="logout" /> {currentTask.refEnvName}</Popover>)
                         : (currentTask.refOpType === TASK_TYPE_PRODUCER ?
-                            <Popover content={`${currentTask.envName}环境提供`}>{currentTask.envName}<Icon type="login" /></Popover>
-                            : <Popover content={`${currentTask.envName}环境消费`}><Icon type="logout" />{currentTask.envName}</Popover>)
+                            <Popover content={`${currentTask.envName}环境提供`}>{currentTask.envName} <Icon type="login" /></Popover>
+                            : <Popover content={`${currentTask.envName}环境消费`}><Icon type="logout" /> {currentTask.envName}</Popover>)
                     )
                     :
                     <></>}
             >
                 {/* {currentTask.refEnvId ? <p>其他环境：{currentTask.refEnvName}</p> : <></>} */}
-                {currentTask.apiUrl && <Tooltip title={currentTask.apiUrl}><p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{currentTask.apiUrl.replace(env.envPrefix, '')}</p></Tooltip>}
+                {currentTask.apiUrl && <Row>
+                    <Col span={22}>
+                        <Tooltip title={taskUrl}>
+                            <p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                                {taskUrl}
+                            </p>
+                        </Tooltip>
+                    </Col>
+                    <Col span={2} style={{textAlign:'right'}}>
+                        <CopyToClipboard
+                            text={taskUrl}
+                            onCopy={() => message.success(`拷贝成功地址：${taskUrl}`)}
+                        >
+                            <Icon type="copy" />
+                        </CopyToClipboard>
+                    </Col>
+                </Row>}
                 {currentTask.consumeEmail && <p>发送邮件：{currentTask.consumeEmail}</p>}
                 <p>运行周期：{currentTask.taskPeriod}</p>
                 <p>最后执行：{currentTask.lastRunTime}</p>
