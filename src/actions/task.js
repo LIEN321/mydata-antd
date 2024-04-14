@@ -11,6 +11,10 @@ export const TASK_STATUS_RUNNING = 1;
 export const TASK_STATUS_FAILED = 2;
 /** 停止状态 */
 export const TASK_STATUS_STOPPED = 3;
+/** 提供模式，调用API */
+export const TASK_PRODUCE_MODE_API = 1;
+/** 提供模式，接收推送 */
+export const TASK_PRODUCE_MODE_PUSH = 2;
 /** 消费模式，调用API */
 export const TASK_CONSUME_MODE_API = 1;
 /** 消费模式，发送邮件 */
