@@ -6,7 +6,7 @@ import FormItem from "antd/lib/form/FormItem";
 import mdStyle from '../../../../layouts/Mydata.less';
 import styles from './style.less';
 import { executeTask, startTask, stopTask, remove, copyTask, logDetail } from '../../../../services/task';
-import { TASK_LOG_LIST, TASK_STATUS_RUNNING, TASK_TYPE_PRODUCER, TASK_PRODUCE_MODE_PUSH } from '../../../../actions/task';
+import { TASK_LOG_LIST, TASK_STATUS_RUNNING, TASK_TYPE_PRODUCER, TASK_PRODUCE_MODE_PUSH, TASK_AUTH_TYPE_NAMES } from '../../../../actions/task';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 @connect(({ task, loading }) => ({
@@ -253,9 +253,8 @@ class TaskCard extends PureComponent {
 
         const taskUrl = currentTask.produceMode === TASK_PRODUCE_MODE_PUSH
             ?
-            'https://api.mydata.work/event/' + currentTask.apiUrl
+            'https://api.mydata.work/mydata-manage/integration/' + currentTask.apiUrl
             :
-            // currentTask.apiUrl.replace(env.envPrefix, '');
             currentTask.apiUrl;
 
         return <>
@@ -295,7 +294,7 @@ class TaskCard extends PureComponent {
                             </p>
                         </Tooltip>
                     </Col>
-                    <Col span={2} style={{textAlign:'right'}}>
+                    <Col span={2} style={{ textAlign: 'right' }}>
                         <CopyToClipboard
                             text={taskUrl}
                             onCopy={() => message.success(`拷贝成功地址：${taskUrl}`)}
@@ -305,7 +304,9 @@ class TaskCard extends PureComponent {
                     </Col>
                 </Row>}
                 {currentTask.consumeEmail && <p>发送邮件：{currentTask.consumeEmail}</p>}
-                <p>运行周期：{currentTask.taskPeriod}</p>
+                {currentTask.produceMode === TASK_PRODUCE_MODE_PUSH && <p>认证方式：{TASK_AUTH_TYPE_NAMES[currentTask.authType]}</p>}
+                {currentTask.taskPeriod && <p>运行周期：{currentTask.taskPeriod}</p>}
+                {currentTask.subscribeTaskId && <p>订阅任务：{currentTask.subscribeTaskName}</p>}
                 <p>最后执行：{currentTask.lastRunTime}</p>
                 <p>最后成功：{currentTask.lastSuccessTime}</p>
             </Card>

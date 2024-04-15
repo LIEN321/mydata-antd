@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Select, Radio, Modal, message, notification, Tabs, Switch, InputNumber, Tooltip, Icon, Button, Popover } from 'antd';
+import { Form, Input, Card, Select, Radio, Modal, message, notification, Tabs, Switch, InputNumber, Tooltip, Icon, Button, Popover, Row, Col } from 'antd';
 import { connect } from 'dva';
 import styles from '../../../../layouts/Sword.less';
-import { TASK_SUBSCRIBED, TASK_TYPE_PRODUCER, TASK_INIT, TASK_TYPE_CONSUMER, TASK_CONSUME_MODE_API, TASK_CONSUME_MODE_EMAIL, TASK_PRODUCE_MODE_API, TASK_PRODUCE_MODE_PUSH } from '../../../../actions/task';
+import { TASK_SUBSCRIBED, TASK_TYPE_PRODUCER, TASK_TYPE_CONSUMER, TASK_CONSUME_MODE_API, TASK_CONSUME_MODE_EMAIL, TASK_PRODUCE_MODE_API, TASK_PRODUCE_MODE_PUSH } from '../../../../actions/task';
+import { TASK_AUTH_TYPE_NONE, TASK_AUTH_TYPE_API_KEY, TASK_AUTH_TYPE_BASIC, TASK_AUTH_TYPE_HMAC } from '../../../../actions/task';
+import { TASK_INIT } from '../../../../actions/task';
 import { submit as submitTask, detail as taskDetail } from '../../../../services/task';
 import TaskFieldMappingTable from '../../Task/TaskFieldMappingTable';
 import { dataFields as loadDataFields } from '../../../../services/data';
@@ -71,6 +73,8 @@ class DataTaskForm extends PureComponent {
 
       // cron组件显示状态
       cronVisible: false,
+
+      authType: TASK_AUTH_TYPE_NONE,
     };
   }
 
@@ -88,7 +92,11 @@ class DataTaskForm extends PureComponent {
           this.setState({
             fieldMapping: detail.fieldMapping,
             isShowSubscribed: detail.opType !== TASK_TYPE_PRODUCER,
-            isShowTaskPeriod: detail.isSubscribed !== TASK_SUBSCRIBED && (opType === TASK_TYPE_PRODUCER && detail.produceMode === TASK_PRODUCE_MODE_API),
+            isShowTaskPeriod: detail.isSubscribed !== TASK_SUBSCRIBED && (
+              (detail.opType === TASK_TYPE_PRODUCER && detail.produceMode === TASK_PRODUCE_MODE_API)
+              ||
+              (detail.opType === TASK_TYPE_CONSUMER && detail.consumeMode === TASK_CONSUME_MODE_API)
+            ),
             initStatus: true,
             filters: detail.dataFilter,
             varMappings: detail.fieldVarMapping,
@@ -96,6 +104,8 @@ class DataTaskForm extends PureComponent {
             batchParams: detail.batchParams,
             consumeMode: detail.consumeMode,
             produceMode: detail.produceMode,
+            authType: detail.authType || TASK_AUTH_TYPE_NONE,
+            isSubscribed: detail.isSubscribed,
           });
           this.renderWarning(detail);
         }
@@ -202,6 +212,7 @@ class DataTaskForm extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form, env, data, projectId, closeTaskForm, currentTask, opType } = this.props;
+    const { authType } = this.state;
 
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -230,6 +241,20 @@ class DataTaskForm extends PureComponent {
         params.fieldVarMapping = fieldVarMapping;
         params.batchStatus = values.batchStatus ? 1 : 0;
         params.batchParams = this.state.batchParams;
+
+        if (authType === TASK_AUTH_TYPE_NONE) {
+          params.authParams = {};
+        } else if (authType === TASK_AUTH_TYPE_API_KEY) {
+          params.authParams = {
+            "keyHeader": '' + form.getFieldValue("keyHeader")
+            , "keyValue": '' + form.getFieldValue("keyValue")
+          };
+        } else if (authType === TASK_AUTH_TYPE_BASIC) {
+          params.authParams = {
+            "username": '' + form.getFieldValue("username")
+            , "password": '' + form.getFieldValue("password")
+          };
+        }
 
         // dispatch(TASK_SUBMIT(params));
         submitTask(params).then(resp => {
@@ -367,6 +392,10 @@ class DataTaskForm extends PureComponent {
     this.setState({ batchParams: batchParams.filter(item => item.key !== key) });
   };
 
+  handleChangeAuthType = authType => {
+    this.setState({ authType });
+  }
+
   render() {
     const {
       form,
@@ -377,9 +406,10 @@ class DataTaskForm extends PureComponent {
       opType,
       isRefEnv,
       env,
+      producerTasks,
     } = this.props;
 
-    const { apiUrl, detail, isBatchEnabled, consumeMode, isSubscribed, produceMode } = this.state;
+    const { apiUrl, detail, isBatchEnabled, consumeMode, isSubscribed, produceMode, authType } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -515,11 +545,11 @@ class DataTaskForm extends PureComponent {
                     )}
                   </FormItem>
                   {/* API完整地址 */}
-                  <FormItem {...formItemLayout} label="API完整地址">
+                  {/* <FormItem {...formItemLayout} label="API完整地址">
                     {apiUrl}
-                  </FormItem>
+                  </FormItem> */}
                   {/* 是否订阅 */}
-                  {this.state.isShowSubscribed && (
+                  {this.state.isShowSubscribed && (<>
                     <FormItem {...formItemLayout} label="订阅数据" extra="订阅模式：区别于定时模式，只当有提供新数据后才推送数据；">
                       {getFieldDecorator('isSubscribed', {
                         rules: [
@@ -536,7 +566,31 @@ class DataTaskForm extends PureComponent {
                           <Radio.Button value={0}>不订阅</Radio.Button>
                         </Radio.Group>
                       )}
-                    </FormItem>)
+                    </FormItem>
+                    {isSubscribed == 1 && (
+                      <FormItem {...formItemLayout} label="选择触发订阅的任务">
+                        {getFieldDecorator('subscribeTaskId', {
+                          rules: [
+                            {
+                              required: true,
+                              message: '请选择触发订阅的任务',
+                            },
+                          ],
+                          initialValue: detail ? detail.subscribeTaskId : '0',
+                        })(
+                          <Select allowClear placeholder="请选择触发订阅的任务">
+                            <Select.Option key={'0'} value={'0'}>全部</Select.Option>
+                            {producerTasks.map(a => (
+                              <Select.Option key={a.id} value={a.id}>
+                                {a.taskName}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        )}
+                      </FormItem>
+                    )}
+                  </>
+                  )
                   }
                 </>
               }
@@ -552,16 +606,79 @@ class DataTaskForm extends PureComponent {
                           message: '请选择认证方式',
                         },
                       ],
-                      initialValue: detail && detail.authType ? detail.authType : 'none',
+                      initialValue: detail && detail.authType ? detail.authType : TASK_AUTH_TYPE_NONE,
                     })(
                       <Select placeholder="请选择认证方式" onChange={this.handleChangeAuthType}>
-                        <Select.Option key={'none'} value={'none'}>无需认证</Select.Option>
-                        <Select.Option key={'api_key'} value={'api_key'}>API Key</Select.Option>
-                        {/* <Select.Option key={'basic'} value={'basic'}>Basic Auth</Select.Option>
-                        <Select.Option key={'hmac'} value={'hmac'}>HMAC</Select.Option> */}
+                        <Select.Option key={TASK_AUTH_TYPE_NONE} value={TASK_AUTH_TYPE_NONE}>无需认证</Select.Option>
+                        <Select.Option key={TASK_AUTH_TYPE_API_KEY} value={TASK_AUTH_TYPE_API_KEY}>API Key</Select.Option>
+                        <Select.Option key={TASK_AUTH_TYPE_BASIC} value={TASK_AUTH_TYPE_BASIC}>Basic Auth</Select.Option>
+                        {/* <Select.Option key={'hmac'} value={'hmac'}>HMAC</Select.Option> */}
                       </Select>
                     )}
                   </FormItem>
+                  {authType === TASK_AUTH_TYPE_API_KEY && <>
+                    <Row gutter={24}>
+                      <Col span={6}></Col>
+                      <Col span={7}>
+                        <FormItem {...formItemLayout} label="Header">
+                          {getFieldDecorator('keyHeader', {
+                            rules: [
+                              {
+                                required: true,
+                                message: '请输入API Key Header',
+                              },
+                            ],
+                            initialValue: detail && detail.authParams ? detail.authParams.keyHeader : '',
+                          })(<Input placeholder="请输入API Key Header" />)}
+                        </FormItem>
+                      </Col>
+                      <Col span={7}>
+                        <FormItem {...formItemLayout} label="Key">
+                          {getFieldDecorator('keyValue', {
+                            rules: [
+                              {
+                                required: true,
+                                message: '请输入API Key',
+                              },
+                            ],
+                            initialValue: detail && detail.authParams ? detail.authParams.keyValue : '',
+                          })(<Input type="password" placeholder="请输入API Key" />)}
+                        </FormItem>
+                      </Col>
+                    </Row>
+                  </>}
+                  {authType === TASK_AUTH_TYPE_BASIC && <>
+                    <Row gutter={24}>
+                      <Col span={6}></Col>
+                      <Col span={7}>
+                        <FormItem {...formItemLayout} label="Username">
+                          {getFieldDecorator('username', {
+                            rules: [
+                              {
+                                required: true,
+                                message: '请输入Username',
+                              },
+                            ],
+                            initialValue: detail && detail.authParams ? detail.authParams.username : '',
+                          })(<Input placeholder="请输入Username" />)}
+                        </FormItem>
+                      </Col>
+                      <Col span={7}>
+                        <FormItem {...formItemLayout} label="Password">
+                          {getFieldDecorator('password', {
+                            rules: [
+                              {
+                                required: true,
+                                message: '请输入Password',
+                              },
+                            ],
+                            initialValue: detail && detail.authParams ? detail.authParams.password : '',
+                          })(<Input type="password" placeholder="请输入Password" />)}
+                        </FormItem>
+                      </Col>
+                    </Row>
+                  </>}
+                  {/* {authType === 'hmac' && <>HMAC</>} */}
                 </>
               }
 
@@ -641,18 +758,34 @@ class DataTaskForm extends PureComponent {
                   )}
                 </FormItem>)
               }
+
+              {/* 消费模式 调用API */}
+              {((opType === TASK_TYPE_CONSUMER && consumeMode === TASK_CONSUME_MODE_API)) && <>
+                <FormItem {...formItemLayout} label="单数据消费模式" extra="当发送的数据只有一条时，选择采用集合或单个对象">
+                  {getFieldDecorator('singleMode', {
+                    initialValue: (detail && detail.singleMode) ? detail.singleMode : 2,
+                  })(
+                    <Radio.Group buttonStyle="solid">
+                      <Radio.Button value={2}>集合</Radio.Button>
+                      <Radio.Button value={1}>对象</Radio.Button>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+              </>
+              }
+
               {produceMode === TASK_PRODUCE_MODE_PUSH &&
                 // 字段前缀
-                <FormItem {...formItemLayout} label="字段层级前缀">
+                <FormItem {...formItemLayout} label="数据层级前缀" extra="例如接口返回结构是{result:{data:[...]}} 则填result.data">
                   {getFieldDecorator('apiFieldPrefix', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入字段层级前缀',
+                        message: '请输入数据层级前缀',
                       },
                     ],
                     initialValue: detail ? detail.apiFieldPrefix : '',
-                  })(<Input placeholder="请输入字段层级前缀，例如result.data" />)}
+                  })(<Input placeholder="请输入数据层级前缀" />)}
                 </FormItem>
               }
               {consumeMode === TASK_CONSUME_MODE_EMAIL ?
