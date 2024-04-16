@@ -317,14 +317,14 @@ class TaskCard extends PureComponent {
                     className={[styles.card, taskStatusStyle[currentTask.taskStatus]]}
                     actions={[
                         currentTask.taskStatus == TASK_STATUS_RUNNING ?
-                            <Popover content="停止"><Icon type="pause" onClick={(e) => { this.handleStop(currentTask.id); e.stopPropagation(); }} /></Popover>
+                            <Popover content="停止"><Icon type="pause" onClick={(e) => { this.handleStop(currentTask.id); e.stopPropagation(); this.setState({ logPreviewVisible: false }); }} /></Popover>
                             :
-                            <Popover content="启动"><Icon type="play-circle" onClick={(e) => { this.handleStart(currentTask.id); e.stopPropagation(); }} /></Popover>,
-                        <Popover content="执行一次"><Icon type="step-forward" onClick={(e) => { this.handleExecute(currentTask.id); e.stopPropagation(); }} /></Popover>,
-                        <Popover content="运行日志"><Icon type="history" onClick={(e) => { this.showLogList(currentTask); e.stopPropagation(); }} /></Popover>,
-                        <Popover content="编辑"><Icon type="edit" onClick={(e) => { this.handleEditTask(currentTask); e.stopPropagation(); }} /></Popover>,
-                        <Popover content="复制"><Icon type="copy" onClick={(e) => { this.openCopyModal(currentTask.id); e.stopPropagation(); }} /></Popover>,
-                        <Popover content="删除"><Icon type="delete" onClick={(e) => { this.handleDelete(currentTask.id); e.stopPropagation(); }} /></Popover>,
+                            <Popover content="启动"><Icon type="play-circle" onClick={(e) => { this.handleStart(currentTask.id); e.stopPropagation(); this.setState({ logPreviewVisible: false }); }} /></Popover>,
+                        <Popover content="执行一次"><Icon type="step-forward" onClick={(e) => { this.handleExecute(currentTask.id); e.stopPropagation(); this.setState({ logPreviewVisible: false }); }} /></Popover>,
+                        <Popover content="运行日志"><Icon type="history" onClick={(e) => { this.showLogList(currentTask); e.stopPropagation(); this.setState({ logPreviewVisible: false }); }} /></Popover>,
+                        <Popover content="编辑"><Icon type="edit" onClick={(e) => { this.handleEditTask(currentTask); e.stopPropagation(); this.setState({ logPreviewVisible: false }); }} /></Popover>,
+                        <Popover content="复制"><Icon type="copy" onClick={(e) => { this.openCopyModal(currentTask.id); e.stopPropagation(); this.setState({ logPreviewVisible: false }); }} /></Popover>,
+                        <Popover content="删除"><Icon type="delete" onClick={(e) => { this.handleDelete(currentTask.id); e.stopPropagation(); this.setState({ logPreviewVisible: false }); }} /></Popover>,
                     ]}
                     extra={currentTask.refEnvId ?
                         (currentTask.envId == env.id ?
