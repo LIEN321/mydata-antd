@@ -780,7 +780,7 @@ class DataTaskForm extends PureComponent {
                   {getFieldDecorator('apiFieldPrefix', {
                     rules: [
                       {
-                        required: true,
+                        required: false,
                         message: '请输入数据层级前缀',
                       },
                     ],
