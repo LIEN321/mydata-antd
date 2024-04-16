@@ -123,7 +123,7 @@ class BaseView extends Component {
       <Panel title="个人设置" back="/" action={action}>
         <Form style={{ marginTop: 8 }} hideRequiredMark>
           <Card title="基本信息" bordered={false}>
-            <FormItem
+            {/* <FormItem
               {...formItemLayout}
               label={formatMessage({ id: 'app.settings.basic.avatar' })}
             >
@@ -151,7 +151,7 @@ class BaseView extends Component {
                   )}
                 </Upload>
               )}
-            </FormItem>
+            </FormItem> */}
             <FormItem
               {...formItemLayout}
               label={formatMessage({ id: 'app.settings.basic.nickname' })}
@@ -182,7 +182,7 @@ class BaseView extends Component {
               {getFieldDecorator('phone', {
                 rules: [
                   {
-                    required: true,
+                    required: false,
                     message: formatMessage({ id: 'app.settings.basic.phone-message' }, {}),
                   },
                 ],
@@ -192,7 +192,7 @@ class BaseView extends Component {
               {getFieldDecorator('email', {
                 rules: [
                   {
-                    required: true,
+                    required: false,
                     message: formatMessage({ id: 'app.settings.basic.email-message' }, {}),
                   },
                 ],
