@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Col, Form, Icon, message, Modal, Popover, Row, Select, Table, Tag, Tooltip } from "antd";
+import { Button, Card, Col, Form, Icon, message, Modal, Popover, Row, Select, Spin, Table, Tag, Timeline, Tooltip } from "antd";
 import { PureComponent } from "react";
 import { connect } from "dva";
 import FormItem from "antd/lib/form/FormItem";
@@ -8,6 +8,7 @@ import styles from './style.less';
 import { executeTask, startTask, stopTask, remove, copyTask, logDetail } from '../../../../services/task';
 import { TASK_LOG_LIST, TASK_STATUS_RUNNING, TASK_TYPE_PRODUCER, TASK_PRODUCE_MODE_PUSH, TASK_AUTH_TYPE_NAMES } from '../../../../actions/task';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Text from 'antd/lib/typography/Text';
 
 @connect(({ task, loading }) => ({
     task,
@@ -24,6 +25,7 @@ class TaskCard extends PureComponent {
             logModalVisible: false,
             copyModalVisible: false,
             logDetailModalVisible: false,
+            logPreviewVisible: false,
 
             taskId: null,
             envId: null,
@@ -192,6 +194,11 @@ class TaskCard extends PureComponent {
         this.setState({ logDetail: null, logDetailModalVisible: false });
     }
 
+    handleLoadLogs = (id) => {
+        const { dispatch } = this.props;
+        dispatch(TASK_LOG_LIST({ taskId: id, size: 5 }));
+    }
+
     render() {
         const {
             form: { getFieldDecorator },
@@ -233,8 +240,8 @@ class TaskCard extends PureComponent {
                 dataIndex: 'taskResult',
                 width: 100,
                 render: taskResult => {
-                    const color = taskResult === 1 ? 'green' : 'red';
-                    const status = taskResult === 1 ? '成功' : '失败';
+                    const color = taskResult != null ? (taskResult === 1 ? 'green' : 'red') : 'gray';
+                    const status = taskResult != null ? (taskResult === 1 ? '成功' : '失败') : '-';
                     return (
                         <Tag color={color}>
                             {status}
@@ -257,59 +264,98 @@ class TaskCard extends PureComponent {
             :
             currentTask.apiUrl;
 
+        const colors = ['red', 'green'];
+
         return <>
-            <Card
-                key={currentTask.id}
-                title={currentTask.taskName}
-                // hoverable
-                className={[styles.card, taskStatusStyle[currentTask.taskStatus]]}
-                actions={[
-                    currentTask.taskStatus == TASK_STATUS_RUNNING ?
-                        <Popover content="停止"><Icon type="pause" onClick={() => { this.handleStop(currentTask.id) }} /></Popover>
-                        : <Popover content="启动"><Icon type="play-circle" onClick={() => { this.handleStart(currentTask.id) }} /></Popover>,
-                    <Popover content="执行一次"><Icon type="redo" onClick={() => { this.handleExecute(currentTask.id); }} /></Popover>,
-                    <Popover content="运行日志"><Icon type="history" onClick={() => { this.showLogList(currentTask); }} /></Popover>,
-                    <Popover content="编辑"><Icon type="edit" onClick={() => { this.handleEditTask(currentTask) }} /></Popover>,
-                    <Popover content="复制"><Icon type="copy" onClick={() => { this.openCopyModal(currentTask.id) }} /></Popover>,
-                    <Popover content="删除"><Icon type="delete" onClick={() => { this.handleDelete(currentTask.id) }} /></Popover>,
-                ]}
-                extra={currentTask.refEnvId ?
-                    (currentTask.envId == env.id ?
-                        (currentTask.opType === TASK_TYPE_PRODUCER ?
-                            <Popover content={`${currentTask.refEnvName}环境提供`}>{currentTask.refEnvName} <Icon type="login" /></Popover>
-                            : <Popover content={`${currentTask.refEnvName}环境消费`}><Icon type="logout" /> {currentTask.refEnvName}</Popover>)
-                        : (currentTask.refOpType === TASK_TYPE_PRODUCER ?
-                            <Popover content={`${currentTask.envName}环境提供`}>{currentTask.envName} <Icon type="login" /></Popover>
-                            : <Popover content={`${currentTask.envName}环境消费`}><Icon type="logout" /> {currentTask.envName}</Popover>)
-                    )
-                    :
-                    <></>}
+            <Popover
+                placement="bottom"
+                visible={this.state.logPreviewVisible}
+                content={
+                    <div style={{ width: 320 }}>
+                        {currentTask.produceMode === TASK_PRODUCE_MODE_PUSH && <p>认证方式：{TASK_AUTH_TYPE_NAMES[currentTask.authType]}</p>}
+                        {currentTask.taskPeriod && <p>运行周期：{currentTask.taskPeriod}</p>}
+                        {currentTask.subscribeTaskId && <p>订阅任务：{currentTask.subscribeTaskName}</p>}
+                        <p>上次执行：{currentTask.lastRunTime ? currentTask.lastRunTime : '-'}</p>
+                        <p>上次成功：{currentTask.lastSuccessTime ? currentTask.lastSuccessTime : '-'}</p>
+                        <p>下次执行：{currentTask.nextRunTime ? currentTask.nextRunTime : '-'}</p>
+                        <p>近期日志 <Text type="mark">最新5个</Text></p>
+                        <Spin spinning={loading}>
+                            <Timeline>
+                                {logs.list.map(log =>
+                                    <Timeline.Item
+                                        dot={log.taskResult == null && <Icon type="clock-circle" />}
+                                        color={log.taskResult != null ? colors[log.taskResult] : 'blue'}
+                                    >
+                                        <Row>
+                                            <Col span={22}>{log.taskStartTime ? log.taskStartTime : '-'} ~ {log.taskEndTime ? log.taskEndTime : '-'}</Col>
+                                            <Col span={2}><Icon type="info-circle" onClick={() => { this.openLogDetail(log.id); this.setState({ logPreviewVisible: false }) }} /></Col>
+                                        </Row>
+                                    </Timeline.Item>
+                                )}
+                            </Timeline>
+                        </Spin>
+                        <div style={{ display: 'flex' }}>
+                            <Button style={{ marginLeft: 'auto' }} onClick={() => { this.setState({ logPreviewVisible: false }) }}>关闭</Button>
+                        </div>
+                    </div>}
+                trigger="click"
+                onClick={(e) => {
+                    this.setState({ logPreviewVisible: true });
+                }}
+                onVisibleChange={visible => {
+                    if (visible === true) {
+                        this.handleLoadLogs(currentTask.id);
+                    }
+                    this.setState({ logPreviewVisible: visible });
+                }}
             >
-                {/* {currentTask.refEnvId ? <p>其他环境：{currentTask.refEnvName}</p> : <></>} */}
-                {currentTask.apiUrl && <Row>
-                    <Col span={22}>
-                        <Tooltip title={taskUrl}>
-                            <p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                                {taskUrl}
-                            </p>
-                        </Tooltip>
-                    </Col>
-                    <Col span={2} style={{ textAlign: 'right' }}>
-                        <CopyToClipboard
-                            text={taskUrl}
-                            onCopy={() => message.success(`拷贝成功地址：${taskUrl}`)}
-                        >
-                            <Icon type="copy" />
-                        </CopyToClipboard>
-                    </Col>
-                </Row>}
-                {currentTask.consumeEmail && <p>发送邮件：{currentTask.consumeEmail}</p>}
-                {currentTask.produceMode === TASK_PRODUCE_MODE_PUSH && <p>认证方式：{TASK_AUTH_TYPE_NAMES[currentTask.authType]}</p>}
-                {currentTask.taskPeriod && <p>运行周期：{currentTask.taskPeriod}</p>}
-                {currentTask.subscribeTaskId && <p>订阅任务：{currentTask.subscribeTaskName}</p>}
-                <p>最后执行：{currentTask.lastRunTime}</p>
-                <p>最后成功：{currentTask.lastSuccessTime}</p>
-            </Card>
+                <Card
+                    key={currentTask.id}
+                    title={currentTask.taskName}
+                    hoverable
+                    size='small'
+                    className={[styles.card, taskStatusStyle[currentTask.taskStatus]]}
+                    actions={[
+                        currentTask.taskStatus == TASK_STATUS_RUNNING ?
+                            <Popover content="停止"><Icon type="pause" onClick={(e) => { this.handleStop(currentTask.id); e.stopPropagation(); }} /></Popover>
+                            :
+                            <Popover content="启动"><Icon type="play-circle" onClick={(e) => { this.handleStart(currentTask.id); e.stopPropagation(); }} /></Popover>,
+                        <Popover content="执行一次"><Icon type="redo" onClick={(e) => { this.handleExecute(currentTask.id); e.stopPropagation(); }} /></Popover>,
+                        <Popover content="运行日志"><Icon type="history" onClick={(e) => { this.showLogList(currentTask); e.stopPropagation(); }} /></Popover>,
+                        <Popover content="编辑"><Icon type="edit" onClick={(e) => { this.handleEditTask(currentTask); e.stopPropagation(); }} /></Popover>,
+                        <Popover content="复制"><Icon type="copy" onClick={(e) => { this.openCopyModal(currentTask.id); e.stopPropagation(); }} /></Popover>,
+                        <Popover content="删除"><Icon type="delete" onClick={(e) => { this.handleDelete(currentTask.id); e.stopPropagation(); }} /></Popover>,
+                    ]}
+                    extra={currentTask.refEnvId ?
+                        (currentTask.envId == env.id ?
+                            (currentTask.opType === TASK_TYPE_PRODUCER ?
+                                <Popover content={`${currentTask.refEnvName}环境提供`}>{currentTask.refEnvName} <Icon type="login" /></Popover>
+                                : <Popover content={`${currentTask.refEnvName}环境消费`}><Icon type="logout" /> {currentTask.refEnvName}</Popover>)
+                            : (currentTask.refOpType === TASK_TYPE_PRODUCER ?
+                                <Popover content={`${currentTask.envName}环境提供`}>{currentTask.envName} <Icon type="login" /></Popover>
+                                : <Popover content={`${currentTask.envName}环境消费`}><Icon type="logout" /> {currentTask.envName}</Popover>)
+                        )
+                        :
+                        <></>}
+                >
+                    {/* {currentTask.refEnvId ? <p>其他环境：{currentTask.refEnvName}</p> : <></>} */}
+                    {currentTask.apiUrl && <Row>
+                        <Col span={22}>
+                            <Tooltip title={taskUrl}>
+                                <p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                                    <Icon type="link" /> {taskUrl}
+                                </p>
+                            </Tooltip>
+                        </Col>
+                        <Col span={2} style={{ textAlign: 'right' }} onClick={(e) => { e.stopPropagation(); }}>
+                            <CopyToClipboard text={taskUrl} onCopy={() => message.success(`拷贝成功地址：${taskUrl}`)}>
+                                <Icon type="copy" />
+                            </CopyToClipboard>
+                        </Col>
+                    </Row>}
+                    {currentTask.consumeEmail && <p><Icon type="mail" /> {currentTask.consumeEmail}</p>}
+                </Card>
+            </Popover>
 
             <Modal
                 title="查看日志"
@@ -380,7 +426,7 @@ class TaskCard extends PureComponent {
                         <span>{logDetail.taskEndTime}</span>
                     </FormItem>
                     <FormItem {...formItemLayout} label="执行结果">
-                        <span>{logDetail.taskResult === 0 ? '失败' : '成功'}</span>
+                        <span>{logDetail.taskResult != null ? (logDetail.taskResult === 0 ? '失败' : '成功') : '-'}</span>
                     </FormItem>
                     <FormItem {...formItemLayout} label="日志内容">
                         <div style={{ overflowWrap: 'anywhere', height: '400px', overflow: 'scroll' }} dangerouslySetInnerHTML={{ __html: `${logDetail.taskDetail.replaceAll('\n', '</br>')}`, }} />
