@@ -435,7 +435,7 @@ class DataTaskForm extends PureComponent {
     return (
 
       <Modal
-        title="定时任务"
+        title={opType === TASK_TYPE_PRODUCER ? "提供数据" : "消费数据"}
         width="60%"
         visible={this.props.taskFormVisible}
         onOk={this.handleSubmit}
@@ -446,9 +446,9 @@ class DataTaskForm extends PureComponent {
           <Tabs defaultActiveKey='1'>
             <TabPane tab="基本信息" key='1'>
               {/* 任务类型 */}
-              <FormItem {...formItemLayout} label="任务类型">
+              {/* <FormItem {...formItemLayout} label="任务类型">
                 {opType === TASK_TYPE_PRODUCER ? "提供数据" : "消费数据"}
-              </FormItem>
+              </FormItem> */}
               {/* 任务名称 */}
               <FormItem {...formItemLayout} label="任务名称">
                 {getFieldDecorator('taskName', {
@@ -761,7 +761,7 @@ class DataTaskForm extends PureComponent {
 
               {/* 消费模式 调用API */}
               {((opType === TASK_TYPE_CONSUMER && consumeMode === TASK_CONSUME_MODE_API)) && <>
-                <FormItem {...formItemLayout} label="单数据消费模式" extra="当发送的数据只有一条时，选择采用集合或单个对象">
+                <FormItem {...formItemLayout} label="单数据模式" extra="根据API接收格式选择，集合是发送多条数据 格式为[{k:v},{k:v},...]，对象是发送一条数据 格式为{k:v,...}">
                   {getFieldDecorator('singleMode', {
                     initialValue: (detail && detail.singleMode) ? detail.singleMode : 2,
                   })(
@@ -810,7 +810,7 @@ class DataTaskForm extends PureComponent {
             </TabPane>
             <TabPane tab="数据过滤" key='2' forceRender>
               {/* 数据过滤 */}
-              <FormItem {...formItemLayout} label="数据过滤条件">
+              <FormItem {...formItemLayout} label="有效数据的条件" extra="符合配置条件的业务数据才可用于集成，否则接收时将被过滤 或 消费时不提供">
                 <TaskDataFilterTable
                   filters={this.state.filters}
                   handleSave={this.handleSaveFilter}
