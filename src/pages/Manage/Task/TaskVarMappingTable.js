@@ -95,13 +95,13 @@ class TaskVarMappingTable extends React.Component {
       {
         title: 'API字段',
         dataIndex: 'k',
-        width: '25%',
+        width: '42%',
         editable: !this.state.readonly,
       },
       {
         title: '环境变量名',
         dataIndex: 'v',
-        width: '25%',
+        width: '42%',
         editable: !this.state.readonly,
       },
     ];

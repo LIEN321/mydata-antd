@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Button, Col, Form, Row, Divider, Card, Icon, notification, Drawer } from 'antd';
-import {   DATA_TASKS, TASK_TYPE_PRODUCER, TASK_TYPE_CONSUMER } from '../../../../actions/task';
+import { DATA_TASKS, TASK_TYPE_PRODUCER, TASK_TYPE_CONSUMER } from '../../../../actions/task';
 import DataTaskForm from './DataTaskForm';
 
 import TaskCard from './TaskCard';
@@ -170,6 +170,7 @@ class DataTask extends PureComponent {
           closeTaskForm={this.closeTaskForm}
           currentTask={this.state.currentTask}
           isRefEnv={this.state.isRefEnv}
+          producerTasks={dataTasks.producerTasks}
         />}
       </Drawer>
     );

@@ -11,6 +11,10 @@ export const TASK_STATUS_RUNNING = 1;
 export const TASK_STATUS_FAILED = 2;
 /** 停止状态 */
 export const TASK_STATUS_STOPPED = 3;
+/** 提供模式，调用API */
+export const TASK_PRODUCE_MODE_API = 1;
+/** 提供模式，接收推送 */
+export const TASK_PRODUCE_MODE_PUSH = 2;
 /** 消费模式，调用API */
 export const TASK_CONSUME_MODE_API = 1;
 /** 消费模式，发送邮件 */
@@ -19,6 +23,16 @@ export const TASK_CONSUME_MODE_EMAIL = 2;
 export const TASK_FILTER_TYPE_VALUE = 1;
 /** 任务过滤条件值类型 - 字段名*/
 export const TASK_FILTER_TYPE_FIELD = 2;
+/** 认证类型，无需认证 */
+export const TASK_AUTH_TYPE_NONE = 0;
+/** 认证类型，api key */
+export const TASK_AUTH_TYPE_API_KEY = 1;
+/** 认证类型，basic auth */
+export const TASK_AUTH_TYPE_BASIC = 2;
+/** 认证类型，hmac */
+export const TASK_AUTH_TYPE_HMAC = 3;
+/** 认证类型名称 */
+export const TASK_AUTH_TYPE_NAMES = ['无需认证','API Key','Basic Auth','HMAC'];
 
 export function TASK_LIST(payload) {
   return {
