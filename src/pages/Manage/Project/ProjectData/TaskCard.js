@@ -240,7 +240,7 @@ class TaskCard extends PureComponent {
                 dataIndex: 'taskResult',
                 width: 100,
                 render: taskResult => {
-                    const color = taskResult != null ? (taskResult === 1 ? 'green' : 'red') : 'gray';
+                    const color = taskResult != null ? (taskResult === 1 ? 'green' : 'red') : '';
                     const status = taskResult != null ? (taskResult === 1 ? '成功' : '失败') : '-';
                     return (
                         <Tag color={color}>
@@ -320,7 +320,7 @@ class TaskCard extends PureComponent {
                             <Popover content="停止"><Icon type="pause" onClick={(e) => { this.handleStop(currentTask.id); e.stopPropagation(); }} /></Popover>
                             :
                             <Popover content="启动"><Icon type="play-circle" onClick={(e) => { this.handleStart(currentTask.id); e.stopPropagation(); }} /></Popover>,
-                        <Popover content="执行一次"><Icon type="redo" onClick={(e) => { this.handleExecute(currentTask.id); e.stopPropagation(); }} /></Popover>,
+                        <Popover content="执行一次"><Icon type="step-forward" onClick={(e) => { this.handleExecute(currentTask.id); e.stopPropagation(); }} /></Popover>,
                         <Popover content="运行日志"><Icon type="history" onClick={(e) => { this.showLogList(currentTask); e.stopPropagation(); }} /></Popover>,
                         <Popover content="编辑"><Icon type="edit" onClick={(e) => { this.handleEditTask(currentTask); e.stopPropagation(); }} /></Popover>,
                         <Popover content="复制"><Icon type="copy" onClick={(e) => { this.openCopyModal(currentTask.id); e.stopPropagation(); }} /></Popover>,
