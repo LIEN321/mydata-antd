@@ -271,7 +271,7 @@ class TaskCard extends PureComponent {
                 placement="bottom"
                 visible={this.state.logPreviewVisible}
                 content={
-                    <div style={{ width: 320 }}>
+                    <div style={{ width: 340 }}>
                         {currentTask.produceMode === TASK_PRODUCE_MODE_PUSH && <p>认证方式：{TASK_AUTH_TYPE_NAMES[currentTask.authType]}</p>}
                         {currentTask.taskPeriod && <p>运行周期：{currentTask.taskPeriod}</p>}
                         {currentTask.subscribeTaskId && <p>订阅任务：{currentTask.subscribeTaskName}</p>}
