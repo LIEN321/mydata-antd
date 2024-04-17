@@ -343,7 +343,7 @@ class TaskCard extends PureComponent {
                         <Col span={22}>
                             <Tooltip title={taskUrl}>
                                 <p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                                    <Icon type="link" /> {taskUrl}
+                                    {currentTask.produceMode === TASK_PRODUCE_MODE_PUSH ? <Icon type="pushpin" /> : <Icon type="link" />} {taskUrl}
                                 </p>
                             </Tooltip>
                         </Col>
