@@ -729,8 +729,12 @@ class DataTaskForm extends PureComponent {
                                   }
                                   }>取消</Button>,
                                 <Button type="primary" onClick={() => {
-                                  setFieldsValue({ taskPeriod: cronRef.getValue() });
-                                  this.setState({ cronVisible: false });
+                                  let cronValue = cronRef.getValue();
+                                  if(cronValue){
+                                    cronValue = "0 " + cronValue.substr(2);
+                                    setFieldsValue({ taskPeriod: cronValue });
+                                    this.setState({ cronVisible: false });
+                                  }
                                 }
                                 }>确认</Button>
                               ]}
