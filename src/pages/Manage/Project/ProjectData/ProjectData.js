@@ -202,7 +202,10 @@ class ProjectData extends PureComponent {
       const { id } = record;
       dataDetail({ id }).then(resp => {
         if (resp.success) {
-          this.setState({ dataFormVisible: true, detail: resp.data, dataFields: resp.data.dataFields });
+          this.setState({ dataFormVisible: true, detail: resp.data });
+          this.setState(() => ({
+            dataFields: resp.data.dataFields
+          }))
         }
       });
     } else if (code === 'data_view') {
