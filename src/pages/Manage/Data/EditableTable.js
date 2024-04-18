@@ -50,7 +50,7 @@ class EditableCell extends React.Component {
       return <Switch ref={node => (this.input = node)} checked={this.props.record.isId === 1} checkedChildren="是" unCheckedChildren="否" onClick={() => this.handleSwitchIsId()} />
     }
     if (this.props.dataIndex === 'fieldType') {
-      return <Select ref={node => (this.input = node)} onChange={this.handleSelectFieldType} placeholder={`请输入${this.props.title}`} defaultValue="default">
+      return <Select ref={node => (this.input = node)} onChange={this.handleSelectFieldType} placeholder={`请输入${this.props.title}`} initialValue="default">
         <Select.Option value="default">默认</Select.Option>
         <Select.Option value="number">数值</Select.Option>
         <Select.Option value="int">整数</Select.Option>
