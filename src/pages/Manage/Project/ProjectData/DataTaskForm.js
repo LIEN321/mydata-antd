@@ -95,7 +95,7 @@ class DataTaskForm extends PureComponent {
             isShowTaskPeriod: detail.isSubscribed !== TASK_SUBSCRIBED && (
               (detail.opType === TASK_TYPE_PRODUCER && detail.produceMode === TASK_PRODUCE_MODE_API)
               ||
-              (detail.opType === TASK_TYPE_CONSUMER && detail.consumeMode === TASK_CONSUME_MODE_API)
+              (detail.opType === TASK_TYPE_CONSUMER)
             ),
             initStatus: true,
             filters: detail.dataFilter,
