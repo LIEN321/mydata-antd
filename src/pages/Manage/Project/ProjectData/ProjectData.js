@@ -106,7 +106,7 @@ class ProjectData extends PureComponent {
       <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
         <Col md={12} sm={24}>
           <span style={{ color: 'red' }}>*</span><span style={{ fontWeight: 'bold' }}>选择环境：</span>
-          {envList.length > 0 ? <Select placeholder="请选择所属环境" onChange={this.handleChangeEnv} style={{ width: 200 }} initialValue={envList.length > 0 ? envList[0].id : null}>
+          {envList.length > 0 ? <Select placeholder="请选择所属环境" onChange={this.handleChangeEnv} style={{ width: 200 }} defaultValue={envList.length > 0 ? envList[0].id : null}>
             {envList.map(e => (
               <Select.Option key={e.id} value={e.id}>
                 <Row style={{ width: '168px' }}>
