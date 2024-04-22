@@ -31,7 +31,7 @@ class DataTaskForm extends PureComponent {
       detail: null,
       // api完整地址
       apiUrl: '',
-      // 其他环境列表
+      // 环境列表
       envList: [],
       // 当前所选环境
       selectedEnv: null,
@@ -125,8 +125,9 @@ class DataTaskForm extends PureComponent {
   componentWillReceiveProps(nextProps) {
     const {
       task: {
-        init: { envList, apiList },
+        init: { apiList },
       },
+      envList,
     } = nextProps;
 
     this.setState({
@@ -400,12 +401,13 @@ class DataTaskForm extends PureComponent {
     const {
       form,
       task: {
-        init: { envList, apiList },
+        init: { apiList },
         //   detail,
       },
       opType,
       isRefEnv,
       env,
+      envList,
       producerTasks,
     } = this.props;
 
