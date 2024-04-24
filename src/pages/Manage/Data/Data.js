@@ -96,6 +96,11 @@ class Data extends PureComponent {
         title: '数据名称',
         dataIndex: 'dataName',
       },
+      {
+        title: '所属项目',
+        dataIndex: 'projectName',
+        width: '200px',
+      },
       // {
       //   title: '数据量',
       //   dataIndex: 'dataCount',
