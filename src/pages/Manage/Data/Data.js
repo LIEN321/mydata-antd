@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Modal, Table } from 'antd';
+import { Button, Col, Form, Input, Row, Modal, Table, Divider } from 'antd';
 import Panel from '../../../components/Panel';
 import { DATA_LIST, BIZ_FIELD_LIST, BIZ_DATA_LIST } from '../../../actions/data';
 import Grid from '../../../components/Sword/Grid';
+import BizData from './BizData';
 
 const FormItem = Form.Item;
 
@@ -18,6 +19,7 @@ class Data extends PureComponent {
 
     this.state = {
       currentData: {},
+      currentEnvId: null,
       bizDataModalVisible: false,
     };
   }
@@ -59,18 +61,9 @@ class Data extends PureComponent {
     );
   };
 
-  showBizData = params => {
-    const { dispatch } = this.props;
-    const { id } = params;
-    dispatch(BIZ_FIELD_LIST({ dataId: id }));
-    dispatch(BIZ_DATA_LIST({ dataId: id }));
-    this.setState({ bizDataModalVisible: true, currentData: params });
-  };
-
-  handleSearchBizData = (pagination) => {
-    const { dispatch } = this.props;
-    const { currentData } = this.state;
-    dispatch(BIZ_DATA_LIST({ ...pagination, dataId: currentData.id }));
+  showBizData = (data, envId) => {
+    this.setState({ bizDataModalVisible: true });
+    this.setState(() => ({ currentData: data, currentEnvId: envId }));
   };
 
   closeBizData = () => {
@@ -85,30 +78,40 @@ class Data extends PureComponent {
       data: { data, bizField, bizData },
     } = this.props;
 
-    const { currentData } = this.state;
+    const { currentData, currentEnvId } = this.state;
 
     const columns = [
       {
         title: '数据编号',
         dataIndex: 'dataCode',
+        width: '200px',
       },
       {
         title: '数据名称',
         dataIndex: 'dataName',
+        width: '200px',
       },
       {
         title: '所属项目',
         dataIndex: 'projectName',
         width: '200px',
       },
-      // {
-      //   title: '数据量',
-      //   dataIndex: 'dataCount',
-      //   render: (text, record, index) => {
-      //     const { id } = record;
-      //     return <a onClick={() => { this.showBizData(record) }}>{text}</a>
-      //   },
-      // },
+      {
+        title: '数据量',
+        render: (text, record) => {
+          const { bizDataList } = record;
+          if (bizDataList && bizDataList.length > 0) {
+
+            return <>
+              {bizDataList[0].envName}: <a onClick={() => { this.showBizData(record, bizDataList[0].envId) }}>{bizDataList[0].dataCount}</a>
+              {bizDataList.slice(1).map(bizData => (
+                <><Divider type='vertical'/>{bizData.envName}: <a onClick={() => { this.showBizData(record, bizData.envId) }}>{bizData.dataCount}</a></>
+              ))}
+            </>;
+          }
+          return <></>;
+        },
+      },
     ];
 
     const bizDataColumns = [];
@@ -136,24 +139,16 @@ class Data extends PureComponent {
           columns={columns}
           data={data}
         />
-        <Modal
-          title={`业务数据 - ${currentData.dataName}`}
-          width="90%"
-          visible={this.state.bizDataModalVisible}
-          footer={[
-            <Button key="back" onClick={this.closeBizData}>
-              关闭
-            </Button>
-          ]}
-          onCancel={this.closeBizData}
-        >
-          <Table
-            columns={bizDataColumns}
-            dataSource={bizData.list}
-            pagination={bizData.pagination}
-            onChange={this.handleSearchBizData}
+        {/* 业务数据 弹出框 */}
+        {this.state.bizDataModalVisible &&
+          <BizData
+            visible={this.state.bizDataModalVisible}
+            onClose={this.closeBizData}
+            currentData={currentData}
+            envId={currentEnvId}
+            projectId={currentData.projectId}
           />
-        </Modal>
+        }
       </Panel>
     );
   }
