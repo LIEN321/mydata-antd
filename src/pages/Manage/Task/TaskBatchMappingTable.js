@@ -160,6 +160,17 @@ class TaskBatchParamTable extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { batchParams } = nextProps;
 
+    let count = 0;
+    let i = 0;
+    if (batchParams) {
+      count = batchParams.length;
+      batchParams.map(b => {
+        b.key = i++;
+      });
+    } else {
+      batchParams = [];
+    }
+
     this.setState({
       batchParams,
       count: batchParams.length,
