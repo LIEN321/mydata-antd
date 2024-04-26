@@ -288,11 +288,14 @@ class EditableTable extends React.Component {
 
     return (
       <div>
-        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 12 }}>
-          添加字段
-        </Button>
-        <Divider type="vertical" />
-        <Switch checked={this.state.isMultiId} checkedChildren="是" unCheckedChildren="否" onChange={this.handleSwitchMultiId} />启用字段组合标识
+        {!this.state.readonly && <>
+          <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 12 }}>
+            添加字段
+          </Button>
+          <Divider type="vertical" />
+          <Switch checked={this.state.isMultiId} checkedChildren="是" unCheckedChildren="否" onChange={this.handleSwitchMultiId} />启用字段组合标识
+        </>
+        }
         <Table
           components={components}
           rowClassName={() => { style.editableRow }}
