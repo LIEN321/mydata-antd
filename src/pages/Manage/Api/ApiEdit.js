@@ -269,7 +269,7 @@ class ApiEdit extends PureComponent {
                 </Radio.Group>
               )}
             </FormItem>
-            <FormItem {...formItemLayout} label="JSON字段层级前缀">
+            <FormItem {...formItemLayout} label="数据层级前缀">
               {getFieldDecorator('fieldPrefix', {
                 rules: [
                   {
@@ -278,7 +278,7 @@ class ApiEdit extends PureComponent {
                   },
                 ],
                 initialValue: detail.fieldPrefix,
-              })(<Input placeholder="请输入JSON字段层级前缀" />)}
+              })(<Input placeholder="请输入数据层级前缀" />)}
             </FormItem>
             <FormItem {...formItemLayout} label="Headers">
               {getFieldDecorator('reqHeaders', {

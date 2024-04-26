@@ -71,7 +71,7 @@ class TaskAdd extends PureComponent {
     }
     this.updateApiUrl();
 
-    const {opType} = api;
+    const { opType } = api;
     if (opType === TASK_TYPE_PRODUCER) {
       // 提供数据
       this.setState({ isShowSubscribed: false, isShowTaskPeriod: true });
@@ -356,16 +356,16 @@ class TaskAdd extends PureComponent {
                 </Radio.Group>
               )}
             </FormItem>)}
-            {/* <FormItem {...formItemLayout} label="JSON字段层级前缀">
+            <FormItem {...formItemLayout} label="数据层级前缀" extra="例如接口返回结构是{result:{data:[...]}} 则填result.data">
               {getFieldDecorator('apiFieldPrefix', {
                 rules: [
                   {
                     required: false,
-                    message: '请输入字段层级前缀',
+                    message: '请输入数据层级前缀',
                   },
                 ],
-              })(<Input placeholder="请输入JSON字段层级前缀" />)}
-            </FormItem> */}
+              })(<Input placeholder="请输入数据层级前缀" />)}
+            </FormItem>
             <FormItem {...formItemLayout} label="字段映射">
               <TaskFieldMappingTable
                 dataFieldList={this.state.dataFieldList}
