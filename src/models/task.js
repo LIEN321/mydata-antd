@@ -5,6 +5,7 @@ import { list, submit, detail, remove, taskLogList, dataTasks, envTasks } from '
 import { select as envSelect } from '../services/env';
 import { select as dataSelect } from '../services/data';
 import { select as apiSelect } from '../services/md_api';
+import { select as appSelect } from '../services/app';
 import { requestApi } from '@/services/api';
 
 export default {
@@ -21,6 +22,7 @@ export default {
       envList: [],
       apiList: [],
       dataList: [],
+      appList: [],
     },
     logs: {
       list: [],
@@ -102,19 +104,22 @@ export default {
     },
     *fetchInit({ payload }, { call, put }) {
       // const responseEnv = yield call(envSelect, payload);
-      const responseApi = yield call(apiSelect, payload);
+      // const responseApi = yield call(apiSelect, payload);
       // const responsedData = yield call(dataSelect, payload);
+      const responseApp = yield call(appSelect, payload);
       if (
         // responseEnv.success &&
-         responseApi.success
+        // && responseApi.success
         // && responsedData.success
+        responseApp.success
       ) {
         yield put({
           type: 'saveInit',
           payload: {
             // envList: responseEnv.data,
-            apiList: responseApi.data,
+            // apiList: responseApi.data,
             // dataList: responsedData.data,
+            appList: responseApp.data,
           },
         });
       }
