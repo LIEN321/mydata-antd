@@ -150,8 +150,6 @@ class DataTaskForm extends PureComponent {
   async loadApi(opType, appId) {
     const response = await apiSelect({ opType, appId });
     if (response.success) {
-      console.info("loadApi response.data");
-      console.info(response.data);
       this.setState(() => ({ apiList: response.data }));
     }
   }
@@ -436,8 +434,6 @@ class DataTaskForm extends PureComponent {
     } = this.props;
 
     const { apiUrl, detail, isBatchEnabled, consumeMode, isSubscribed, produceMode, authType, apiList } = this.state;
-    console.info("apiList");
-    console.info(apiList);
 
     const formItemLayout = {
       labelCol: {

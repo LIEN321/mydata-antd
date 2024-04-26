@@ -39,7 +39,6 @@ class EditableCell extends React.Component {
 
   getInput = () => {
     if (this.props.inputType === 'switch') {
-      console.info("TaskFieldSelectTable record.isSelect = " + this.props.record.isSelect);
       return <Switch ref={node => (this.input = node)} checked={this.props.record.isSelect === 1} checkedChildren="是" unCheckedChildren="否" onClick={() => this.handleSwitchIsSelect()} />
     }
     return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入${this.props.title}`} />;
