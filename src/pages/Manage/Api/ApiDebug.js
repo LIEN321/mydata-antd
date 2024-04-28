@@ -3,6 +3,7 @@ import { Form, Card, Button, Select, Modal } from 'antd';
 import { connect } from 'dva';
 import styles from '../../../layouts/Sword.less';
 import { API_DEBUG } from '../../../actions/api';
+import env from '@/models/env';
 
 const FormItem = Form.Item;
 
@@ -17,6 +18,7 @@ class ApiDebug extends PureComponent {
     this.state = {
       apiUrl: '',
       contentType: '',
+      currentEnv: {},
     };
   }
 
@@ -26,7 +28,7 @@ class ApiDebug extends PureComponent {
   }
 
   handleChangeContentType = value => {
-    this.setState({ contentType : value });
+    this.setState({ contentType: value });
   }
 
   debug = () => {
@@ -36,7 +38,7 @@ class ApiDebug extends PureComponent {
     const httpUri = this.state.apiUrl;
     const httpHeaders = this.props.reqHeaders;
     const httpParams = this.props.reqParams;
-    const {contentType} = this.state;
+    const { contentType, currentEnv } = this.state;
 
     const params = {
       httpMethod,
@@ -44,13 +46,16 @@ class ApiDebug extends PureComponent {
       httpHeaders,
       httpParams,
       contentType,
+      envId: currentEnv.id,
+      globalHeaders: currentEnv.globalHeaders,
+      globalParams: currentEnv.globalParams,
     };
 
     dispatch(API_DEBUG(params));
   }
 
   updateApiUrl(env) {
-    const {apiUri} = this.props;
+    const { apiUri } = this.props;
     const apiUrl = env.envPrefix + apiUri;
 
     this.setState({ apiUrl });
@@ -62,6 +67,13 @@ class ApiDebug extends PureComponent {
     const env = newEnvList[index];
     this.state.currentEnv = env;
     return env;
+  }
+
+  handleClose = () => {
+    const { form } = this.props;
+    form.resetFields();
+    this.props.api.debugResult='';
+    this.props.onCancel();
   }
 
   render() {
@@ -78,19 +90,19 @@ class ApiDebug extends PureComponent {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 7 },
+        sm: { span: 4 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 12 },
-        md: { span: 10 },
+        sm: { span: 18 },
+        md: { span: 18 },
       },
     };
 
     return (
       <Modal
         visible={visible}
-        onCancel={this.props.onCancel}
+        onCancel={this.handleClose}
         width="50%"
         footer={<Button type='primary' onClick={this.debug}>运行</Button>}
       >
@@ -115,9 +127,8 @@ class ApiDebug extends PureComponent {
               {apiUrl}
             </FormItem>
             <FormItem {...formItemLayout} label="响应内容">
-              <span>状态：{debugResult.status}</span> <br />
-              <span>耗时：{debugResult.time} ms</span>
-              <Card>
+              <span>状态：{debugResult.status}</span> | <span>耗时：{debugResult.time} ms</span>
+              <Card style={{ maxHeight: 300, overflow: 'scroll' }} >
                 {debugResult.body}
               </Card>
             </FormItem>
