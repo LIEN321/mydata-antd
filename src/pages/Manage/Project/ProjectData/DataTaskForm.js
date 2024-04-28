@@ -808,9 +808,9 @@ class DataTaskForm extends PureComponent {
 
               {/* 消费模式 调用API */}
               {((opType === TASK_TYPE_CONSUMER && consumeMode === TASK_CONSUME_MODE_API)) && <>
-                <FormItem {...formItemLayout} label="单数据模式" extra="根据API接收格式选择，集合是发送多条数据 格式为[{k:v},{k:v},...]，对象是发送一条数据 格式为{k:v,...}">
-                  {getFieldDecorator('singleMode', {
-                    initialValue: (detail && detail.singleMode) ? detail.singleMode : 2,
+                <FormItem {...formItemLayout} label="数据模式" extra="根据API接收格式选择，集合是发送多条数据 格式为[{k:v},{k:v},...]，对象是逐个发送数据 格式为{k:v,...}">
+                  {getFieldDecorator('dataMode', {
+                    initialValue: (detail && detail.dataMode) ? detail.dataMode : 2,
                   })(
                     <Radio.Group buttonStyle="solid">
                       <Radio.Button value={2}>集合</Radio.Button>
