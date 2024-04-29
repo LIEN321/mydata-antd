@@ -277,6 +277,10 @@ class DataTaskForm extends PureComponent {
           };
         }
 
+        if(params.produceMode === TASK_PRODUCE_MODE_PUSH){
+          params.isSubscribed = TASK_SUBSCRIBED;
+        }
+
         // dispatch(TASK_SUBMIT(params));
         submitTask(params).then(resp => {
           if (resp.success) {
