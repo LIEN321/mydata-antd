@@ -92,7 +92,7 @@ class DataTaskForm extends PureComponent {
           this.setState({ apiUrl: detail.apiUrl });
           this.setState({
             fieldMapping: detail.fieldMapping,
-            isShowSubscribed: detail.opType !== TASK_TYPE_PRODUCER,
+            isShowSubscribed: !(detail.opType === TASK_TYPE_PRODUCER && detail.produceMode === TASK_PRODUCE_MODE_PUSH),
             isShowTaskPeriod: detail.isSubscribed !== TASK_SUBSCRIBED && (
               (detail.opType === TASK_TYPE_PRODUCER && detail.produceMode === TASK_PRODUCE_MODE_API)
               ||
