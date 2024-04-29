@@ -211,8 +211,10 @@ class DataTaskForm extends PureComponent {
   handleSaveMapping = mapping => {
     const { fieldMapping } = this.state;
     const key = mapping.dataFieldCode;
-    if (key) {
+    if (key && mapping.apiFieldCode) {
       fieldMapping[key] = mapping.apiFieldCode;
+    }else{
+      delete fieldMapping[key];
     }
   };
 
