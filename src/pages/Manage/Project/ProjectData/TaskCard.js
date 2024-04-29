@@ -6,7 +6,7 @@ import FormItem from "antd/lib/form/FormItem";
 import mdStyle from '../../../../layouts/Mydata.less';
 import styles from './style.less';
 import { executeTask, startTask, stopTask, remove, copyTask, logDetail } from '../../../../services/task';
-import { TASK_LOG_LIST, TASK_STATUS_RUNNING, TASK_TYPE_PRODUCER, TASK_PRODUCE_MODE_PUSH, TASK_AUTH_TYPE_NAMES } from '../../../../actions/task';
+import { TASK_LOG_LIST, TASK_STATUS_RUNNING, TASK_TYPE_PRODUCER, TASK_PRODUCE_MODE_PUSH, TASK_AUTH_TYPE_NAMES, TASK_SUBSCRIBED } from '../../../../actions/task';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Text from 'antd/lib/typography/Text';
 
@@ -343,7 +343,14 @@ class TaskCard extends PureComponent {
                         <Col span={22}>
                             <Tooltip title={taskUrl}>
                                 <p style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                                    {currentTask.produceMode === TASK_PRODUCE_MODE_PUSH ? <Icon type="pushpin" /> : <Icon type="link" />} {taskUrl}
+                                    {currentTask.produceMode === TASK_PRODUCE_MODE_PUSH
+                                        ?
+                                        <Icon type="cloud-upload" />
+                                        : currentTask.isSubscribed === TASK_SUBSCRIBED
+                                            ? <Icon type="pushpin" />
+                                            : <Icon type="hourglass" />
+                                    }
+                                    {taskUrl}
                                 </p>
                             </Tooltip>
                         </Col>
