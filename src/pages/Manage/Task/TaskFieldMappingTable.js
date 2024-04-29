@@ -97,6 +97,13 @@ class TaskFieldMappingTable extends React.Component {
         dataIndex: 'dataFieldCode',
         width: '25%',
         editable: false,
+        render: (text, record) => {
+          const { isId } = record;
+          return <>
+            {record.dataFieldCode}
+            {isId === 1 && <span style={{ color: 'red' }}>*</span>}
+          </>
+        },
       },
       {
         title: '数据字段名称',
@@ -143,6 +150,7 @@ class TaskFieldMappingTable extends React.Component {
           , dataFieldCode: dataField.fieldCode
           , dataFieldName: dataField.fieldName
           , apiFieldCode: (initFieldMappings ? (initFieldMappings[dataField.fieldCode] ? initFieldMappings[dataField.fieldCode] : null) : null)
+          , isId: dataField.isId
         };
 
         fieldMappings.push(mapping);
