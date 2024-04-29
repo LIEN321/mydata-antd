@@ -522,8 +522,8 @@ class ProjectData extends PureComponent {
                   initialValue: detail.dataName || '',
                 })(<Input placeholder="请输入数据名称，长度不超过64位" maxLength={64} />)}
               </FormItem>
-              <FormItem {...formItemLayout} label="字段" extra={<span>标识字段至少选择一个，多选则表示字段组合是唯一的；
-                <br />若修改标识字段，则会自动重启已启动的任务！</span>}>
+              <FormItem {...formItemLayout} label="字段" extra={<span>标识字段至少选择一个，多选则表示字段组合是唯一的！
+                <br />注意：请谨慎调整标识字段，修改后会更新所有相关任务并自动重启已启动的任务！</span>}>
                 <EditableTable
                   dataFields={dataFields || []}
                   handleSave={this.handleSaveField}
