@@ -1,4 +1,4 @@
-import { Form, Input, Table } from 'antd';
+import { Col, Form, Input, Row, Select, Table } from 'antd';
 import React from 'react';
 import style from './StandardData.less';
 
@@ -26,7 +26,44 @@ class EditableCell extends React.Component {
     });
   };
 
+  handleSelectOp = (op) => {
+    const { record, handleSaveDataProcess } = this.props;
+    handleSaveDataProcess(record.key, 'op', op);
+  }
+
+  handleSaveValue = (e) => {
+    const { record, handleSaveDataProcess } = this.props;
+    handleSaveDataProcess(record.key, 'v', e.currentTarget.value);
+  }
+
   getInput = () => {
+    const { dataIndex, record } = this.props;
+    if (dataIndex === 'dataProcess') {
+      return <Row>
+        <Col span={12}>
+          <Select ref={node => (this.input = node)}
+            onChange={this.handleSelectOp}
+            placeholder={`请选择`}
+            value={(record.dataProcess && record.dataProcess.op) ? record.dataProcess.op : ""}
+            showArrow={false}
+          >
+            <Select.Option value="">无</Select.Option>
+            <Select.Option value="+">+</Select.Option>
+            <Select.Option value="-">-</Select.Option>
+            <Select.Option value="*">*</Select.Option>
+            <Select.Option value="/">/</Select.Option>
+            <Select.Option value="md5">md5</Select.Option>
+            <Select.Option value="base64">base64</Select.Option>
+            <Select.Option value="add second">加秒</Select.Option>
+          </Select>
+        </Col>
+        {(record.dataProcess && record.dataProcess.op && record.dataProcess.op != 'md5' && record.dataProcess.op != 'base64') &&
+          <Col span={12}>
+            <Input ref={node => (this.input = node)} onChange={this.handleSaveValue} placeholder={`请输入`} value={(record.dataProcess && record.dataProcess.v) ? record.dataProcess.v : ""} />
+          </Col>
+        }
+      </Row>;
+    }
     return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入${this.props.title}`} />;
   };
 
@@ -88,14 +125,14 @@ class TaskFieldMappingTable extends React.Component {
     super(props);
     this.state = {
       fieldMappings: [],
-      readonly: props.readonly ? props.readonly : false
+      readonly: false
     };
 
     this.columns = [
       {
         title: '数据字段编号',
         dataIndex: 'dataFieldCode',
-        width: '25%',
+        width: '23%',
         editable: false,
         render: (text, record) => {
           const { isId } = record;
@@ -108,41 +145,29 @@ class TaskFieldMappingTable extends React.Component {
       {
         title: '数据字段名称',
         dataIndex: 'dataFieldName',
-        width: '25%',
+        width: '23%',
         editable: false,
       },
       {
         title: '接口字段',
         dataIndex: 'apiFieldCode',
-        width: '50%',
+        width: '26%',
+        editable: !this.state.readonly,
+      },
+      {
+        title: '数据处理',
+        dataIndex: 'dataProcess',
+        width: '28%',
         editable: !this.state.readonly,
       },
     ];
-
-    const fieldMappings = [];
-    const { dataFieldList, initFieldMappings } = this.props;
-
-    if (dataFieldList) {
-      dataFieldList.map(dataField => {
-        const mapping = {
-          key: dataField.fieldCode
-          , dataFieldCode: dataField.fieldCode
-          , dataFieldName: dataField.fieldName
-          , apiFieldCode: (initFieldMappings ? (initFieldMappings[dataField.fieldCode] ? initFieldMappings[dataField.fieldCode] : null) : null)
-        };
-
-        fieldMappings.push(mapping);
-      });
-    }
-
-    this.setState({ fieldMappings });
   }
 
   componentWillReceiveProps(nextProps) {
 
     const fieldMappings = [];
 
-    const { dataFieldList, initFieldMappings } = nextProps;
+    const { dataFieldList, initFieldMappings, dataProcess } = nextProps;
     if (dataFieldList) {
       dataFieldList.map(dataField => {
         const mapping = {
@@ -151,6 +176,7 @@ class TaskFieldMappingTable extends React.Component {
           , dataFieldName: dataField.fieldName
           , apiFieldCode: (initFieldMappings ? (initFieldMappings[dataField.fieldCode] ? initFieldMappings[dataField.fieldCode] : null) : null)
           , isId: dataField.isId
+          , dataProcess: (dataProcess ? (dataProcess[dataField.fieldCode]) : {})
         };
 
         fieldMappings.push(mapping);
@@ -177,6 +203,23 @@ class TaskFieldMappingTable extends React.Component {
     this.props.handleSave(item);
   };
 
+  handleSaveDataProcess = (key, k, v) => {
+    const newData = [...this.state.fieldMappings];
+    const index = newData.findIndex(item => key === item.key);
+    const item = newData[index];
+    if (!item.dataProcess) {
+      item.dataProcess = {};
+    }
+    if (v) {
+      item.dataProcess[k] = v;
+    } else {
+      delete item.dataProcess[k];
+    }
+
+    this.setState({ fieldMappings: newData });
+    this.props.handleSaveDataProcess(item);
+  };
+
   render() {
 
     const components = {
@@ -198,6 +241,7 @@ class TaskFieldMappingTable extends React.Component {
           dataIndex: col.dataIndex,
           title: col.title,
           handleSave: this.handleSave,
+          handleSaveDataProcess: this.handleSaveDataProcess,
           inputType: col.dataIndex === 'isId' ? 'switch' : 'text',
         }),
       };

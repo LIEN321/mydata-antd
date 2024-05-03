@@ -46,6 +46,8 @@ class DataTaskForm extends PureComponent {
       dataFieldList: [],
       // 字段映射
       fieldMapping: {},
+      // 数据处理
+      dataProcess: {},
 
       // 过滤条件列表
       filters: [],
@@ -92,6 +94,7 @@ class DataTaskForm extends PureComponent {
           this.setState({ apiUrl: detail.apiUrl });
           this.setState({
             fieldMapping: detail.fieldMapping,
+            dataProcess: detail.dataProcess,
             isShowSubscribed: !(detail.opType === TASK_TYPE_PRODUCER && detail.produceMode === TASK_PRODUCE_MODE_PUSH),
             isShowTaskPeriod: detail.isSubscribed !== TASK_SUBSCRIBED && (
               (detail.opType === TASK_TYPE_PRODUCER && detail.produceMode === TASK_PRODUCE_MODE_API)
@@ -213,9 +216,23 @@ class DataTaskForm extends PureComponent {
     const key = mapping.dataFieldCode;
     if (key && mapping.apiFieldCode) {
       fieldMapping[key] = mapping.apiFieldCode;
-    }else{
+    } else {
       delete fieldMapping[key];
     }
+    this.setState({fieldMapping});
+  };
+
+  handleSaveDataProcess = mapping => {
+    const { dataProcess } = this.state;
+    const key = mapping.dataFieldCode;
+    if (key && mapping.dataProcess) {
+      dataProcess[key] = mapping.dataProcess;
+    } else {
+      delete dataProcess[key];
+    }
+    this.setState({dataProcess});
+    console.info(mapping);
+    console.info(dataProcess);
   };
 
   // 消费模式是发送邮件时，选择字段
@@ -247,6 +264,7 @@ class DataTaskForm extends PureComponent {
           // params.refEnvId = currentTask.refEnvId;
         }
         params.fieldMapping = this.state.fieldMapping;
+        params.dataProcess = this.state.dataProcess;
         params.dataFilter = this.state.filters;
         // params.fieldVarMapping = this.state.varMappings;
         params.envId = env.id;
@@ -279,7 +297,7 @@ class DataTaskForm extends PureComponent {
           };
         }
 
-        if(params.produceMode === TASK_PRODUCE_MODE_PUSH){
+        if (params.produceMode === TASK_PRODUCE_MODE_PUSH) {
           params.isSubscribed = TASK_SUBSCRIBED;
         }
 
@@ -856,7 +874,9 @@ class DataTaskForm extends PureComponent {
                   <TaskFieldMappingTable
                     dataFieldList={this.state.dataFieldList}
                     handleSave={this.handleSaveMapping}
+                    handleSaveDataProcess={this.handleSaveDataProcess}
                     initFieldMappings={this.state.fieldMapping}
+                    dataProcess={this.state.dataProcess}
                   />
                 </FormItem>
               }
