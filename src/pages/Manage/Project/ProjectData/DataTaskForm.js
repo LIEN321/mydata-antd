@@ -870,7 +870,12 @@ class DataTaskForm extends PureComponent {
                 </FormItem>
                 :
                 // 字段映射
-                <FormItem {...formItemLayout} label="字段映射">
+                <FormItem {...formItemLayout} label="字段映射" extra={
+                  <>
+                  <div>数据处理 对提供数据操作：从API获取数据后，先根据配置对数据进行处理，再存入仓库；</div>
+                  <div>数据处理 对提供数据操作：数据出库后，先根据配置对数据进行处理，再发送给API或Excel；</div>
+                  </>
+                }>
                   <TaskFieldMappingTable
                     dataFieldList={this.state.dataFieldList}
                     handleSave={this.handleSaveMapping}
