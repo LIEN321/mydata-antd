@@ -39,6 +39,7 @@ class ApiDebug extends PureComponent {
     const httpHeaders = this.props.reqHeaders;
     const httpParams = this.props.reqParams;
     const { contentType, currentEnv } = this.state;
+    const httpBody = this.props.reqBody;
 
     const params = {
       httpMethod,
@@ -49,6 +50,7 @@ class ApiDebug extends PureComponent {
       envId: currentEnv.id,
       globalHeaders: currentEnv.globalHeaders,
       globalParams: currentEnv.globalParams,
+      httpBody,
     };
 
     dispatch(API_DEBUG(params));

@@ -6,6 +6,7 @@ import styles from '../../../layouts/Sword.less';
 import { API_SUBMIT, API_INIT } from '../../../actions/api';
 import ApiEditableTable from './ApiEditableTable';
 import ApiDebug from './ApiDebug';
+import { TASK_TYPE_CONSUMER, TASK_TYPE_PRODUCER } from '@/actions/task';
 
 const FormItem = Form.Item;
 
@@ -20,6 +21,7 @@ class ApiAdd extends PureComponent {
     this.state = {
       reqHeaders: [],
       reqParams: [],
+      opType: TASK_TYPE_PRODUCER,
 
       visible: false,
     };
@@ -94,6 +96,7 @@ class ApiAdd extends PureComponent {
       visible: true,
       apiMethod: form.getFieldValue("apiMethod"),
       apiUri: form.getFieldValue("apiUri"),
+      reqBody: form.getFieldValue("reqBody"),
     });
   };
 
@@ -103,8 +106,14 @@ class ApiAdd extends PureComponent {
     });
   }
 
+  // 切换类型
+  handleChangeOpType = e => {
+    const opType = e.target.value;
+    this.setState({ opType });
+  }
+
   render() {
-    const { visible, apiMethod, apiUri, reqHeaders, reqParams } = this.state;
+    const { visible, apiMethod, apiUri, reqHeaders, reqParams, reqBody } = this.state;
 
     const {
       form: { getFieldDecorator },
@@ -179,9 +188,9 @@ class ApiAdd extends PureComponent {
                 ],
                 initialValue: 1,
               })(
-                <Radio.Group>
-                  <Radio.Button value={1}>提供数据</Radio.Button>
-                  <Radio.Button value={2}>消费数据</Radio.Button>
+                <Radio.Group onChange={this.handleChangeOpType}>
+                  <Radio.Button value={TASK_TYPE_PRODUCER}>提供数据</Radio.Button>
+                  <Radio.Button value={TASK_TYPE_CONSUMER}>消费数据</Radio.Button>
                 </Radio.Group>
               )}
             </FormItem>
@@ -272,6 +281,18 @@ class ApiAdd extends PureComponent {
                 />
               )}
             </FormItem>
+            {this.state.opType === TASK_TYPE_PRODUCER && <FormItem {...formItemLayout} label="Body" extra="注意：Params与Body不可同时使用，当使用body时 会Params将失效">
+              {getFieldDecorator('reqBody', {
+                rules: [
+                  {
+                    required: false,
+                    message: '请输入接口请求体',
+                  },
+                ],
+              })(
+                <Input.TextArea placeholder="请输入接口请求体" rows={4} />
+              )}
+            </FormItem>}
           </Card>
         </Form>
         <ApiDebug
@@ -281,6 +302,7 @@ class ApiAdd extends PureComponent {
           apiUri={apiUri}
           reqHeaders={reqHeaders}
           reqParams={reqParams}
+          reqBody={reqBody}
           onCancel={this.cancelDebug}
         />
       </Panel>
