@@ -54,7 +54,7 @@ class EditableCell extends React.Component {
             <Select.Option value="/">/</Select.Option>
             <Select.Option value="md5">md5</Select.Option>
             <Select.Option value="base64">base64</Select.Option>
-            <Select.Option value="add second">加秒</Select.Option>
+            <Select.Option value="add second">增加秒</Select.Option>
           </Select>
         </Col>
         {(record.dataProcess && record.dataProcess.op && record.dataProcess.op != 'md5' && record.dataProcess.op != 'base64') &&
