@@ -152,7 +152,7 @@ class Env extends PureComponent {
             <a onClick={() => {
               this.syncTask(id);
             }}
-            >更新
+            >同步
             </a>
           </>
         },
