@@ -59,7 +59,7 @@ class DataTaskForm extends PureComponent {
 
       // 是否显示订阅
       isSubscribed: 0,
-      isShowSubscribed: false,
+      isShowSubscribed: true,
       // 是否显示任务周期
       isShowTaskPeriod: true,
 
@@ -117,14 +117,6 @@ class DataTaskForm extends PureComponent {
         }
       });
       // dispatch(TASK_DETAIL(currentTask.id));
-    }
-
-    if (opType === TASK_TYPE_PRODUCER) {
-      // 提供数据
-      this.setState({ isShowSubscribed: false });
-    } else {
-      // 消费数据
-      this.setState({ isShowSubscribed: true });
     }
   }
 
