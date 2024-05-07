@@ -55,16 +55,18 @@ class EditableCell extends React.Component {
             <Select.Option value="md5">md5</Select.Option>
             <Select.Option value="base64">base64</Select.Option>
             <Select.Option value="add second">增加秒</Select.Option>
+            <Select.Option value="set null">置空(null)</Select.Option>
           </Select>
         </Col>
-        {(record.dataProcess && record.dataProcess.op && record.dataProcess.op != 'md5' && record.dataProcess.op != 'base64') &&
-          <Col span={14}>
+        {(record.dataProcess && record.dataProcess.op 
+        && record.dataProcess.op != 'md5' && record.dataProcess.op != 'base64' && record.dataProcess.op != 'set null') 
+        &&<Col span={14}>
             <Input ref={node => (this.input = node)} onChange={this.handleSaveValue} placeholder={`请输入`} value={(record.dataProcess && record.dataProcess.v) ? record.dataProcess.v : ""} />
           </Col>
         }
       </Row>;
     }
-    return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入${this.props.title}`} />;
+    return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入`} />;
   };
 
   renderCell = form => {
@@ -77,7 +79,7 @@ class EditableCell extends React.Component {
           rules: [
             {
               required: false,
-              message: `请输入${title}`,
+              message: `请输入`,
             },
           ],
           initialValue: record[dataIndex],
