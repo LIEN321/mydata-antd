@@ -102,7 +102,7 @@ class Api extends PureComponent {
         dataIndex: 'apiMethod',
       },
       {
-        title: '相对路径',
+        title: 'API路径',
         dataIndex: 'apiUri',
       },
       {
@@ -131,7 +131,7 @@ class Api extends PureComponent {
             <a onClick={() => {
               this.syncTask(id);
             }}
-            >更新
+            >同步
             </a>
           </>
         },

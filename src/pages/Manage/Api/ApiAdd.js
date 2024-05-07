@@ -212,15 +212,19 @@ class ApiAdd extends PureComponent {
                 </Radio.Group>
               )}
             </FormItem>
-            <FormItem {...formItemLayout} label="相对路径" help="长度128以内，例如：/hr/users；">
+            <FormItem {...formItemLayout} label="API路径" extra={<>
+              <div>长度128以内，例如：http://domain:port/path；</div>
+              <div>若多环境部署可填写相对路径 例如：/hr/users，再结合环境的统一前缀形成完整地址；</div>
+            </>
+            }>
               {getFieldDecorator('apiUri', {
                 rules: [
                   {
                     required: true,
-                    message: '请输入相对路径',
+                    message: '请输入API路径',
                   },
                 ],
-              })(<Input placeholder="API相对路径，以斜杠(/)开头" maxLength={128} />)}
+              })(<Input placeholder="API路径" maxLength={128} />)}
             </FormItem>
             <FormItem {...formItemLayout} label="数据类型" help="目前仅支持JSON；">
               {getFieldDecorator('dataType', {
