@@ -1,4 +1,4 @@
-import { Col, Form, Input, Row, Select, Table } from 'antd';
+import { Col, Form, Icon, Input, Row, Select, Table, Tooltip } from 'antd';
 import React from 'react';
 import style from './StandardData.less';
 
@@ -45,7 +45,7 @@ class EditableCell extends React.Component {
             onChange={this.handleSelectOp}
             placeholder={`请选择`}
             value={(record.dataProcess && record.dataProcess.op) ? record.dataProcess.op : ""}
-            // showArrow={false}
+          // showArrow={false}
           >
             <Select.Option value="">无</Select.Option>
             <Select.Option value="+">+</Select.Option>
@@ -149,7 +149,14 @@ class TaskFieldMappingTable extends React.Component {
         editable: false,
       },
       {
-        title: '接口字段',
+        title: <span> <Tooltip title={
+          <>
+            支持格式有：
+            <div>1.fiele 普通字段名，比如name；</div>
+            <div>2./field 获json根目录字段，比如/code；</div>
+            <div>3.&#123;&#123;field&#125;&#125; 订阅任务获取父任务数据中的指定数据，比如&#123;&#123;code&#125;&#125;；</div>
+          </>
+        }>接口字段<Icon type="question-circle" /></Tooltip></span>,
         dataIndex: 'apiFieldCode',
         width: '22%',
         editable: !this.state.readonly,
