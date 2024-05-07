@@ -14,10 +14,18 @@ const FormItem = Form.Item;
 }))
 @Form.create()
 class Api extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      params: {},
+    };
+  }
+
   // ============ 查询 ===============
   handleSearch = params => {
     const { dispatch } = this.props;
     dispatch(API_LIST(params));
+    this.setState({ params });
   };
 
   // ============ 查询表单 ===============
@@ -48,6 +56,7 @@ class Api extends PureComponent {
 
   syncTask = id => {
     const { dispatch } = this.props;
+    const { params } = this.state;
 
     Modal.confirm({
       title: '更新任务确认',
@@ -59,7 +68,7 @@ class Api extends PureComponent {
         const response = await syncTask({ id });
         if (response.success) {
           message.success(response.msg);
-          dispatch(API_LIST());
+          dispatch(API_LIST(params));
         } else {
           message.error(response.msg || '更新任务失败！');
         }
