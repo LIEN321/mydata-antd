@@ -267,7 +267,7 @@ class EnvTaskForm extends PureComponent {
                 initialValue: detail ? detail.apiId : '',
               })(
                 <Select allowClear placeholder="请选择API" onChange={this.handleChangeApi}>
-                  {apiList.map(a => (
+                  {apiList && apiList.map(a => (
                     <Select.Option key={a.id} value={a.id}>
                       {a.apiName} ({a.apiUri})
                     </Select.Option>

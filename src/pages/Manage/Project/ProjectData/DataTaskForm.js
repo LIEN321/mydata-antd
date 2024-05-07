@@ -512,7 +512,7 @@ class DataTaskForm extends PureComponent {
                   initialValue: detail ? detail.appId : '',
                 })(
                   <Select allowClear showSearch placeholder="请选择应用" onChange={this.handleChangeApp} optionFilterProp="children">
-                    {appList.map(a => (
+                    {appList && appList.map(a => (
                       <Select.Option key={a.id} value={a.id}>
                         {a.appName} ({a.appCode})
                       </Select.Option>
@@ -575,7 +575,7 @@ class DataTaskForm extends PureComponent {
                       initialValue: detail ? detail.refEnvId : '',
                     })(
                       <Select allowClear placeholder="请选择其他环境" onChange={this.handleChangeEnv}>
-                        {otherEnvList.map(e => (
+                        {otherEnvList && otherEnvList.map(e => (
                           <Select.Option key={e.id} value={e.id}>
                             {e.envName} ({e.envPrefix})
                           </Select.Option>
@@ -639,7 +639,7 @@ class DataTaskForm extends PureComponent {
                         })(
                           <Select allowClear placeholder="请选择触发订阅的任务">
                             <Select.Option key={'0'} value={'0'}>全部</Select.Option>
-                            {producerTasks.map(a => (
+                            {producerTasks && producerTasks.map(a => (
                               <Select.Option key={a.id} value={a.id}>
                                 {a.taskName}
                               </Select.Option>
