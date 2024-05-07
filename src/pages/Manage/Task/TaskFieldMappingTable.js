@@ -145,19 +145,19 @@ class TaskFieldMappingTable extends React.Component {
       {
         title: '数据字段名称',
         dataIndex: 'dataFieldName',
-        width: '23%',
+        width: '22%',
         editable: false,
       },
       {
         title: '接口字段',
         dataIndex: 'apiFieldCode',
-        width: '26%',
+        width: '25%',
         editable: !this.state.readonly,
       },
       {
         title: '数据处理',
         dataIndex: 'dataProcess',
-        width: '28%',
+        width: '30%',
         editable: !this.state.readonly,
       },
     ];
