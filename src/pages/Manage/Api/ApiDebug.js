@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Card, Button, Select, Modal } from 'antd';
+import { Form, Card, Button, Select, Modal, Input } from 'antd';
 import { connect } from 'dva';
 import styles from '../../../layouts/Sword.less';
 import { API_DEBUG } from '../../../actions/api';
@@ -31,29 +31,35 @@ class ApiDebug extends PureComponent {
     this.setState({ contentType: value });
   }
 
-  debug = () => {
-    const { dispatch } = this.props;
+  debug = e => {
+    e.preventDefault();
 
-    const httpMethod = this.props.apiMethod;
-    const httpUri = this.state.apiUrl;
-    const httpHeaders = this.props.reqHeaders;
-    const httpParams = this.props.reqParams;
-    const { contentType, currentEnv } = this.state;
-    const httpBody = this.props.reqBody;
+    const { dispatch, form } = this.props;
 
-    const params = {
-      httpMethod,
-      httpUri,
-      httpHeaders,
-      httpParams,
-      contentType,
-      envId: currentEnv.id,
-      globalHeaders: currentEnv.globalHeaders,
-      globalParams: currentEnv.globalParams,
-      httpBody,
-    };
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const httpMethod = this.props.apiMethod;
+        const httpUri = this.state.apiUrl;
+        const httpHeaders = this.props.reqHeaders;
+        const httpParams = this.props.reqParams;
+        const { contentType, currentEnv } = this.state;
+        const httpBody = form.getFieldValue("reqBody");
 
-    dispatch(API_DEBUG(params));
+        const params = {
+          httpMethod,
+          httpUri,
+          httpHeaders,
+          httpParams,
+          contentType,
+          envId: currentEnv.id,
+          globalHeaders: currentEnv.globalHeaders,
+          globalParams: currentEnv.globalParams,
+          httpBody,
+        };
+
+        dispatch(API_DEBUG(params));
+      }
+    });
   }
 
   updateApiUrl(env) {
@@ -74,7 +80,7 @@ class ApiDebug extends PureComponent {
   handleClose = () => {
     const { form } = this.props;
     form.resetFields();
-    this.props.api.debugResult='';
+    this.props.api.debugResult = '';
     this.props.onCancel();
   }
 
@@ -83,6 +89,7 @@ class ApiDebug extends PureComponent {
     const { apiUrl } = this.state;
 
     const {
+      form: { getFieldDecorator },
       envList,
       api: {
         debugResult
@@ -111,13 +118,22 @@ class ApiDebug extends PureComponent {
         <Form hideRequiredMark style={{ marginTop: 8 }}>
           <Card className={styles.card} bordered={false}>
             <FormItem {...formItemLayout} label="选择环境">
-              <Select allowClear placeholder="请选择环境" onChange={this.handleChangeEnv}>
-                {envList.map(e => (
-                  <Select.Option key={e.id} value={e.id}>
-                    {e.envName} ({e.envPrefix})
-                  </Select.Option>
-                ))}
-              </Select>
+              {getFieldDecorator('envId', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择环境',
+                  },
+                ],
+              })(
+                <Select allowClear placeholder="请选择环境" onChange={this.handleChangeEnv}>
+                  {envList.map(e => (
+                    <Select.Option key={e.id} value={e.id}>
+                      {e.envName} ({e.envPrefix})
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
             </FormItem>
             <FormItem {...formItemLayout} label="选择Content-Type">
               <Select allowClear placeholder="请选择Content-Type" defaultValue="" onChange={this.handleChangeContentType}>
@@ -127,6 +143,19 @@ class ApiDebug extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label="请求地址">
               {apiUrl}
+            </FormItem>
+            <FormItem {...formItemLayout} label="Body">
+              {getFieldDecorator('reqBody', {
+                rules: [
+                  {
+                    required: false,
+                    message: '请输入请求体',
+                  },
+                ],
+                initialValue: this.props.reqBody,
+              })(
+                <Input.TextArea placeholder="请输入请求体" rows={4} />
+              )}
             </FormItem>
             <FormItem {...formItemLayout} label="响应内容">
               <span>状态：{debugResult.status}</span> | <span>耗时：{debugResult.time} ms</span>
