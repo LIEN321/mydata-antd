@@ -463,6 +463,18 @@ class DataTaskForm extends PureComponent {
       },
     };
 
+    const formItemLayout2 = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 6 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 18 },
+        md: { span: 18 },
+      },
+    };
+
     // 从环境列表中排除当前环境
     let otherEnvList = envList;
     if (envList) {
@@ -862,7 +874,7 @@ class DataTaskForm extends PureComponent {
                 </FormItem>
                 :
                 // 字段映射
-                <FormItem {...formItemLayout} label="字段映射" extra={
+                <FormItem {...formItemLayout2} label="字段映射" extra={
                   <>
                   <div>数据处理 对提供数据操作：从API获取数据后，先根据配置对数据进行处理，再存入仓库；</div>
                   <div>数据处理 对提供数据操作：数据出库后，先根据配置对数据进行处理，再发送给API或Excel；</div>

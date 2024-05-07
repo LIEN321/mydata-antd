@@ -40,12 +40,12 @@ class EditableCell extends React.Component {
     const { dataIndex, record } = this.props;
     if (dataIndex === 'dataProcess') {
       return <Row>
-        <Col span={12}>
+        <Col span={10}>
           <Select ref={node => (this.input = node)}
             onChange={this.handleSelectOp}
             placeholder={`请选择`}
             value={(record.dataProcess && record.dataProcess.op) ? record.dataProcess.op : ""}
-            showArrow={false}
+            // showArrow={false}
           >
             <Select.Option value="">无</Select.Option>
             <Select.Option value="+">+</Select.Option>
@@ -58,7 +58,7 @@ class EditableCell extends React.Component {
           </Select>
         </Col>
         {(record.dataProcess && record.dataProcess.op && record.dataProcess.op != 'md5' && record.dataProcess.op != 'base64') &&
-          <Col span={12}>
+          <Col span={14}>
             <Input ref={node => (this.input = node)} onChange={this.handleSaveValue} placeholder={`请输入`} value={(record.dataProcess && record.dataProcess.v) ? record.dataProcess.v : ""} />
           </Col>
         }
@@ -132,7 +132,7 @@ class TaskFieldMappingTable extends React.Component {
       {
         title: '数据字段编号',
         dataIndex: 'dataFieldCode',
-        width: '23%',
+        width: '22%',
         editable: false,
         render: (text, record) => {
           const { isId } = record;
@@ -151,13 +151,13 @@ class TaskFieldMappingTable extends React.Component {
       {
         title: '接口字段',
         dataIndex: 'apiFieldCode',
-        width: '25%',
+        width: '22%',
         editable: !this.state.readonly,
       },
       {
         title: '数据处理',
         dataIndex: 'dataProcess',
-        width: '30%',
+        width: '34%',
         editable: !this.state.readonly,
       },
     ];
