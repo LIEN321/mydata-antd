@@ -48,19 +48,29 @@ class EditableCell extends React.Component {
           // showArrow={false}
           >
             <Select.Option value="">无</Select.Option>
-            <Select.Option value="+">+</Select.Option>
-            <Select.Option value="-">-</Select.Option>
-            <Select.Option value="*">*</Select.Option>
-            <Select.Option value="/">/</Select.Option>
-            <Select.Option value="md5">md5</Select.Option>
-            <Select.Option value="base64">base64</Select.Option>
-            <Select.Option value="add second">增加秒</Select.Option>
-            <Select.Option value="set null">置空(null)</Select.Option>
+            <Select.OptGroup label="数字">
+              <Select.Option value="+">+</Select.Option>
+              <Select.Option value="-">-</Select.Option>
+              <Select.Option value="*">*</Select.Option>
+              <Select.Option value="/">/</Select.Option>
+            </Select.OptGroup>
+            <Select.OptGroup label="字符串">
+              <Select.Option value="md5">md5</Select.Option>
+              <Select.Option value="base64">base64</Select.Option>
+              <Select.Option value="prepend">前添加</Select.Option>
+              <Select.Option value="append">后追加</Select.Option>
+            </Select.OptGroup>
+            <Select.OptGroup label="日期时间">
+              <Select.Option value="add second">增加秒</Select.Option>
+            </Select.OptGroup>
+            <Select.OptGroup label="通用">
+              <Select.Option value="set null">置空(null)</Select.Option>
+            </Select.OptGroup>
           </Select>
         </Col>
-        {(record.dataProcess && record.dataProcess.op 
-        && record.dataProcess.op != 'md5' && record.dataProcess.op != 'base64' && record.dataProcess.op != 'set null') 
-        &&<Col span={14}>
+        {(record.dataProcess && record.dataProcess.op
+          && record.dataProcess.op != 'md5' && record.dataProcess.op != 'base64' && record.dataProcess.op != 'set null')
+          && <Col span={14}>
             <Input ref={node => (this.input = node)} onChange={this.handleSaveValue} placeholder={`请输入`} value={(record.dataProcess && record.dataProcess.v) ? record.dataProcess.v : ""} />
           </Col>
         }
