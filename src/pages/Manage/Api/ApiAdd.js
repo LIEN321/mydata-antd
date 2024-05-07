@@ -21,7 +21,6 @@ class ApiAdd extends PureComponent {
     this.state = {
       reqHeaders: [],
       reqParams: [],
-      opType: TASK_TYPE_PRODUCER,
 
       visible: false,
     };
@@ -106,12 +105,6 @@ class ApiAdd extends PureComponent {
     });
   }
 
-  // 切换类型
-  handleChangeOpType = e => {
-    const opType = e.target.value;
-    this.setState({ opType });
-  }
-
   render() {
     const { visible, apiMethod, apiUri, reqHeaders, reqParams, reqBody } = this.state;
 
@@ -188,7 +181,7 @@ class ApiAdd extends PureComponent {
                 ],
                 initialValue: 1,
               })(
-                <Radio.Group onChange={this.handleChangeOpType}>
+                <Radio.Group>
                   <Radio.Button value={TASK_TYPE_PRODUCER}>提供数据</Radio.Button>
                   <Radio.Button value={TASK_TYPE_CONSUMER}>消费数据</Radio.Button>
                 </Radio.Group>
@@ -285,7 +278,7 @@ class ApiAdd extends PureComponent {
                 />
               )}
             </FormItem>
-            {this.state.opType === TASK_TYPE_PRODUCER && <FormItem {...formItemLayout} label="Body" extra="注意：Params与Body不可同时使用，当使用body时 会Params将失效">
+            <FormItem {...formItemLayout} label="Body" extra="注意：Params与Body不可同时使用，当使用body时 会Params将失效">
               {getFieldDecorator('reqBody', {
                 rules: [
                   {
@@ -294,9 +287,9 @@ class ApiAdd extends PureComponent {
                   },
                 ],
               })(
-                <Input.TextArea placeholder="请输入接口请求体" rows={4} />
+                <Input.TextArea placeholder="请输入接口请求体" rows={6} />
               )}
-            </FormItem>}
+            </FormItem>
           </Card>
         </Form>
         <ApiDebug

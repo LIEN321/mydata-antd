@@ -21,7 +21,6 @@ class ApiEdit extends PureComponent {
     this.state = {
       reqHeaders: [],
       reqParams: [],
-      opType: TASK_TYPE_PRODUCER,
 
       visible: false,
     };
@@ -45,9 +44,7 @@ class ApiEdit extends PureComponent {
       },
     } = nextProps;
 
-    const { reqHeaders, reqParams, opType } = detail;
-
-    this.setState({ opType });
+    const { reqHeaders, reqParams } = detail;
 
     if (reqHeaders && reqHeaders.length > 0) {
       reqHeaders.filter((item, index) => { item.key = index });
@@ -145,12 +142,6 @@ class ApiEdit extends PureComponent {
     });
   }
 
-  // 切换类型
-  handleChangeOpType = e => {
-    const opType = e.target.value;
-    this.setState({ opType });
-  }
-
   render() {
     const { visible, apiMethod, apiUri, reqHeaders, reqParams, reqBody } = this.state;
 
@@ -230,7 +221,7 @@ class ApiEdit extends PureComponent {
                 ],
                 initialValue: detail.opType,
               })(
-                <Radio.Group onChange={this.handleChangeOpType}>
+                <Radio.Group>
                   <Radio.Button value={TASK_TYPE_PRODUCER}>提供数据</Radio.Button>
                   <Radio.Button value={TASK_TYPE_CONSUMER}>消费数据</Radio.Button>
                 </Radio.Group>
@@ -331,7 +322,7 @@ class ApiEdit extends PureComponent {
                 />
               )}
             </FormItem>
-            {this.state.opType === TASK_TYPE_PRODUCER && <FormItem {...formItemLayout} label="Body" extra="注意：Params与Body不可同时使用，当使用body时 会Params将失效">
+            <FormItem {...formItemLayout} label="Body" extra="注意：Params与Body不可同时使用，当使用body时 会Params将失效">
               {getFieldDecorator('reqBody', {
                 rules: [
                   {
@@ -341,9 +332,9 @@ class ApiEdit extends PureComponent {
                 ],
                 initialValue: detail.reqBody,
               })(
-                <Input.TextArea placeholder="请输入接口请求体" rows={4} />
+                <Input.TextArea placeholder="请输入接口请求体" rows={6} />
               )}
-            </FormItem>}
+            </FormItem>
           </Card>
         </Form>
         <ApiDebug
