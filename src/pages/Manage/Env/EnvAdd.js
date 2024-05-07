@@ -164,6 +164,7 @@ class EnvAdd extends PureComponent {
                     message: '请输入顺序',
                   },
                 ],
+                initialValue: 1,
               })(<Input placeholder="请输入顺序" />)}
             </FormItem>
             <FormItem {...formItemLayout} label="全局Headers">
