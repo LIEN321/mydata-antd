@@ -76,6 +76,7 @@ class BizData extends PureComponent {
                             <Popconfirm
                                 title="删除数据是不可逆操作，确认要删除吗？"
                                 icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+                                placement="topRight"
                                 onConfirm={this.handleDeleteBizData}
                             >
                                 <Button type='danger'>全部删除</Button>
