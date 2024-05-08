@@ -21,6 +21,7 @@ class Data extends PureComponent {
       currentData: {},
       currentEnvId: null,
       bizDataModalVisible: false,
+      params: {},
     };
   }
 
@@ -28,6 +29,7 @@ class Data extends PureComponent {
   handleSearch = params => {
     const { dispatch } = this.props;
     dispatch(DATA_LIST(params));
+    this.setState({ params });
   };
 
   // ============ 查询表单 ===============
@@ -68,6 +70,8 @@ class Data extends PureComponent {
 
   closeBizData = () => {
     this.setState({ bizDataModalVisible: false, currentData: {} });
+    const { params } = this.state;
+    this.handleSearch(params);
   };
 
   render() {
@@ -105,7 +109,7 @@ class Data extends PureComponent {
             return <>
               {bizDataList[0].envName}: <a onClick={() => { this.showBizData(record, bizDataList[0].envId) }}>{bizDataList[0].dataCount}</a>
               {bizDataList.slice(1).map(bizData => (
-                <><Divider type='vertical'/>{bizData.envName}: <a onClick={() => { this.showBizData(record, bizData.envId) }}>{bizData.dataCount}</a></>
+                <><Divider type='vertical' />{bizData.envName}: <a onClick={() => { this.showBizData(record, bizData.envId) }}>{bizData.dataCount}</a></>
               ))}
             </>;
           }
