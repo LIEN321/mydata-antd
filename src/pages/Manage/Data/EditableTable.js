@@ -55,7 +55,7 @@ class EditableCell extends React.Component {
         <Select.Option value="number">数值</Select.Option>
         <Select.Option value="int">整数</Select.Option>
         <Select.Option value="string">字符串</Select.Option>
-        <Select.Option value="date">日期</Select.Option>
+        <Select.Option value="date">日期时间</Select.Option>
       </Select>;
     }
     return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入${this.props.title}`} />;
