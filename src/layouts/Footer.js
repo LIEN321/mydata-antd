@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { Layout, Icon } from 'antd';
 import GlobalFooter from '@/components/GlobalFooter';
+import { version } from './version';
 
 const { Footer } = Layout;
 const FooterView = () => (
@@ -8,7 +9,7 @@ const FooterView = () => (
     <GlobalFooter
       copyright={
         <Fragment>
-          MyData v0.8.1.1 Copyright <Icon type="copyright" /> 2024 LIEN{' '}
+          MyData v{version} Copyright <Icon type="copyright" /> 2024 LIEN{' '}
           <a
             key="github"
             title="git"

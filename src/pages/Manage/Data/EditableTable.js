@@ -1,4 +1,4 @@
-import { Form, Input, Button, Table, Switch, Popconfirm, InputNumber, Select } from 'antd';
+import { Form, Input, Button, Table, Switch, Popconfirm, InputNumber, Select, Divider } from 'antd';
 import React from 'react';
 import style from './StandardData.less';
 
@@ -50,12 +50,12 @@ class EditableCell extends React.Component {
       return <Switch ref={node => (this.input = node)} checked={this.props.record.isId === 1} checkedChildren="是" unCheckedChildren="否" onClick={() => this.handleSwitchIsId()} />
     }
     if (this.props.dataIndex === 'fieldType') {
-      return <Select ref={node => (this.input = node)} onChange={this.handleSelectFieldType} placeholder={`请输入${this.props.title}`} initialValue="default">
+      return <Select ref={node => (this.input = node)} onChange={this.handleSelectFieldType} placeholder={`请输入${this.props.title}`} defaultValue="default">
         <Select.Option value="default">默认</Select.Option>
         <Select.Option value="number">数值</Select.Option>
         <Select.Option value="int">整数</Select.Option>
         <Select.Option value="string">字符串</Select.Option>
-        <Select.Option value="date">日期</Select.Option>
+        <Select.Option value="date">日期时间</Select.Option>
       </Select>;
     }
     return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入${this.props.title}`} />;
@@ -120,7 +120,8 @@ class EditableTable extends React.Component {
     this.state = {
       dataFields: [],
       count: 0,
-      readonly: props.readonly ? props.readonly : false
+      readonly: props.readonly ? props.readonly : false,
+      isMultiId: false,
     };
 
     this.columns = [
@@ -170,10 +171,14 @@ class EditableTable extends React.Component {
   componentWillReceiveProps(nextProps) {
 
     let { dataFields } = nextProps;
+    let idCount = 0;
     if (dataFields) {
       let i = 0;
       dataFields.map(field => {
         field.key = i++;
+        if (field.isId === 1) {
+          idCount++;
+        }
       });
     } else {
       dataFields = [];
@@ -183,6 +188,7 @@ class EditableTable extends React.Component {
       dataFields,
       count: dataFields.length,
       readonly: nextProps.readonly ? nextProps.readonly : false,
+      isMultiId: (idCount > 1),
     });
   }
 
@@ -230,7 +236,7 @@ class EditableTable extends React.Component {
   };
 
   handleSwitchIsId = (key, isId) => {
-    if (isId === 0) {
+    if (isId === 0 || this.state.isMultiId === true) {
       return;
     }
     const { dataFields } = this.state;
@@ -240,6 +246,18 @@ class EditableTable extends React.Component {
       }
     });
     this.setState({ dataFields });
+  }
+
+  handleSwitchMultiId = (value) => {
+    this.setState({ isMultiId: value });
+    // 取消组合标识，则禁用所有选择
+    if (value === false) {
+      const { dataFields } = this.state;
+      dataFields.map(field => {
+        field.isId = 0;
+      });
+      this.setState({ dataFields });
+    }
   }
 
   render() {
@@ -270,9 +288,14 @@ class EditableTable extends React.Component {
 
     return (
       <div>
-        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 12 }}>
-          添加字段
-        </Button>
+        {!this.state.readonly && <>
+          <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 12 }}>
+            添加字段
+          </Button>
+          <Divider type="vertical" />
+          <Switch checked={this.state.isMultiId} checkedChildren="是" unCheckedChildren="否" onChange={this.handleSwitchMultiId} />启用字段组合标识
+        </>
+        }
         <Table
           components={components}
           rowClassName={() => { style.editableRow }}
@@ -283,6 +306,8 @@ class EditableTable extends React.Component {
             onChange: this.cancel,
             position: "none"
           }}
+          size="small"
+          scroll={{ y: 230 }}
         />
       </div>
     );

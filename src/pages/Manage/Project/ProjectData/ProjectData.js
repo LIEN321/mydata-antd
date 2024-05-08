@@ -14,6 +14,7 @@ import mdStyle from '../../../../layouts/Mydata.less'
 import DataTask from './DataTask';
 import EnvVar from '../../EnvVar/EnvVar';
 import EnvTask from './EnvTask';
+import BizData from '../../Data/BizData';
 
 const FormItem = Form.Item;
 
@@ -106,7 +107,7 @@ class ProjectData extends PureComponent {
       <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
         <Col md={12} sm={24}>
           <span style={{ color: 'red' }}>*</span><span style={{ fontWeight: 'bold' }}>选择环境：</span>
-          {envList.length > 0 ? <Select placeholder="请选择所属环境" onChange={this.handleChangeEnv} style={{ width: 200 }} initialValue={envList.length > 0 ? envList[0].id : null}>
+          {envList.length > 0 ? <Select placeholder="请选择所属环境" onChange={this.handleChangeEnv} style={{ width: 200 }} defaultValue={envList.length > 0 ? envList[0].id : null}>
             {envList.map(e => (
               <Select.Option key={e.id} value={e.id}>
                 <Row style={{ width: '168px' }}>
@@ -159,36 +160,14 @@ class ProjectData extends PureComponent {
     );
   };
 
-  showBizData = params => {
-    const { dispatch, projectId } = this.props;
-    const { id } = params;
-    const envId = this.state.currentEnv.id;
-    dispatch(BIZ_FIELD_LIST({ dataId: id }));
-    dispatch(BIZ_DATA_LIST({ dataId: id, projectId, envId }));
-    this.setState({ bizDataModalVisible: true, currentData: params });
-  };
-
-  handleSearchBizData = (pagination) => {
-    const { dispatch, projectId } = this.props;
-    const { currentData } = this.state;
-    const envId = this.state.currentEnv.id;
-    dispatch(BIZ_DATA_LIST({ ...pagination, dataId: currentData.id, projectId, envId }));
-  };
-
-  handleDeleteBizData = () => {
-    const { currentData, currentEnv } = this.state;
-    deleteBizDataByEnv({ dataId: currentData.id, envId: currentEnv.id }).then(resp => {
-      if (resp.success) {
-        message.info(resp.msg);
-        this.closeBizData();
-        this.handleChangeEnv(currentEnv.id);
-      } else {
-        message.error(resp.msg);
-      }
-    });
+  showBizData = data => {
+    this.setState({ bizDataModalVisible: true });
+    this.setState(() => ({ currentData: data }));
   };
 
   closeBizData = () => {
+    const { currentEnv } = this.state;
+    this.handleChangeEnv(currentEnv.id);
     this.setState({ bizDataModalVisible: false, currentData: {} });
   };
 
@@ -254,12 +233,12 @@ class ProjectData extends PureComponent {
         submitData(formData).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
+            this.handleSearch(params);
+            this.handleCloseDataForm();
+            form.resetFields();
           } else {
             message.error(resp.msg || '提交失败');
           }
-          this.handleSearch(params);
-          this.handleCloseDataForm();
-          form.resetFields();
         });
       }
     });
@@ -471,21 +450,6 @@ class ProjectData extends PureComponent {
       }
     ];
 
-    const bizDataColumns = [];
-    if (bizField) {
-      for (let i = 0; i < bizField.length; i++) {
-        const field = bizField[i];
-        bizDataColumns.push({
-          title: field.fieldName,
-          dataIndex: field.fieldCode,
-        });
-      }
-    }
-    bizDataColumns.push({
-      title: "最后更新时间",
-      dataIndex: "_MD_UPDATE_TIME_"
-    });
-
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -558,7 +522,8 @@ class ProjectData extends PureComponent {
                   initialValue: detail.dataName || '',
                 })(<Input placeholder="请输入数据名称，长度不超过64位" maxLength={64} />)}
               </FormItem>
-              <FormItem {...formItemLayout} label="字段">
+              <FormItem {...formItemLayout} label="字段" extra={<span>标识字段至少选择一个，多选则表示字段组合是唯一的！
+                <br />注意：请谨慎调整标识字段，修改后会更新所有相关任务并自动重启已启动的任务！</span>}>
                 <EditableTable
                   dataFields={dataFields || []}
                   handleSave={this.handleSaveField}
@@ -570,37 +535,15 @@ class ProjectData extends PureComponent {
         </Modal>
 
         {/* 业务数据 弹出框 */}
-        <Modal
-          title={`业务数据 - ${currentData.dataName}`}
-          width="90%"
-          visible={this.state.bizDataModalVisible}
-          footer={[
-            <Button key="back" onClick={this.closeBizData}>
-              关闭
-            </Button>
-          ]}
-          onCancel={this.closeBizData}
-        >
-          <Row justify='end' style={{ marginBottom: 12 }}>
-            <Col>
-              <div style={{ float: 'right' }}>
-                <Popconfirm
-                  title="删除数据是不可逆操作，确认要删除吗？"
-                  icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
-                  onConfirm={this.handleDeleteBizData}
-                >
-                  <Button type='danger'>全部删除</Button>
-                </Popconfirm>
-              </div>
-            </Col>
-          </Row>
-          <Table
-            columns={bizDataColumns}
-            dataSource={bizData.list}
-            pagination={bizData.pagination}
-            onChange={this.handleSearchBizData}
+        {this.state.bizDataModalVisible &&
+          <BizData
+            visible={this.state.bizDataModalVisible}
+            onClose={this.closeBizData}
+            currentData={currentData}
+            envId={currentEnv.id}
+            projectId={projectId}
           />
-        </Modal>
+        }
 
         {/* 数据项的同步任务 */}
         {currentEnv && dataTaskVisible && <DataTask

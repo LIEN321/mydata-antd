@@ -8,6 +8,7 @@ import { TASK_INIT } from '../../../../actions/task';
 import { submit as submitTask, detail as taskDetail } from '../../../../services/task';
 import TaskFieldMappingTable from '../../Task/TaskFieldMappingTable';
 import { dataFields as loadDataFields } from '../../../../services/data';
+import { select as apiSelect } from '../../../../services/md_api';
 import TaskDataFilterTable from '../../Task/TaskDataFilterTable';
 import TaskVarMappingTable from '../../Task/TaskVarMappingTable';
 import TaskBatchParamTable from '../../Task/TaskBatchMappingTable';
@@ -31,7 +32,7 @@ class DataTaskForm extends PureComponent {
       detail: null,
       // api完整地址
       apiUrl: '',
-      // 其他环境列表
+      // 环境列表
       envList: [],
       // 当前所选环境
       selectedEnv: null,
@@ -45,6 +46,8 @@ class DataTaskForm extends PureComponent {
       dataFieldList: [],
       // 字段映射
       fieldMapping: {},
+      // 数据处理
+      dataProcess: {},
 
       // 过滤条件列表
       filters: [],
@@ -56,7 +59,7 @@ class DataTaskForm extends PureComponent {
 
       // 是否显示订阅
       isSubscribed: 0,
-      isShowSubscribed: false,
+      isShowSubscribed: true,
       // 是否显示任务周期
       isShowTaskPeriod: true,
 
@@ -80,7 +83,7 @@ class DataTaskForm extends PureComponent {
 
   componentWillMount() {
     const { dispatch, opType, data, currentTask } = this.props;
-    dispatch(TASK_INIT({ opType }));
+    dispatch(TASK_INIT());
     this.loadDataFieldList(data.id);
 
     if (currentTask && currentTask.id) {
@@ -91,7 +94,8 @@ class DataTaskForm extends PureComponent {
           this.setState({ apiUrl: detail.apiUrl });
           this.setState({
             fieldMapping: detail.fieldMapping,
-            isShowSubscribed: detail.opType !== TASK_TYPE_PRODUCER,
+            dataProcess: detail.dataProcess,
+            isShowSubscribed: !(detail.opType === TASK_TYPE_PRODUCER && detail.produceMode === TASK_PRODUCE_MODE_PUSH),
             isShowTaskPeriod: detail.isSubscribed !== TASK_SUBSCRIBED && (
               (detail.opType === TASK_TYPE_PRODUCER && detail.produceMode === TASK_PRODUCE_MODE_API)
               ||
@@ -108,31 +112,41 @@ class DataTaskForm extends PureComponent {
             isSubscribed: detail.isSubscribed,
           });
           this.renderWarning(detail);
+
+          this.loadApi(opType, detail.appId);
         }
       });
       // dispatch(TASK_DETAIL(currentTask.id));
-    }
-
-    if (opType === TASK_TYPE_PRODUCER) {
-      // 提供数据
-      this.setState({ isShowSubscribed: false });
-    } else {
-      // 消费数据
-      this.setState({ isShowSubscribed: true });
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const {
-      task: {
-        init: { envList, apiList },
-      },
+      // task: {
+      //   init: { apiList },
+      // },
+      envList,
     } = nextProps;
 
     this.setState({
       envList,
-      apiList,
+      // apiList,
     });
+  }
+
+  handleChangeApp = appId => {
+    const { opType, form } = this.props;
+    if (appId) {
+      this.loadApi(opType, appId);
+      form.setFieldsValue({ apiId: '' });
+    }
+  }
+
+  async loadApi(opType, appId) {
+    const response = await apiSelect({ opType, appId });
+    if (response.success) {
+      this.setState(() => ({ apiList: response.data }));
+    }
   }
 
   handleChangeEnv = envId => {
@@ -143,8 +157,10 @@ class DataTaskForm extends PureComponent {
 
   handleChangeApi = apiId => {
     const api = this.findApi(apiId);
-    this.state.selectedApi = api;
-    this.updateApiUrl();
+    if (api) {
+      this.state.selectedApi = api;
+      this.updateApiUrl();
+    }
   }
 
   updateApiUrl() {
@@ -190,9 +206,25 @@ class DataTaskForm extends PureComponent {
   handleSaveMapping = mapping => {
     const { fieldMapping } = this.state;
     const key = mapping.dataFieldCode;
-    if (key) {
+    if (key && mapping.apiFieldCode) {
       fieldMapping[key] = mapping.apiFieldCode;
+    } else {
+      delete fieldMapping[key];
     }
+    this.setState({fieldMapping});
+  };
+
+  handleSaveDataProcess = mapping => {
+    const { dataProcess } = this.state;
+    const key = mapping.dataFieldCode;
+    if (key && mapping.dataProcess) {
+      dataProcess[key] = mapping.dataProcess;
+    } else {
+      delete dataProcess[key];
+    }
+    this.setState({dataProcess});
+    console.info(mapping);
+    console.info(dataProcess);
   };
 
   // 消费模式是发送邮件时，选择字段
@@ -224,6 +256,7 @@ class DataTaskForm extends PureComponent {
           // params.refEnvId = currentTask.refEnvId;
         }
         params.fieldMapping = this.state.fieldMapping;
+        params.dataProcess = this.state.dataProcess;
         params.dataFilter = this.state.filters;
         // params.fieldVarMapping = this.state.varMappings;
         params.envId = env.id;
@@ -254,6 +287,10 @@ class DataTaskForm extends PureComponent {
             "username": '' + form.getFieldValue("username")
             , "password": '' + form.getFieldValue("password")
           };
+        }
+
+        if (params.produceMode === TASK_PRODUCE_MODE_PUSH) {
+          params.isSubscribed = TASK_SUBSCRIBED;
         }
 
         // dispatch(TASK_SUBMIT(params));
@@ -341,10 +378,12 @@ class DataTaskForm extends PureComponent {
 
   findApi(apiId) {
     const newApiList = [...this.state.apiList];
-    const index = newApiList.findIndex(api => api.id === apiId);
-    const api = newApiList[index];
-    this.state.selectedApi = api;
-    return api;
+    if (newApiList) {
+      const index = newApiList.findIndex(api => api.id === apiId);
+      const api = newApiList[index];
+      this.state.selectedApi = api;
+      return api;
+    }
   }
 
   findEnv(envId) {
@@ -400,16 +439,17 @@ class DataTaskForm extends PureComponent {
     const {
       form,
       task: {
-        init: { envList, apiList },
+        init: { appList },
         //   detail,
       },
       opType,
       isRefEnv,
       env,
+      envList,
       producerTasks,
     } = this.props;
 
-    const { apiUrl, detail, isBatchEnabled, consumeMode, isSubscribed, produceMode, authType } = this.state;
+    const { apiUrl, detail, isBatchEnabled, consumeMode, isSubscribed, produceMode, authType, apiList } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -420,6 +460,18 @@ class DataTaskForm extends PureComponent {
         xs: { span: 24 },
         sm: { span: 14 },
         md: { span: 14 },
+      },
+    };
+
+    const formItemLayout2 = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 6 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 18 },
+        md: { span: 18 },
       },
     };
 
@@ -460,6 +512,25 @@ class DataTaskForm extends PureComponent {
                   ],
                   initialValue: detail ? detail.taskName : '',
                 })(<Input placeholder="请输入任务名称" />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label="选择应用">
+                {getFieldDecorator('appId', {
+                  rules: [
+                    {
+                      required: false,
+                      message: '请选择应用',
+                    },
+                  ],
+                  initialValue: detail ? detail.appId : '',
+                })(
+                  <Select allowClear showSearch placeholder="请选择应用" onChange={this.handleChangeApp} optionFilterProp="children">
+                    {appList && appList.map(a => (
+                      <Select.Option key={a.id} value={a.id}>
+                        {a.appName} ({a.appCode})
+                      </Select.Option>
+                    ))}
+                  </Select>
+                )}
               </FormItem>
               {/* 选择提供模式 */}
               {opType === TASK_TYPE_PRODUCER ? (
@@ -516,7 +587,7 @@ class DataTaskForm extends PureComponent {
                       initialValue: detail ? detail.refEnvId : '',
                     })(
                       <Select allowClear placeholder="请选择其他环境" onChange={this.handleChangeEnv}>
-                        {otherEnvList.map(e => (
+                        {otherEnvList && otherEnvList.map(e => (
                           <Select.Option key={e.id} value={e.id}>
                             {e.envName} ({e.envPrefix})
                           </Select.Option>
@@ -535,8 +606,8 @@ class DataTaskForm extends PureComponent {
                       ],
                       initialValue: detail ? detail.apiId : '',
                     })(
-                      <Select allowClear placeholder="请选择API" onChange={this.handleChangeApi}>
-                        {apiList.map(a => (
+                      <Select allowClear showSearch placeholder="请选择API" onChange={this.handleChangeApi} optionFilterProp="children">
+                        {apiList && apiList.map(a => (
                           <Select.Option key={a.id} value={a.id}>
                             {a.apiName} ({a.apiUri})
                           </Select.Option>
@@ -580,7 +651,7 @@ class DataTaskForm extends PureComponent {
                         })(
                           <Select allowClear placeholder="请选择触发订阅的任务">
                             <Select.Option key={'0'} value={'0'}>全部</Select.Option>
-                            {producerTasks.map(a => (
+                            {producerTasks && producerTasks.map(a => (
                               <Select.Option key={a.id} value={a.id}>
                                 {a.taskName}
                               </Select.Option>
@@ -730,7 +801,7 @@ class DataTaskForm extends PureComponent {
                                   }>取消</Button>,
                                 <Button type="primary" onClick={() => {
                                   let cronValue = cronRef.getValue();
-                                  if(cronValue){
+                                  if (cronValue) {
                                     cronValue = "0 " + cronValue.substr(2);
                                     setFieldsValue({ taskPeriod: cronValue });
                                     this.setState({ cronVisible: false });
@@ -765,9 +836,9 @@ class DataTaskForm extends PureComponent {
 
               {/* 消费模式 调用API */}
               {((opType === TASK_TYPE_CONSUMER && consumeMode === TASK_CONSUME_MODE_API)) && <>
-                <FormItem {...formItemLayout} label="单数据模式" extra="根据API接收格式选择，集合是发送多条数据 格式为[{k:v},{k:v},...]，对象是发送一条数据 格式为{k:v,...}">
-                  {getFieldDecorator('singleMode', {
-                    initialValue: (detail && detail.singleMode) ? detail.singleMode : 2,
+                <FormItem {...formItemLayout} label="数据模式" extra="根据API接收格式选择，集合是发送多条数据 格式为[{k:v},{k:v},...]，对象是逐个发送数据 格式为{k:v,...}">
+                  {getFieldDecorator('dataMode', {
+                    initialValue: (detail && detail.dataMode) ? detail.dataMode : 2,
                   })(
                     <Radio.Group buttonStyle="solid">
                       <Radio.Button value={2}>集合</Radio.Button>
@@ -803,11 +874,18 @@ class DataTaskForm extends PureComponent {
                 </FormItem>
                 :
                 // 字段映射
-                <FormItem {...formItemLayout} label="字段映射">
+                <FormItem {...formItemLayout2} label="字段映射" extra={
+                  <>
+                  <div>数据处理 对提供数据操作：从API获取数据后，先根据配置对数据进行处理，再存入仓库；</div>
+                  <div>数据处理 对提供数据操作：数据出库后，先根据配置对数据进行处理，再发送给API或Excel；</div>
+                  </>
+                }>
                   <TaskFieldMappingTable
                     dataFieldList={this.state.dataFieldList}
                     handleSave={this.handleSaveMapping}
+                    handleSaveDataProcess={this.handleSaveDataProcess}
                     initFieldMappings={this.state.fieldMapping}
+                    dataProcess={this.state.dataProcess}
                   />
                 </FormItem>
               }

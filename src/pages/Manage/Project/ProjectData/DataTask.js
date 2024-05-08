@@ -77,6 +77,7 @@ class DataTask extends PureComponent {
       env,
       data,
       projectId,
+      envList,
     } = this.props;
 
     return (
@@ -163,6 +164,7 @@ class DataTask extends PureComponent {
 
         {this.state.taskFormVisible && <DataTaskForm
           env={env}
+          envList={envList}
           data={data}
           projectId={projectId}
           opType={this.state.opType}

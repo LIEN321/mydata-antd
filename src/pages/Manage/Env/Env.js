@@ -109,6 +109,11 @@ class Env extends PureComponent {
 
     const columns = [
       {
+        title: '环境名称',
+        dataIndex: 'envName',
+        width: '200px',
+      },
+      {
         title: '所属项目',
         dataIndex: 'projectName',
         width: '200px',
@@ -117,11 +122,6 @@ class Env extends PureComponent {
         title: '顺序',
         dataIndex: 'sort',
         width: '50px',
-      },
-      {
-        title: '环境名称',
-        dataIndex: 'envName',
-        width: '200px',
       },
       {
         title: '前置路径',
@@ -152,7 +152,7 @@ class Env extends PureComponent {
             <a onClick={() => {
               this.syncTask(id);
             }}
-            >更新
+            >同步
             </a>
           </>
         },

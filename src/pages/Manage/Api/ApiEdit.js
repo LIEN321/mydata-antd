@@ -6,6 +6,7 @@ import styles from '../../../layouts/Sword.less';
 import { API_DETAIL, API_SUBMIT, API_INIT } from '../../../actions/api';
 import ApiEditableTable from './ApiEditableTable';
 import ApiDebug from './ApiDebug';
+import { TASK_TYPE_CONSUMER, TASK_TYPE_PRODUCER } from '@/actions/task';
 
 const FormItem = Form.Item;
 
@@ -20,7 +21,7 @@ class ApiEdit extends PureComponent {
     this.state = {
       reqHeaders: [],
       reqParams: [],
-      
+
       visible: false,
     };
   }
@@ -131,6 +132,7 @@ class ApiEdit extends PureComponent {
       visible: true,
       apiMethod: form.getFieldValue("apiMethod"),
       apiUri: form.getFieldValue("apiUri"),
+      reqBody: form.getFieldValue("reqBody"),
     });
   };
 
@@ -141,7 +143,7 @@ class ApiEdit extends PureComponent {
   }
 
   render() {
-    const { visible, apiMethod, apiUri, reqHeaders, reqParams } = this.state;
+    const { visible, apiMethod, apiUri, reqHeaders, reqParams, reqBody } = this.state;
 
     const {
       form: { getFieldDecorator },
@@ -220,8 +222,8 @@ class ApiEdit extends PureComponent {
                 initialValue: detail.opType,
               })(
                 <Radio.Group>
-                  <Radio.Button value={1}>提供数据</Radio.Button>
-                  <Radio.Button value={2}>消费数据</Radio.Button>
+                  <Radio.Button value={TASK_TYPE_PRODUCER}>提供数据</Radio.Button>
+                  <Radio.Button value={TASK_TYPE_CONSUMER}>消费数据</Radio.Button>
                 </Radio.Group>
               )}
             </FormItem>
@@ -243,16 +245,20 @@ class ApiEdit extends PureComponent {
                 </Radio.Group>
               )}
             </FormItem>
-            <FormItem {...formItemLayout} label="相对路径" help="长度128以内，例如：/hr/users；">
+            <FormItem {...formItemLayout} label="API路径" extra={<>
+              <div>长度128以内，例如：http://domain:port/path；</div>
+              <div>若多环境部署可填写相对路径 例如：/hr/users，再结合环境的统一前缀形成完整地址；</div>
+            </>
+            }>
               {getFieldDecorator('apiUri', {
                 rules: [
                   {
                     required: true,
-                    message: '请输入相对路径',
+                    message: '请输入API路径',
                   },
                 ],
                 initialValue: detail.apiUri,
-              })(<Input placeholder="API相对路径，以斜杠(/)开头" maxLength={128} />)}
+              })(<Input placeholder="API路径" maxLength={128} />)}
             </FormItem>
             <FormItem {...formItemLayout} label="数据类型" help="目前仅支持JSON；">
               {getFieldDecorator('dataType', {
@@ -269,7 +275,7 @@ class ApiEdit extends PureComponent {
                 </Radio.Group>
               )}
             </FormItem>
-            <FormItem {...formItemLayout} label="JSON字段层级前缀">
+            <FormItem {...formItemLayout} label="数据层级前缀">
               {getFieldDecorator('fieldPrefix', {
                 rules: [
                   {
@@ -278,7 +284,7 @@ class ApiEdit extends PureComponent {
                   },
                 ],
                 initialValue: detail.fieldPrefix,
-              })(<Input placeholder="请输入JSON字段层级前缀" />)}
+              })(<Input placeholder="请输入数据层级前缀" />)}
             </FormItem>
             <FormItem {...formItemLayout} label="Headers">
               {getFieldDecorator('reqHeaders', {
@@ -316,6 +322,19 @@ class ApiEdit extends PureComponent {
                 />
               )}
             </FormItem>
+            <FormItem {...formItemLayout} label="Body" extra="注意：Params与Body不可同时使用，当使用body时 会Params将失效">
+              {getFieldDecorator('reqBody', {
+                rules: [
+                  {
+                    required: false,
+                    message: '请输入接口请求体',
+                  },
+                ],
+                initialValue: detail.reqBody,
+              })(
+                <Input.TextArea placeholder="请输入接口请求体" rows={6} />
+              )}
+            </FormItem>
           </Card>
         </Form>
         <ApiDebug
@@ -325,6 +344,7 @@ class ApiEdit extends PureComponent {
           apiUri={apiUri}
           reqHeaders={reqHeaders}
           reqParams={reqParams}
+          reqBody={reqBody}
           onCancel={this.cancelDebug}
         />
       </Panel>

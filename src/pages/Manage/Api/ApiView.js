@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import router from 'umi/router';
-import { Form, Card, Button } from 'antd';
+import { Form, Card, Button, Input } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
@@ -78,7 +78,7 @@ class ApiView extends PureComponent {
             <FormItem {...formItemLayout} label="数据类型">
               <span>{detail.dataType}</span>
             </FormItem>
-            <FormItem {...formItemLayout} label="JSON字段层级前缀">
+            <FormItem {...formItemLayout} label="数据层级前缀">
               <span>{detail.fieldPrefix}</span>
             </FormItem>
             <FormItem {...formItemLayout} label="Headers">
@@ -92,6 +92,9 @@ class ApiView extends PureComponent {
                 tableValues={detail.reqParams}
                 readonly
               />
+            </FormItem>
+            <FormItem {...formItemLayout} label="Body">
+              <Input.TextArea placeholder="请输入接口请求体" rows={6} value={detail.reqBody} readOnly />
             </FormItem>
           </Card>
         </Form>

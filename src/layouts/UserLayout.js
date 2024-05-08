@@ -6,6 +6,7 @@ import GlobalFooter from '@/components/GlobalFooter';
 import SelectLang from '@/components/SelectLang';
 import styles from './UserLayout.less';
 import logo from '../assets/logo.png';
+import { version } from './version';
 
 const links = [
   {
@@ -27,7 +28,7 @@ const links = [
 
 const copyright = (
   <Fragment>
-    MyData v0.8.1.1 Copyright <Icon type="copyright" /> 2024 LIEN{' '}
+    MyData v{version} Copyright <Icon type="copyright" /> 2024 LIEN{' '}
     <a
       key="github"
       title="git"

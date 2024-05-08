@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Form, Input, Card, Button, Select, Radio, Modal, message, notification, Popover } from 'antd';
 import { connect } from 'dva';
 import styles from '../../../../layouts/Sword.less';
-import { TASK_INIT_API, TASK_SUBSCRIBED, TASK_TYPE_PRODUCER } from '../../../../actions/task';
+import { TASK_INIT_API, TASK_SUBSCRIBED, TASK_TYPE_PRODUCER, TASK_PRODUCE_MODE_API } from '../../../../actions/task';
 import { submit as submitTask, detail as taskDetail } from '../../../../services/task';
 import TaskVarMappingTable from '../../Task/TaskVarMappingTable';
 import Cron from "qnn-react-cron";
@@ -135,6 +135,7 @@ class EnvTaskForm extends PureComponent {
         // params.fieldVarMapping = this.state.varMappings;
         params.envId = env.id;
         params.projectId = projectId;
+        params.produceMode = TASK_PRODUCE_MODE_API;
 
         const fieldVarMapping = {};
         const { varMappings } = this.state;
@@ -266,7 +267,7 @@ class EnvTaskForm extends PureComponent {
                 initialValue: detail ? detail.apiId : '',
               })(
                 <Select allowClear placeholder="请选择API" onChange={this.handleChangeApi}>
-                  {apiList.map(a => (
+                  {apiList && apiList.map(a => (
                     <Select.Option key={a.id} value={a.id}>
                       {a.apiName} ({a.apiUri})
                     </Select.Option>
