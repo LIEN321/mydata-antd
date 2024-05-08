@@ -88,6 +88,7 @@ class BizData extends PureComponent {
                     dataSource={bizData.list}
                     pagination={bizData.pagination}
                     onChange={this.handleSearchBizData}
+                    size="small"
                 />
             </Modal>
         );

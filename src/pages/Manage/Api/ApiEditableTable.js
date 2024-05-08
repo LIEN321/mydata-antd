@@ -219,6 +219,7 @@ class ApiEditableTable extends React.Component {
             onChange: this.cancel,
             position: "none"
           }}
+          size="small"
         />
       </div>
     );

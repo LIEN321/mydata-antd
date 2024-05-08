@@ -385,6 +385,7 @@ class TaskCard extends PureComponent {
                     onChange={this.handleSearchLog}
                     expandedRowRender={record => <div style={{ 'overflow-wrap': 'anywhere' }} dangerouslySetInnerHTML={{ __html: `${record.taskDetail.replaceAll('\n', '</br>')}`, }} />}
                     loading={loading}
+                    size="small"
                 />}
             </Modal>
 
