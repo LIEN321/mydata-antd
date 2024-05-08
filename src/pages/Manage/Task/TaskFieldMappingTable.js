@@ -59,6 +59,7 @@ class EditableCell extends React.Component {
               <Select.Option value="base64">base64</Select.Option>
               <Select.Option value="prepend">前添加</Select.Option>
               <Select.Option value="append">后追加</Select.Option>
+              <Select.Option value="set empty">置空(empty)</Select.Option>
             </Select.OptGroup>
             <Select.OptGroup label="日期时间">
               <Select.Option value="add second">增加秒</Select.Option>
