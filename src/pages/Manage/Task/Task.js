@@ -262,8 +262,8 @@ class Task extends PureComponent {
         dataIndex: 'taskResult',
         width: 100,
         render: taskResult => {
-          const color = taskResult === 1 ? 'green' : 'red';
-          const status = taskResult === 1 ? '成功' : '失败';
+          const color = taskResult != null ? (taskResult === 1 ? 'green' : 'red') : '';
+          const status = taskResult != null ? (taskResult === 1 ? '成功' : '失败') : '-';
           return (
             <Tag color={color}>
               {status}
