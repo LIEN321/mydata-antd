@@ -199,10 +199,7 @@ class TaskFieldSelectTable extends React.Component {
           bordered
           dataSource={this.state.fieldMappings}
           columns={columns}
-          pagination={{
-            onChange: this.cancel,
-            position: "none"
-          }}
+          pagination={false}
           size="small"
           scroll={{ y: 230 }}
         />
