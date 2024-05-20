@@ -248,7 +248,7 @@ class Task extends PureComponent {
 
     const logColumns = [
       {
-        title: '开始时间',
+        title: '（预计）开始时间',
         dataIndex: 'taskStartTime',
         width: 160,
       },

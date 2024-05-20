@@ -227,7 +227,7 @@ class TaskCard extends PureComponent {
         const taskStatusStyle = [{}, mdStyle.runningCard, mdStyle.failedCard, mdStyle.stoppedCard];
         const logColumns = [
             {
-                title: '开始时间',
+                title: '（预计）开始时间',
                 dataIndex: 'taskStartTime',
                 width: 160,
             },
