@@ -1,6 +1,6 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent, Fragment, useEffect } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Row, Divider, Card, Icon, notification, Drawer } from 'antd';
+import { Button, Col, Form, Row, Divider, Card, Icon, notification, Drawer, Switch } from 'antd';
 import { DATA_TASKS, TASK_TYPE_PRODUCER, TASK_TYPE_CONSUMER } from '../../../../actions/task';
 import DataTaskForm from './DataTaskForm';
 
@@ -18,11 +18,17 @@ class DataTask extends PureComponent {
     this.state = {
       currentTask: {},
       taskFormVisible: false,
+      isAutoRefresh: false,
+      intervalId: null,
     };
   }
 
   componentDidMount() {
     this.handleLoadTasks();
+  }
+
+  componentWillUnmount() {
+    this.stopAutoRefresh();
   }
 
   // 查询数据项的任务列表
@@ -71,6 +77,30 @@ class DataTask extends PureComponent {
     />
   };
 
+  handleChangeAutoRefresh = (checked) => {
+    if (checked) {
+      this.startAutoRefresh();
+    } else {
+      this.stopAutoRefresh();
+    }
+    this.setState({ isAutoRefresh: checked });
+  }
+
+  startAutoRefresh = () => {
+    const intervalId = setInterval(() => {
+      this.handleLoadTasks();
+    }, 5000);
+    this.setState({ intervalId });
+  }
+
+  stopAutoRefresh = () => {
+    const { intervalId } = this.state;
+    if (intervalId) {
+      clearInterval(intervalId);
+      this.setState({ intervalId: null });
+    }
+  }
+
   render() {
     const {
       task: { dataTasks },
@@ -79,6 +109,8 @@ class DataTask extends PureComponent {
       projectId,
       envList,
     } = this.props;
+
+    const { isAutoRefresh } = this.state;
 
     return (
       <Drawer
@@ -93,7 +125,8 @@ class DataTask extends PureComponent {
             <Button onClick={this.handleRefresh}>
               <Icon type="reload" />刷新
             </Button>
-
+            <Divider type='vertical' />
+            <Switch checked={isAutoRefresh} onChange={this.handleChangeAutoRefresh} />自动刷新（每隔5秒）
           </>
         }
         visible={this.props.dataTaskVisible}
