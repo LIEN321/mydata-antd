@@ -80,10 +80,11 @@ class TaskCard extends PureComponent {
             okText: '确定',
             // okType: 'danger',
             cancelText: '取消',
-            async onOk() {
+            onOk: async () => {
                 const response = await executeTask(taskId);
                 if (response.success) {
                     message.success('任务已触发执行，请在日志中查看结果！');
+                    this.handleLoadTasks();
                 } else {
                     message.error(response.msg || '任务执行失败！');
                 }
