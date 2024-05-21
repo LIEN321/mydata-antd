@@ -1,20 +1,24 @@
-import { Button, Col, Icon, message, Modal, Popconfirm, Row, Table } from "antd";
+import { Button, Col, Divider, Form, Icon, Input, message, Modal, Popconfirm, Row, Table } from "antd";
 import { connect } from "dva";
 import React, { PureComponent } from "react";
 import { BIZ_FIELD_LIST, BIZ_DATA_LIST } from '../../../actions/data';
 import { deleteBizDataByEnv } from '../../../services/data';
+import Grid from "@/components/Sword/Grid";
+
+const FormItem = Form.Item;
 
 @connect(({ data, loading }) => ({
     data,
     loading: loading.models.data,
 }))
+@Form.create()
 class BizData extends PureComponent {
     constructor(props) {
         super(props);
 
         const { dispatch, projectId, envId, currentData } = this.props;
         dispatch(BIZ_FIELD_LIST({ dataId: currentData.id }));
-        dispatch(BIZ_DATA_LIST({ dataId: currentData.id, projectId, envId }));
+        // dispatch(BIZ_DATA_LIST({ dataId: currentData.id, projectId, envId }));
     }
 
     handleSearchBizData = (pagination) => {
@@ -34,19 +38,73 @@ class BizData extends PureComponent {
         });
     };
 
+    // ============ 查询表单 ===============
+    renderSearchForm = onReset => {
+        const {
+            form,
+            data: { bizFields },
+        } = this.props;
+        const { getFieldDecorator } = form;
+
+        return (
+            <Row>
+                <Col span={18}>
+                    {bizFields && bizFields.map(f => {
+                        if (f.isId === 1) {
+                            return <div style={{ width: 200, float: 'left' }}><FormItem label={f.fieldName} style={{ marginBottom: 0 }}>
+                                {
+                                    getFieldDecorator(`${f.fieldCode}`, {})(<Input />)
+                                }
+                            </FormItem></div>
+                        }
+                    })}
+                    <div style={{ float: 'left' }}>
+                        <span style={{ marginLeft: 12 }}></span>
+                        <Button type="primary" htmlType="submit">筛选</Button>
+                        <Button style={{ marginLeft: 8 }} onClick={onReset}>重置</Button>
+                    </div>
+                </Col>
+                <Col span={6}>
+                    <div style={{ float: 'right' }}>
+                        <Button type="primary" icon="cloud-upload">导入Excel</Button>
+                        <Divider type="vertical" />
+                        <Popconfirm
+                            title="确认导出当前数据吗？"
+                            icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+                            placement="topRight"
+                            onConfirm={this.handleDeleteBizData}
+                        >
+                            <Button type="primary" icon="cloud-download">导出Excel</Button>
+                        </Popconfirm>
+                        <Divider type="vertical" />
+                        <Popconfirm
+                            title="删除数据是不可逆操作，确认要删除吗？"
+                            icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+                            placement="topRight"
+                            onConfirm={this.handleDeleteBizData}
+                        >
+                            <Button type='danger' icon="delete">全部删除</Button>
+                        </Popconfirm>
+                    </div>
+                </Col>
+            </Row>
+        );
+    };
+
     render() {
         const {
+            form,
             loading,
-            data: { bizField, bizData },
+            data: { bizFields, bizData },
             projectId,
             visible,
             currentData
         } = this.props;
 
         const bizDataColumns = [];
-        if (bizField) {
-            for (let i = 0; i < bizField.length; i++) {
-                const field = bizField[i];
+        if (bizFields) {
+            for (let i = 0; i < bizFields.length; i++) {
+                const field = bizFields[i];
                 bizDataColumns.push({
                     title: field.fieldName,
                     dataIndex: field.fieldCode,
@@ -69,27 +127,17 @@ class BizData extends PureComponent {
                     </Button>
                 ]}
                 onCancel={this.props.onClose}
+                bodyStyle={{ padding: 0 }}
             >
-                <Row justify='end' style={{ marginBottom: 12 }}>
-                    <Col>
-                        <div style={{ float: 'right' }}>
-                            <Popconfirm
-                                title="删除数据是不可逆操作，确认要删除吗？"
-                                icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
-                                placement="topRight"
-                                onConfirm={this.handleDeleteBizData}
-                            >
-                                <Button type='danger'>全部删除</Button>
-                            </Popconfirm>
-                        </div>
-                    </Col>
-                </Row>
-                <Table
+                <Grid
+                    form={form}
+                    onSearch={this.handleSearchBizData}
+                    renderSearchForm={this.renderSearchForm}
+                    loading={loading}
+                    data={bizData}
                     columns={bizDataColumns}
-                    dataSource={bizData.list}
-                    pagination={bizData.pagination}
-                    onChange={this.handleSearchBizData}
-                    size="small"
+                    // actionColumnWidth={250}
+                    enableRowSelection={false}
                 />
             </Modal>
         );

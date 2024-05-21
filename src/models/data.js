@@ -12,7 +12,7 @@ export default {
       pagination: false,
     },
     detail: {},
-    bizField: [],
+    bizFields: [],
     bizData: {
       list: [],
       pagination: false,
@@ -105,7 +105,7 @@ export default {
         yield put({
           type: 'saveBizFieldList',
           payload: {
-            bizField: response.data,
+            bizFields: response.data,
           },
         });
       }
@@ -155,7 +155,7 @@ export default {
     saveBizFieldList(state, action) {
       return {
         ...state,
-        bizField: action.payload.bizField,
+        bizFields: action.payload.bizFields,
       };
     },
     saveBizDataList(state, action) {
