@@ -19,6 +19,7 @@ class Task extends PureComponent {
 
     this.state = {
       logModalVisible: false,
+      params: {},
     };
   }
 
@@ -32,11 +33,12 @@ class Task extends PureComponent {
       okText: '确定',
       // okType: 'danger',
       cancelText: '取消',
-      async onOk() {
+      onOk: async () => {
         const response = await startTask(taskId);
         if (response.success) {
           message.success(response.msg);
-          dispatch(TASK_LIST());
+          const { params } = this.state;
+          dispatch(TASK_LIST(params));
         } else {
           message.error(response.msg || '启动失败');
         }
@@ -54,11 +56,12 @@ class Task extends PureComponent {
       okText: '确定',
       okType: 'danger',
       cancelText: '取消',
-      async onOk() {
+      onOk: async () => {
         const response = await stopTask(taskId);
         if (response.success) {
           message.success(response.msg);
-          dispatch(TASK_LIST());
+          const { params } = this.state;
+          dispatch(TASK_LIST(params));
         } else {
           message.error(response.msg || '任务停止失败！');
         }
@@ -90,6 +93,7 @@ class Task extends PureComponent {
   handleSearch = params => {
     const { dispatch } = this.props;
     dispatch(TASK_LIST(params));
+    this.setState({ params });
   };
 
   // ============ 查询表单 ===============
