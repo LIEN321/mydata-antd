@@ -2,8 +2,10 @@ import { Button, Col, Divider, Form, Icon, Input, message, Modal, Popconfirm, Ro
 import { connect } from "dva";
 import React, { PureComponent } from "react";
 import { BIZ_FIELD_LIST, BIZ_DATA_LIST } from '../../../actions/data';
-import { deleteBizDataByEnv } from '../../../services/data';
+import { deleteBizDataByEnv, exportBizData } from '../../../services/data';
 import Grid from "@/components/Sword/Grid";
+import { getAccessToken } from '../../../utils/authority';
+import { stringify } from 'qs';
 
 const FormItem = Form.Item;
 
@@ -16,6 +18,10 @@ class BizData extends PureComponent {
     constructor(props) {
         super(props);
 
+        this.state = {
+            pagination: {},
+        };
+
         const { dispatch, projectId, envId, currentData } = this.props;
         dispatch(BIZ_FIELD_LIST({ dataId: currentData.id }));
         // dispatch(BIZ_DATA_LIST({ dataId: currentData.id, projectId, envId }));
@@ -24,6 +30,7 @@ class BizData extends PureComponent {
     handleSearchBizData = (pagination) => {
         const { dispatch, projectId, envId, currentData } = this.props;
         dispatch(BIZ_DATA_LIST({ ...pagination, dataId: currentData.id, projectId, envId }));
+        this.setState({ pagination });
     };
 
     handleDeleteBizData = () => {
@@ -45,6 +52,10 @@ class BizData extends PureComponent {
             data: { bizFields },
         } = this.props;
         const { getFieldDecorator } = form;
+
+        const { projectId, envId, currentData } = this.props;
+        const { pagination } = this.state;
+        const params = { ...pagination, dataId: currentData.id, projectId, envId };
 
         return (
             <Row>
@@ -72,7 +83,9 @@ class BizData extends PureComponent {
                             title="确认导出当前数据吗？"
                             icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
                             placement="topRight"
-                            onConfirm={this.handleDeleteBizData}
+                            onConfirm={() => {
+                                window.open(`/api/mydata-manage/biz_data/export_excel?blade-auth=bearer ${getAccessToken()}&${stringify(params)}`);
+                            }}
                         >
                             <Button type="primary" icon="cloud-download">导出Excel</Button>
                         </Popconfirm>
