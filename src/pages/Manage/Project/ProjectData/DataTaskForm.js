@@ -643,7 +643,7 @@ class DataTaskForm extends PureComponent {
                     {isSubscribed == 1 && (
                       <Row gutter={24}>
                         <Col span={6}></Col>
-                        <Col span={7}>
+                        <Col span={8}>
                           <FormItem {...formItemLayout} label="订阅任务">
                             {getFieldDecorator('subscribeTaskId', {
                               rules: [
@@ -665,7 +665,7 @@ class DataTaskForm extends PureComponent {
                             )}
                           </FormItem>
                         </Col>
-                        <Col span={7}>
+                        <Col span={8}>
                           <FormItem {...formItemLayout} label="复用数据">
                             {getFieldDecorator('sameBatch', {
                               rules: [
