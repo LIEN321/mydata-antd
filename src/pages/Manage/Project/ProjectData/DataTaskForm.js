@@ -60,6 +60,8 @@ class DataTaskForm extends PureComponent {
       // 是否显示订阅
       isSubscribed: 0,
       isShowSubscribed: true,
+      // 是否复用父任务批次数据
+      sameBatch: 1,
       // 是否显示任务周期
       isShowTaskPeriod: true,
 
@@ -211,7 +213,7 @@ class DataTaskForm extends PureComponent {
     } else {
       delete fieldMapping[key];
     }
-    this.setState({fieldMapping});
+    this.setState({ fieldMapping });
   };
 
   handleSaveDataProcess = mapping => {
@@ -222,7 +224,7 @@ class DataTaskForm extends PureComponent {
     } else {
       delete dataProcess[key];
     }
-    this.setState({dataProcess});
+    this.setState({ dataProcess });
     console.info(mapping);
     console.info(dataProcess);
   };
@@ -449,7 +451,7 @@ class DataTaskForm extends PureComponent {
       producerTasks,
     } = this.props;
 
-    const { apiUrl, detail, isBatchEnabled, consumeMode, isSubscribed, produceMode, authType, apiList } = this.state;
+    const { apiUrl, detail, isBatchEnabled, consumeMode, isSubscribed, sameBatch, produceMode, authType, apiList } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -639,26 +641,49 @@ class DataTaskForm extends PureComponent {
                       )}
                     </FormItem>
                     {isSubscribed == 1 && (
-                      <FormItem {...formItemLayout} label="选择触发订阅的任务">
-                        {getFieldDecorator('subscribeTaskId', {
-                          rules: [
-                            {
-                              required: true,
-                              message: '请选择触发订阅的任务',
-                            },
-                          ],
-                          initialValue: detail ? detail.subscribeTaskId : '0',
-                        })(
-                          <Select allowClear placeholder="请选择触发订阅的任务">
-                            <Select.Option key={'0'} value={'0'}>全部</Select.Option>
-                            {producerTasks && producerTasks.map(a => (
-                              <Select.Option key={a.id} value={a.id}>
-                                {a.taskName}
-                              </Select.Option>
-                            ))}
-                          </Select>
-                        )}
-                      </FormItem>
+                      <Row gutter={24}>
+                        <Col span={6}></Col>
+                        <Col span={7}>
+                          <FormItem {...formItemLayout} label="订阅任务">
+                            {getFieldDecorator('subscribeTaskId', {
+                              rules: [
+                                {
+                                  required: true,
+                                  message: '请选择触发订阅的任务',
+                                },
+                              ],
+                              initialValue: detail ? detail.subscribeTaskId : '0',
+                            })(
+                              <Select allowClear placeholder="选择触发订阅的任务">
+                                <Select.Option key={'0'} value={'0'}>全部</Select.Option>
+                                {producerTasks && producerTasks.map(a => (
+                                  <Select.Option key={a.id} value={a.id}>
+                                    {a.taskName}
+                                  </Select.Option>
+                                ))}
+                              </Select>
+                            )}
+                          </FormItem>
+                        </Col>
+                        <Col span={7}>
+                          <FormItem {...formItemLayout} label="复用数据">
+                            {getFieldDecorator('sameBatch', {
+                              rules: [
+                                {
+                                  required: true,
+                                  message: '请选择是否为订阅任务',
+                                },
+                              ],
+                              initialValue: detail ? detail.sameBatch : sameBatch,
+                            })(
+                              <Radio.Group buttonStyle="solid">
+                                <Radio.Button value={1}>复用</Radio.Button>
+                                <Radio.Button value={0}>不复用</Radio.Button>
+                              </Radio.Group>
+                            )}
+                          </FormItem>
+                        </Col>
+                      </Row>
                     )}
                   </>
                   )
@@ -687,7 +712,7 @@ class DataTaskForm extends PureComponent {
                       </Select>
                     )}
                   </FormItem>
-                  {authType === TASK_AUTH_TYPE_API_KEY && <>
+                  {authType === TASK_AUTH_TYPE_API_KEY &&
                     <Row gutter={24}>
                       <Col span={6}></Col>
                       <Col span={7}>
@@ -717,7 +742,7 @@ class DataTaskForm extends PureComponent {
                         </FormItem>
                       </Col>
                     </Row>
-                  </>}
+                  }
                   {authType === TASK_AUTH_TYPE_BASIC && <>
                     <Row gutter={24}>
                       <Col span={6}></Col>
@@ -876,8 +901,8 @@ class DataTaskForm extends PureComponent {
                 // 字段映射
                 <FormItem {...formItemLayout2} label="字段映射" extra={
                   <>
-                  <div>数据处理 对提供数据操作：从API获取数据后，先根据配置对数据进行处理，再存入仓库；</div>
-                  <div>数据处理 对提供数据操作：数据出库后，先根据配置对数据进行处理，再发送给API或Excel；</div>
+                    <div>数据处理 对提供数据操作：从API获取数据后，先根据配置对数据进行处理，再存入仓库；</div>
+                    <div>数据处理 对提供数据操作：数据出库后，先根据配置对数据进行处理，再发送给API或Excel；</div>
                   </>
                 }>
                   <TaskFieldMappingTable
