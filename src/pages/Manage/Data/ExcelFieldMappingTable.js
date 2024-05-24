@@ -1,4 +1,4 @@
-import { Form, Input, Table, Switch } from 'antd';
+import { Col, Form, Icon, Input, Row, Select, Table, Tooltip } from 'antd';
 import React from 'react';
 import style from './StandardData.less';
 
@@ -11,7 +11,6 @@ const EditableRow = ({ form, index, ...props }) => (
 const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = { editing: props.editable };
@@ -27,21 +26,26 @@ class EditableCell extends React.Component {
     });
   };
 
-  handleSwitchIsSelect = () => {
+  handleSelectHeaderName = (name) => {
     const { record, handleSave } = this.props;
-    if (record.isSelect === 1) {
-      record.isSelect = 0;
-    } else {
-      record.isSelect = 1;
-    }
-    handleSave(record.key, this.props.dataIndex, record.isSelect);
-  };
+    record.headerName = name;
+    handleSave(record.key, this.props.dataIndex, name);
+  }
 
   getInput = () => {
-    if (this.props.inputType === 'switch') {
-      return <Switch ref={node => (this.input = node)} checked={this.props.record.isSelect === 1} checkedChildren="是" unCheckedChildren="否" onClick={() => this.handleSwitchIsSelect()} />
+    const { dataIndex, record } = this.props;
+    const { headerNames, dataFieldList } = this.props;
+
+    if (dataIndex === 'headerName') {
+      return <Select ref={node => (this.input = node)} onChange={this.handleSelectHeaderName} placeholder={`请输入${this.props.title}`}>
+        {headerNames.map(name => (
+          <Select.Option key={name} value={name}>
+            {name}
+          </Select.Option>
+        ))}
+      </Select>;
     }
-    return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入${this.props.title}`} />;
+    return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} placeholder={`请输入`} />;
   };
 
   renderCell = form => {
@@ -54,7 +58,7 @@ class EditableCell extends React.Component {
           rules: [
             {
               required: false,
-              message: `请输入${title}`,
+              message: `请输入`,
             },
           ],
           initialValue: record[dataIndex],
@@ -96,54 +100,74 @@ class EditableCell extends React.Component {
   }
 }
 
-class TaskFieldSelectTable extends React.Component {
+class ExcelFieldMappingTable extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      readonly: props.readonly ? props.readonly : false
-    };
 
     this.columns = [
       {
         title: '数据字段编号',
         dataIndex: 'dataFieldCode',
-        width: '40%',
+        width: '22%',
         editable: false,
+        render: (text, record) => {
+          const { isId } = record;
+          return <>
+            {record.dataFieldCode}
+            {isId === 1 && <span style={{ color: 'red' }}>*</span>}
+          </>
+        },
       },
       {
         title: '数据字段名称',
         dataIndex: 'dataFieldName',
-        width: '40%',
+        width: '22%',
         editable: false,
       },
       {
-        title: '是否导出',
-        dataIndex: 'isSelect',
-        width: '20%',
-        render: (text, record) => {
-          return record.isSelect == 1 ? "是" : "否";
-        },
-        editable: !this.state.readonly,
+        title: '选择Excel列',
+        dataIndex: 'headerName',
+        width: '56%',
+        editable: true,
       },
     ];
 
     const fieldMappings = [];
-    const { dataFieldList, initFieldMappings } = this.props;
 
+    const { dataFieldList, headerNames, handleSave } = props;
     if (dataFieldList) {
       dataFieldList.map(dataField => {
+        let headerName = '';
+
+        let index = headerNames.findIndex(e => e === dataField.fieldCode);
+        if (index >= 0) {
+          headerName = dataField.fieldCode;
+        } else {
+          index = headerNames.findIndex(e => e === dataField.fieldName);
+          if (index >= 0) {
+            headerName = dataField.fieldName;
+          }
+        }
+
         const mapping = {
           key: dataField.fieldCode
           , dataFieldCode: dataField.fieldCode
           , dataFieldName: dataField.fieldName
-          , isSelect: (initFieldMappings && initFieldMappings[dataField.fieldCode]) ? 1 : 0
+          , headerName: headerName
+          , isId: dataField.isId
         };
 
         fieldMappings.push(mapping);
+
+        handleSave(mapping);
       });
     }
-    this.state = {fieldMappings};
+
+    this.state = {
+      fieldMappings,
+      readonly: false,
+    };
   }
 
   componentWillUnmount() {
@@ -160,19 +184,16 @@ class TaskFieldSelectTable extends React.Component {
     this.props.handleSave(item);
   };
 
-  handleDelete = key => {
-    const fieldMappings = [...this.state.fieldMappings];
-    this.setState({ fieldMappings: fieldMappings.filter(item => item.key !== key) });
-    this.props.handleDelete(key);
-  };
-
   render() {
+
     const components = {
       body: {
         row: EditableFormRow,
         cell: EditableCell,
       },
     };
+
+    const { headerNames, dataFieldList } = this.props;
 
     const columns = this.columns.map(col => {
       if (!col.editable) {
@@ -186,26 +207,29 @@ class TaskFieldSelectTable extends React.Component {
           dataIndex: col.dataIndex,
           title: col.title,
           handleSave: this.handleSave,
-          inputType: col.dataIndex === 'isSelect' ? 'switch' : 'text',
+          inputType: col.dataIndex === 'isId' ? 'switch' : 'text',
+          headerNames: headerNames,
         }),
       };
     });
 
     return (
       <div>
-        <Table
-          components={components}
-          rowClassName={() => { style.editableRow }}
-          bordered
-          dataSource={this.state.fieldMappings}
-          columns={columns}
-          pagination={false}
-          size="small"
-          scroll={{ y: 230 }}
-        />
+        <Form>
+          <Table
+            components={components}
+            rowClassName={() => { style.editableRow }}
+            bordered
+            dataSource={this.state.fieldMappings}
+            columns={columns}
+            pagination={false}
+            size="small"
+            scroll={{ y: 230 }}
+          />
+        </Form>
       </div>
     );
   }
 }
 
-export default TaskFieldSelectTable;
+export default ExcelFieldMappingTable;

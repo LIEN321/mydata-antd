@@ -211,10 +211,7 @@ class TaskVarMappingTable extends React.Component {
           bordered
           dataSource={this.state.varMappings}
           columns={columns}
-          pagination={{
-            onChange: this.cancel,
-            position: "none"
-          }}
+          pagination={false}
           size="small"
         />
       </div>

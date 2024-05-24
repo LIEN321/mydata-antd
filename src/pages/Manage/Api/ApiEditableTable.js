@@ -215,10 +215,7 @@ class ApiEditableTable extends React.Component {
           bordered
           dataSource={this.state.tableValues}
           columns={columns}
-          pagination={{
-            onChange: this.cancel,
-            position: "none"
-          }}
+          pagination={false}
           size="small"
         />
       </div>

@@ -19,6 +19,7 @@ class Task extends PureComponent {
 
     this.state = {
       logModalVisible: false,
+      params: {},
     };
   }
 
@@ -32,11 +33,12 @@ class Task extends PureComponent {
       okText: '确定',
       // okType: 'danger',
       cancelText: '取消',
-      async onOk() {
+      onOk: async () => {
         const response = await startTask(taskId);
         if (response.success) {
           message.success(response.msg);
-          dispatch(TASK_LIST());
+          const { params } = this.state;
+          dispatch(TASK_LIST(params));
         } else {
           message.error(response.msg || '启动失败');
         }
@@ -54,11 +56,12 @@ class Task extends PureComponent {
       okText: '确定',
       okType: 'danger',
       cancelText: '取消',
-      async onOk() {
+      onOk: async () => {
         const response = await stopTask(taskId);
         if (response.success) {
           message.success(response.msg);
-          dispatch(TASK_LIST());
+          const { params } = this.state;
+          dispatch(TASK_LIST(params));
         } else {
           message.error(response.msg || '任务停止失败！');
         }
@@ -90,6 +93,7 @@ class Task extends PureComponent {
   handleSearch = params => {
     const { dispatch } = this.props;
     dispatch(TASK_LIST(params));
+    this.setState({ params });
   };
 
   // ============ 查询表单 ===============
@@ -248,7 +252,7 @@ class Task extends PureComponent {
 
     const logColumns = [
       {
-        title: '开始时间',
+        title: '（预计）开始时间',
         dataIndex: 'taskStartTime',
         width: 160,
       },
@@ -262,8 +266,8 @@ class Task extends PureComponent {
         dataIndex: 'taskResult',
         width: 100,
         render: taskResult => {
-          const color = taskResult === 1 ? 'green' : 'red';
-          const status = taskResult === 1 ? '成功' : '失败';
+          const color = taskResult != null ? (taskResult === 1 ? 'green' : 'red') : '';
+          const status = taskResult != null ? (taskResult === 1 ? '成功' : '失败') : '-';
           return (
             <Tag color={color}>
               {status}

@@ -80,10 +80,11 @@ class TaskCard extends PureComponent {
             okText: '确定',
             // okType: 'danger',
             cancelText: '取消',
-            async onOk() {
+            onOk: async () => {
                 const response = await executeTask(taskId);
                 if (response.success) {
                     message.success('任务已触发执行，请在日志中查看结果！');
+                    this.handleLoadTasks();
                 } else {
                     message.error(response.msg || '任务执行失败！');
                 }
@@ -226,7 +227,7 @@ class TaskCard extends PureComponent {
         const taskStatusStyle = [{}, mdStyle.runningCard, mdStyle.failedCard, mdStyle.stoppedCard];
         const logColumns = [
             {
-                title: '开始时间',
+                title: '（预计）开始时间',
                 dataIndex: 'taskStartTime',
                 width: 160,
             },
@@ -326,17 +327,19 @@ class TaskCard extends PureComponent {
                         <Popover content="复制"><Icon type="copy" onClick={(e) => { this.openCopyModal(currentTask.id); e.stopPropagation(); this.setState({ logPreviewVisible: false }); }} /></Popover>,
                         <Popover content="删除"><Icon type="delete" onClick={(e) => { this.handleDelete(currentTask.id); e.stopPropagation(); this.setState({ logPreviewVisible: false }); }} /></Popover>,
                     ]}
-                    extra={currentTask.refEnvId ?
-                        (currentTask.envId == env.id ?
-                            (currentTask.opType === TASK_TYPE_PRODUCER ?
-                                <Popover content={`${currentTask.refEnvName}环境提供`}>{currentTask.refEnvName} <Icon type="login" /></Popover>
-                                : <Popover content={`${currentTask.refEnvName}环境消费`}><Icon type="logout" /> {currentTask.refEnvName}</Popover>)
-                            : (currentTask.refOpType === TASK_TYPE_PRODUCER ?
-                                <Popover content={`${currentTask.envName}环境提供`}>{currentTask.envName} <Icon type="login" /></Popover>
-                                : <Popover content={`${currentTask.envName}环境消费`}><Icon type="logout" /> {currentTask.envName}</Popover>)
-                        )
-                        :
-                        <></>}
+                    extra={currentTask.appName
+                        // currentTask.refEnvId ?
+                        //     (currentTask.envId == env.id ?
+                        //         (currentTask.opType === TASK_TYPE_PRODUCER ?
+                        //             <Popover content={`${currentTask.refEnvName}环境提供`}>{currentTask.refEnvName} <Icon type="login" /></Popover>
+                        //             : <Popover content={`${currentTask.refEnvName}环境消费`}><Icon type="logout" /> {currentTask.refEnvName}</Popover>)
+                        //         : (currentTask.refOpType === TASK_TYPE_PRODUCER ?
+                        //             <Popover content={`${currentTask.envName}环境提供`}>{currentTask.envName} <Icon type="login" /></Popover>
+                        //             : <Popover content={`${currentTask.envName}环境消费`}><Icon type="logout" /> {currentTask.envName}</Popover>)
+                        //     )
+                        //     :
+                        //     <></>
+                    }
                 >
                     {/* {currentTask.refEnvId ? <p>其他环境：{currentTask.refEnvName}</p> : <></>} */}
                     {currentTask.apiUrl && <Row>
