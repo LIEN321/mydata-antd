@@ -67,6 +67,8 @@ class DataTaskForm extends PureComponent {
 
       // 是否启用批处理
       isBatchEnabled: false,
+      // 是否清除html
+      isCleanHtml: false,
 
       // 提供模式
       produceMode: TASK_PRODUCE_MODE_API,
@@ -112,6 +114,7 @@ class DataTaskForm extends PureComponent {
             produceMode: detail.produceMode,
             authType: detail.authType || TASK_AUTH_TYPE_NONE,
             isSubscribed: detail.isSubscribed,
+            isCleanHtml: detail.cleanHtml === 1,
           });
           this.renderWarning(detail);
 
@@ -276,6 +279,7 @@ class DataTaskForm extends PureComponent {
         params.fieldVarMapping = fieldVarMapping;
         params.batchStatus = values.batchStatus ? 1 : 0;
         params.batchParams = this.state.batchParams;
+        params.cleanHtml = values.cleanHtml ? 1 : 0;
 
         if (authType === TASK_AUTH_TYPE_NONE) {
           params.authParams = {};
@@ -412,6 +416,11 @@ class DataTaskForm extends PureComponent {
     this.setState({ isBatchEnabled: !isBatchEnabled });
   }
 
+  handleChangeCleanHtml = () => {
+    const { isCleanHtml } = this.state;
+    this.setState({ isCleanHtml: !isCleanHtml });
+  }
+
   handleSaveBatchParam = param => {
     const newData = [...this.state.batchParams];
     const index = newData.findIndex(item => param.key === item.key);
@@ -451,7 +460,7 @@ class DataTaskForm extends PureComponent {
       producerTasks,
     } = this.props;
 
-    const { apiUrl, detail, isBatchEnabled, consumeMode, isSubscribed, sameBatch, produceMode, authType, apiList } = this.state;
+    const { apiUrl, detail, isBatchEnabled, consumeMode, isSubscribed, sameBatch, produceMode, authType, apiList, isCleanHtml } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -924,6 +933,11 @@ class DataTaskForm extends PureComponent {
                   handleDelete={this.handleDeleteFilter}
                   dataFieldList={this.state.dataFieldList}
                 />
+              </FormItem>
+              <FormItem {...formItemLayout} label="清除HTML">
+                {getFieldDecorator('cleanHtml', {
+                  initialValue: detail ? detail.cleanHtml : 0,
+                })(<Switch checked={isCleanHtml} onChange={this.handleChangeCleanHtml} disabled={consumeMode === TASK_CONSUME_MODE_EMAIL} />)}
               </FormItem>
             </TabPane>
             <TabPane tab="变量配置" key='3' forceRender>
