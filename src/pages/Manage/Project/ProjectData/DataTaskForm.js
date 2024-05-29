@@ -675,7 +675,7 @@ class DataTaskForm extends PureComponent {
                           </FormItem>
                         </Col>
                         <Col span={8}>
-                          <FormItem {...formItemLayout} label="复用数据">
+                          <FormItem {...formItemLayout} label="复用任务批号" extra="任务批号 用于标记同一个任务内更新的数据，复用批号可延续处理同一批数据">
                             {getFieldDecorator('sameBatch', {
                               rules: [
                                 {
