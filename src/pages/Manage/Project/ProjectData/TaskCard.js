@@ -368,7 +368,7 @@ class TaskCard extends PureComponent {
             </Popover>
 
             <Modal
-                title="查看日志"
+                title={`${currentTask.taskName} - 日志列表`}
                 width="60%"
                 visible={this.state.logModalVisible}
                 footer={[
@@ -423,7 +423,7 @@ class TaskCard extends PureComponent {
             </Modal>}
 
             {logDetailModalVisible && <Modal
-                title="日志详情"
+                title={`${currentTask.taskName} - 日志详情`}
                 visible={logDetailModalVisible}
                 footer={[<Button key="back" onClick={this.closeLogDetail}>关闭</Button>]}
                 onCancel={this.closeLogDetail}
