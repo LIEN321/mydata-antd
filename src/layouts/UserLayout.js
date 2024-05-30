@@ -6,7 +6,7 @@ import GlobalFooter from '@/components/GlobalFooter';
 import SelectLang from '@/components/SelectLang';
 import styles from './UserLayout.less';
 import logo from '../assets/logo.png';
-import { version } from './version';
+import { version } from '../version';
 
 const links = [
   {
