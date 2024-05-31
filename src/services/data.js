@@ -48,6 +48,10 @@ export async function deleteBizDataByEnv(params) {
   return request(`/api/mydata-manage/biz_data/delete_by_env?${stringify(params)}`);
 }
 
+export async function deleteBizData(params) {
+  return request(`/api/mydata-manage/biz_data/delete_biz_data?${stringify(params)}`);
+}
+
 export async function saveBizData(params) {
   return request(`/api/mydata-manage/biz_data/save_biz_data`, {
     method: 'POST',

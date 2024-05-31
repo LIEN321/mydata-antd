@@ -2,7 +2,7 @@ import { Button, Col, Divider, Form, Icon, Input, message, Modal, Popconfirm, Ro
 import { connect } from "dva";
 import React, { PureComponent } from "react";
 import { BIZ_FIELD_LIST, BIZ_DATA_LIST } from '../../../actions/data';
-import { deleteBizDataByEnv, exportBizData } from '../../../services/data';
+import { deleteBizData, deleteBizDataByEnv, exportBizData } from '../../../services/data';
 import Grid from "@/components/Sword/Grid";
 import { getAccessToken } from '../../../utils/authority';
 import { stringify } from 'qs';
@@ -35,7 +35,22 @@ class BizData extends PureComponent {
         this.setState({ pagination });
     };
 
-    handleDeleteBizData = () => {
+    handleDeleteBizData = (record) => {
+        const { currentData, envId } = this.props;
+        const dataId = currentData.id;
+        const bizId = record._MD_DATA_ID_;
+
+        deleteBizData({dataId,envId,bizId}).then(resp=>{
+            if (resp.success) {
+                message.info(resp.msg);
+                this.handleSearchBizData(this.state.pagination);
+            } else {
+                message.error(resp.msg);
+            }
+        });
+    };
+
+    handleDeleteAll = () => {
         const { currentData, envId } = this.props;
         deleteBizDataByEnv({ dataId: currentData.id, envId }).then(resp => {
             if (resp.success) {
@@ -106,7 +121,7 @@ class BizData extends PureComponent {
                             title="删除数据是不可逆操作，确认要删除吗？"
                             icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
                             placement="topRight"
-                            onConfirm={this.handleDeleteBizData}
+                            onConfirm={this.handleDeleteAll}
                         >
                             <Button type='danger' icon="delete">全部删除</Button>
                         </Popconfirm>
@@ -139,10 +154,25 @@ class BizData extends PureComponent {
                 });
             }
         }
-        bizDataColumns.push({
-            title: "最后更新时间",
-            dataIndex: "_MD_UPDATE_TIME_"
-        });
+        bizDataColumns.push(
+            {
+                title: "最后更新时间",
+                dataIndex: "_MD_UPDATE_TIME_"
+            },
+            {
+                title: '操作',
+                render: (text, record) => {
+                    return <Popconfirm
+                        title="确认删除该数据吗？"
+                        icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+                        placement="topRight"
+                        onConfirm={() => this.handleDeleteBizData(record)}
+                    >
+                        <a title="删除">删除</a>
+                    </Popconfirm>
+                }
+            }
+        );
 
         return (
             <>
