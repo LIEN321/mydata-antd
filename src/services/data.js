@@ -58,3 +58,7 @@ export async function saveBizData(params) {
     body: params,
   });
 }
+
+export async function bizDataHistoryList(params) {
+  return request(`/api/mydata-manage/biz_data/data_history_page?${stringify(params)}`);
+}

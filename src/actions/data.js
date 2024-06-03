@@ -63,3 +63,10 @@ export function DATA_INIT(payload) {
     payload,
   };
 }
+
+export function BIZ_DATA_HISTORY_LIST(payload) {
+  return {
+    type: `${DATA_NAMESPACE}/fetchBizDataHistoryList`,
+    payload,
+  };
+}
