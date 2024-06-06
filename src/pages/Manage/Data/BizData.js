@@ -235,7 +235,7 @@ class BizData extends PureComponent {
                     onClose={this.handleCloseBizData}
                 />}
                 {historyModalVisible && <Modal
-                    title={`业务数据 - ${currentData.dataName}`}
+                    title={`数据历史记录 - ${currentData.dataName}`}
                     width="90%"
                     visible={historyModalVisible}
                     footer={[
