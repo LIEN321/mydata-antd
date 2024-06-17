@@ -140,18 +140,23 @@ class EditableTable extends React.Component {
       {
         title: '字段编号',
         dataIndex: 'fieldCode',
-        width: '24%',
+        width: '22%',
         editable: !this.state.readonly,
       },
       {
         title: '字段名称',
         dataIndex: 'fieldName',
-        width: '24%',
+        width: '22%',
         editable: !this.state.readonly,
       },
       {
         title: '数据类型',
         dataIndex: 'fieldType',
+        editable: !this.state.readonly,
+      },
+      {
+        title: '默认值',
+        dataIndex: 'defaultValue',
         editable: !this.state.readonly,
       },
       {
