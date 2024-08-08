@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://www.mydata.work/images/mydata_logo.png" alt="mydata" width="300px"/>
+    <img src="./doc/image/mydata_logo.png" alt="mydata" width="300px"/>
 </p>
 <p align="center">
     <strong>你的数据融合新助手</strong>
@@ -29,7 +29,7 @@
 
 基于Web API、Excel实现数据集成，简化跨系统之间的数据对接；
 
-![对接结构](https://www.mydata.work/images/mydata_structure_v0.8.jpg)
+![对接结构](./doc/image/mydata_structure_v0.8.jpg)
 
 ### 适用场景
 
@@ -66,11 +66,11 @@
 
 ## 系统结构
 
-![系统结构](http://www.mydata.work/images/mydata_frame_0.7.0.jpg)
+![系统结构](./doc/image//mydata_frame_0.7.0.jpg)
 
 ## 功能模块
 
-![功能模块](https://www.mydata.work/images/mydata_funtion_v0.7.0.jpg)
+![功能模块](./doc/image/mydata_funtion_v0.7.0.jpg)
 
 ## 体验
 
@@ -90,6 +90,23 @@
 ![联系作者](./doc/image/wechat.jpg)
 
 # 更新记录
+
+## 0.8.4（2024-08-08）
+
+### 新功能
+
+- 数据管理
+
+- 增加数据保留历史记录的开关 和 查询历史数据；
+- 业务数据支持单个删除；
+- 字段增加默认值配置，若接口未返回数据 则自动补充默认值；
+- 增加设置字段是否显示，方便查看业务数据时 隐藏无需显示列；
+
+### 优化
+
+- 定时任务
+
+- 执行失败重试的时间间隔逐次递增；
 
 ## 0.8.3（2024-05-25）
 
