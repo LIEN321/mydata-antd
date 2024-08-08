@@ -1,8 +1,8 @@
 import { Button, Col, Divider, Form, Icon, Input, message, Modal, Popconfirm, Row, Table } from "antd";
 import { connect } from "dva";
 import React, { PureComponent } from "react";
-import { BIZ_FIELD_LIST, BIZ_DATA_LIST } from '../../../actions/data';
-import { deleteBizDataByEnv, exportBizData } from '../../../services/data';
+import { BIZ_FIELD_LIST, BIZ_DATA_LIST, BIZ_DATA_HISTORY_LIST } from '../../../actions/data';
+import { deleteBizData, deleteBizDataByEnv, exportBizData } from '../../../services/data';
 import Grid from "@/components/Sword/Grid";
 import { getAccessToken } from '../../../utils/authority';
 import { stringify } from 'qs';
@@ -22,6 +22,9 @@ class BizData extends PureComponent {
         this.state = {
             pagination: {},
             importModalVisible: false,
+            historyModalVisible: false,
+
+            currentBizData: {},
         };
 
         const { dispatch, projectId, envId, currentData } = this.props;
@@ -35,7 +38,22 @@ class BizData extends PureComponent {
         this.setState({ pagination });
     };
 
-    handleDeleteBizData = () => {
+    handleDeleteBizData = (record) => {
+        const { currentData, envId } = this.props;
+        const dataId = currentData.id;
+        const bizId = record._MD_DATA_ID_;
+
+        deleteBizData({ dataId, envId, bizId }).then(resp => {
+            if (resp.success) {
+                message.info(resp.msg);
+                this.handleSearchBizData(this.state.pagination);
+            } else {
+                message.error(resp.msg);
+            }
+        });
+    };
+
+    handleDeleteAll = () => {
         const { currentData, envId } = this.props;
         deleteBizDataByEnv({ dataId: currentData.id, envId }).then(resp => {
             if (resp.success) {
@@ -56,6 +74,16 @@ class BizData extends PureComponent {
         this.setState({ importModalVisible: false });
         this.handleSearchBizData(this.state.pagination);
     }
+
+    handleShowBizDataHistory = (record) => {
+        this.setState(() => ({ currentBizData: record, historyModalVisible: true }));
+    }
+
+    handleSearchBizDataHistory = (pagination) => {
+        const { dispatch, projectId, envId, currentData } = this.props;
+        const { currentBizData } = this.state;
+        dispatch(BIZ_DATA_HISTORY_LIST({ ...pagination, dataId: currentData.id, projectId, envId, _MD_DATA_ID_: currentBizData._MD_DATA_ID_ }));
+    };
 
     // ============ 查询表单 ===============
     renderSearchForm = onReset => {
@@ -106,7 +134,7 @@ class BizData extends PureComponent {
                             title="删除数据是不可逆操作，确认要删除吗？"
                             icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
                             placement="topRight"
-                            onConfirm={this.handleDeleteBizData}
+                            onConfirm={this.handleDeleteAll}
                         >
                             <Button type='danger' icon="delete">全部删除</Button>
                         </Popconfirm>
@@ -120,16 +148,18 @@ class BizData extends PureComponent {
         const {
             form,
             loading,
-            data: { bizFields, bizData },
+            data: { bizFields, bizData, bizDataHistory },
             projectId,
             envId,
             visible,
             currentData
         } = this.props;
 
-        const { importModalVisible } = this.state;
+        const { importModalVisible, historyModalVisible } = this.state;
 
-        const bizDataColumns = [];
+        let bizDataColumns = [];
+        let bizDataHistoryColumns = [];
+
         if (bizFields) {
             for (let i = 0; i < bizFields.length; i++) {
                 const field = bizFields[i];
@@ -139,10 +169,34 @@ class BizData extends PureComponent {
                 });
             }
         }
-        bizDataColumns.push({
-            title: "最后更新时间",
-            dataIndex: "_MD_UPDATE_TIME_"
-        });
+        bizDataColumns.push(
+            {
+                title: "最后更新时间",
+                dataIndex: "_MD_UPDATE_TIME_"
+            },
+            {
+                title: '操作',
+                width: 120,
+                render: (text, record) => {
+                    return <>
+                        <Popconfirm
+                            title="确认删除该数据吗？"
+                            icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+                            placement="topRight"
+                            onConfirm={() => this.handleDeleteBizData(record)}
+                        >
+                            <a title="删除">删除</a>
+                        </Popconfirm>
+                        {record._MD_DATA_ID_ && <>
+                            <Divider type="vertical" />
+                            <a onClick={() => { this.handleShowBizDataHistory(record) }}>历史数据</a></>
+                        }
+                    </>
+                }
+            }
+        );
+
+        bizDataHistoryColumns = bizDataColumns.slice(0, -1);
 
         return (
             <>
@@ -151,6 +205,9 @@ class BizData extends PureComponent {
                     width="90%"
                     visible={visible}
                     footer={[
+                        <Button key="refresh" onClick={() => this.handleSearchBizData({ current: 1, size: 10 })}>
+                            刷新
+                        </Button>,
                         <Button key="back" onClick={this.props.onClose}>
                             关闭
                         </Button>
@@ -177,6 +234,32 @@ class BizData extends PureComponent {
                     dataFieldList={bizFields}
                     onClose={this.handleCloseBizData}
                 />}
+                {historyModalVisible && <Modal
+                    title={`数据历史记录 - ${currentData.dataName}`}
+                    width="90%"
+                    visible={historyModalVisible}
+                    footer={[
+                        <Button key="refresh" onClick={() => this.handleSearchBizDataHistory({ current: 1, size: 10 })}>
+                            刷新
+                        </Button>,
+                        <Button key="back" onClick={() => { this.setState({ historyModalVisible: false }) }}>
+                            关闭
+                        </Button>
+                    ]}
+                    onCancel={() => { this.setState({ historyModalVisible: false }) }}
+                    bodyStyle={{ padding: 0 }}
+                >
+                    <Grid
+                        form={form}
+                        onSearch={this.handleSearchBizDataHistory}
+                        renderSearchForm={() => { return <></> }}
+                        loading={loading}
+                        data={bizDataHistory}
+                        columns={bizDataHistoryColumns}
+                        // actionColumnWidth={250}
+                        enableRowSelection={false}
+                    />
+                </Modal>}
             </>
         );
     }

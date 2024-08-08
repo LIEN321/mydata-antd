@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import router from 'umi/router';
 import { DATA_NAMESPACE } from '../actions/data';
-import { list, projectDataList, submit, detail, remove, bizFieldList, bizDataList } from '../services/data';
+import { list, projectDataList, submit, detail, remove, bizFieldList, bizDataList, bizDataHistoryList } from '../services/data';
 import { projectEnv } from '../services/env';
 
 export default {
@@ -14,6 +14,10 @@ export default {
     detail: {},
     bizFields: [],
     bizData: {
+      list: [],
+      pagination: false,
+    },
+    bizDataHistory: {
       list: [],
       pagination: false,
     },
@@ -126,6 +130,22 @@ export default {
         });
       }
     },
+    *fetchBizDataHistoryList({ payload }, { call, put }) {
+      const response = yield call(bizDataHistoryList, payload);
+      if (response.success) {
+        yield put({
+          type: 'saveBizDataHistoryList',
+          payload: {
+            list: response.data.records,
+            pagination: {
+              total: response.data.total,
+              current: response.data.current,
+              pageSize: response.data.size,
+            },
+          },
+        });
+      }
+    },
   },
   reducers: {
     saveInit(state, action) {
@@ -162,6 +182,12 @@ export default {
       return {
         ...state,
         bizData: action.payload,
+      };
+    },
+    saveBizDataHistoryList(state, action) {
+      return {
+        ...state,
+        bizDataHistory: action.payload,
       };
     },
   },

@@ -1,6 +1,6 @@
 import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Modal, Table, Card, message, Divider, Icon, Select, Drawer, Popconfirm } from 'antd';
+import { Button, Col, Form, Input, Row, Modal, Table, Card, message, Divider, Icon, Select, Drawer, Popconfirm, Switch } from 'antd';
 import { router } from 'umi';
 import { BIZ_FIELD_LIST, BIZ_DATA_LIST, PROJECT_DATA_LIST, DATA_INIT } from '../../../../actions/data';
 import Grid from '../../../../components/Sword/Grid';
@@ -41,6 +41,8 @@ class ProjectData extends PureComponent {
       dataFormVisible: false,
       // 数据项记录
       detail: { id: '' },
+      // 是否启用历史记录
+      isEnableHistory: false,
       // 数据项字段
       dataFields: [],
       // 查询参数
@@ -191,7 +193,10 @@ class ProjectData extends PureComponent {
       const { id } = record;
       envVarDetail({ id }).then(resp => {
         if (resp.success) {
-          this.setState({ detail: resp.data });
+          this.setState({
+            detail: resp.data,
+            isEnableHistory: detail.enableHistory === 1,
+          });
         }
       });
     } else if (code === 'data_delete') {
@@ -230,6 +235,7 @@ class ProjectData extends PureComponent {
         if (!func.isEmpty(id)) {
           formData.id = id;
         }
+        formData.enableHistory = values.enableHistory ? 1 : 0;
         submitData(formData).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
@@ -358,6 +364,11 @@ class ProjectData extends PureComponent {
     this.handleRefresh();
   }
 
+  handleChangeEnableHistory = () => {
+    const { isEnableHistory } = this.state;
+    this.setState({ isEnableHistory: !isEnableHistory });
+  }
+
   render() {
     const {
       form,
@@ -367,7 +378,7 @@ class ProjectData extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { currentData, detail, dataFields, currentEnv, dataTaskVisible, envDrawerVisible, envTaskVisible, envList } = this.state;
+    const { currentData, detail, dataFields, currentEnv, dataTaskVisible, envDrawerVisible, envTaskVisible, envList, isEnableHistory } = this.state;
 
     const columns = [
       {
@@ -521,6 +532,11 @@ class ProjectData extends PureComponent {
                   ],
                   initialValue: detail.dataName || '',
                 })(<Input placeholder="请输入数据名称，长度不超过64位" maxLength={64} />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label="记录历史">
+                {getFieldDecorator('enableHistory', {
+                  initialValue: detail.enableHistory || 0,
+                })(<Switch checked={isEnableHistory} onChange={this.handleChangeEnableHistory} />)}
               </FormItem>
               <FormItem {...formItemLayout} label="字段" extra={<span>标识字段至少选择一个，多选则表示字段组合是唯一的！
                 <br />注意：请谨慎调整标识字段，修改后会更新所有相关任务并自动重启已启动的任务！</span>}>

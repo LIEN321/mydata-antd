@@ -104,6 +104,18 @@ class DataEdit extends PureComponent {
       },
     };
 
+    const formItemLayout2 = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 6 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 14 },
+      },
+    };
+
     const action = (
       <Button type="primary" onClick={this.handleSubmit} loading={submitting}>
         提交
@@ -137,7 +149,7 @@ class DataEdit extends PureComponent {
                 initialValue: detail.dataName,
               })(<Input placeholder="请输入数据名称" />)}
             </FormItem>
-            <FormItem {...formItemLayout} label="字段管理">
+            <FormItem {...formItemLayout2} label="字段管理">
               <EditableTable
                 dataFields={this.state.dataFields}
                 handleSave={this.handleSaveField}

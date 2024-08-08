@@ -37,6 +37,15 @@ class EditableCell extends React.Component {
     handleSwitchIsId(record.key, record.isId);
   };
 
+  handleSwitchDisplayMode = () => {
+    const { record } = this.props;
+    if (record.displayMode === 1) {
+      record.displayMode = 0;
+    } else {
+      record.displayMode = 1;
+    }
+  };
+
   handleSelectFieldType = (fieldType) => {
     const { record } = this.props;
     record.fieldType = fieldType;
@@ -46,8 +55,11 @@ class EditableCell extends React.Component {
     if (this.props.inputType === 'number') {
       return <InputNumber />;
     }
-    if (this.props.inputType === 'switch') {
+    if (this.props.dataIndex === 'isId') {
       return <Switch ref={node => (this.input = node)} checked={this.props.record.isId === 1} checkedChildren="是" unCheckedChildren="否" onClick={() => this.handleSwitchIsId()} />
+    }
+    if (this.props.dataIndex === 'displayMode') {
+      return <Switch ref={node => (this.input = node)} checked={this.props.record.displayMode === 1} checkedChildren="是" unCheckedChildren="否" onClick={() => this.handleSwitchDisplayMode()} />
     }
     if (this.props.dataIndex === 'fieldType') {
       return <Select ref={node => (this.input = node)} onChange={this.handleSelectFieldType} placeholder={`请输入${this.props.title}`} defaultValue="default">
@@ -128,13 +140,13 @@ class EditableTable extends React.Component {
       {
         title: '字段编号',
         dataIndex: 'fieldCode',
-        width: '28%',
+        width: '22%',
         editable: !this.state.readonly,
       },
       {
         title: '字段名称',
         dataIndex: 'fieldName',
-        width: '28%',
+        width: '22%',
         editable: !this.state.readonly,
       },
       {
@@ -143,11 +155,25 @@ class EditableTable extends React.Component {
         editable: !this.state.readonly,
       },
       {
+        title: '默认值',
+        dataIndex: 'defaultValue',
+        editable: !this.state.readonly,
+      },
+      {
         title: '是否标识',
         dataIndex: 'isId',
-        width: '100px',
+        width: '80px',
         render: (text, record) => {
           return record.isId === 1 ? "是" : "否";
+        },
+        editable: !this.state.readonly,
+      },
+      {
+        title: '是否显示',
+        dataIndex: 'displayMode',
+        width: '80px',
+        render: (text, record) => {
+          return record.displayMode === 1 ? "是" : "否";
         },
         editable: !this.state.readonly,
       },
@@ -156,6 +182,7 @@ class EditableTable extends React.Component {
     if (!this.state.readonly) {
       this.columns.push({
         title: '操作',
+        width: '50px',
         dataIndex: 'operation',
         render: (text, record) =>
           this.state.dataFields.length >= 1 ? (
@@ -205,6 +232,7 @@ class EditableTable extends React.Component {
       fieldType: 'default',
       isId: 0,
       key: count,
+      displayMode: 1,
     };
     this.setState({
       dataFields: [...dataFields, newDataField],

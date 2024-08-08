@@ -72,6 +72,18 @@ class DataAdd extends PureComponent {
       },
     };
 
+    const formItemLayout2 = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 6 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 14 },
+      },
+    };
+
     const action = (
       <Button type="primary" onClick={this.handleSubmit} loading={submitting}>
         提交
@@ -102,7 +114,7 @@ class DataAdd extends PureComponent {
                 ],
               })(<Input placeholder="请输入数据名称，长度不超过64位" maxLength={64} />)}
             </FormItem>
-            <FormItem {...formItemLayout} label="字段">
+            <FormItem {...formItemLayout2} label="字段">
               <EditableTable
                 dataFields={this.state.dataFields}
                 handleSave={this.handleSaveField}
