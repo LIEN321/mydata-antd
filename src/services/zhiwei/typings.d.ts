@@ -1,0 +1,1081 @@
+declare namespace API {
+  type AuthUser = {
+    /** 所属租户 */
+    tenantId?: string;
+    /** 用户id */
+    id?: number;
+    /** 用户编号 */
+    code?: string;
+    /** 登录名 */
+    loginName?: string;
+    /** 用户名 */
+    name?: string;
+    /** 头像 */
+    avatar?: string;
+    /** 所属部门id */
+    departmentId?: number;
+    /** 手机 */
+    phone?: string;
+    /** 邮箱 */
+    email?: string;
+    /** 密码复杂度 */
+    passwordStrength?: number;
+    /** 角色id */
+    roleId?: number;
+  };
+
+  type ChangePasswordDTO = {
+    /** 原密码 */
+    oldPassword?: string;
+    /** 新密码 */
+    newPassword?: string;
+    /** 确认密码 */
+    confirmPassword?: string;
+  };
+
+  type deleteDemoParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type deleteDepartmentParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type deleteDevEntityParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type deleteMenuParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type deleteParameterParams = {
+    id: number;
+  };
+
+  type deleteRoleParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type deleteSysApiParams = {
+    id: number;
+  };
+
+  type deleteTenantParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type deleteUserParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type demoDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type DemoDTO = {
+    id?: number;
+    /** 字符串 */
+    a?: string;
+    /** 长整型 */
+    b?: number;
+    /** 整数 */
+    c?: number;
+    /** 日期 */
+    d?: string;
+    /** 时间 */
+    e?: string;
+    /** 浮点数 */
+    f?: number;
+    /** 布尔 */
+    g?: boolean;
+    /** 高精度数 */
+    h?: number;
+    /** 多行文本 */
+    i?: string;
+    /** 下拉框 */
+    j?: string;
+    /** 树型下拉框 */
+    k?: string;
+    /** 单选 */
+    l?: string;
+    /** 多选 */
+    m?: string[];
+  };
+
+  type demoPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    a?: string;
+    b?: string;
+    d?: string;
+    e?: string;
+    f?: string;
+    g?: string;
+    h?: string;
+    i?: string;
+    j?: string;
+  };
+
+  type DemoVO = {
+    /** id */
+    id?: number;
+    /** 字符串 */
+    a?: string;
+    /** 长整型 */
+    b?: number;
+    /** 整数 */
+    c?: number;
+    /** 日期 */
+    d?: string;
+    /** 时间 */
+    e?: string;
+    /** 浮点数 */
+    f?: number;
+    /** 布尔 */
+    g?: boolean;
+    /** 高精度数 */
+    h?: number;
+    /** 多行文本 */
+    i?: string;
+    /** 下拉框 */
+    j?: string;
+    /** 树型下拉框 */
+    k?: string;
+    /** 单选 */
+    l?: string;
+    /** 多选 */
+    m?: string[];
+  };
+
+  type departmentDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type DepartmentDTO = {
+    id?: number;
+    parentId?: number;
+    /** 机构名称 */
+    name?: string;
+    /** 机构类型 */
+    type?: number;
+    /** 机构排序 */
+    sort?: number;
+    /** 机构备注 */
+    remark?: string;
+  };
+
+  type departmentListParams = {
+    name?: string;
+  };
+
+  type DepartmentTreeVO = {
+    /** id */
+    id?: number;
+    /** 父菜单id */
+    parentId?: number;
+    value?: number;
+    key?: number;
+    title?: string;
+    children?: DepartmentTreeVO[];
+  };
+
+  type DepartmentVO = {
+    /** id */
+    id?: number;
+    /** 父菜单id */
+    parentId?: number;
+    /** 机构名称 */
+    name?: string;
+    /** 机构类型 */
+    type?: number;
+    /** 机构排序 */
+    sort?: number;
+    /** 机构备注 */
+    remark?: string;
+    /** 子层级机构 */
+    children?: DepartmentVO[];
+  };
+
+  type devEntityDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type DevEntityDTO = {
+    id?: number;
+    /** 实体编号 */
+    code?: string;
+    /** 实体名称 */
+    name?: string;
+    /** 后端包名 */
+    packageName?: string;
+    /** 数据库表名 */
+    tableName?: string;
+    /** 实体备注 */
+    remark?: string;
+  };
+
+  type devEntityPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    code?: string;
+    name?: string;
+    tableName?: string;
+  };
+
+  type DevEntityPropertyDTO = {
+    id?: number;
+    /** 属性编号 */
+    code?: string;
+    /** 属性名称 */
+    name?: string;
+    /** 属性类型 */
+    type?: string;
+    /** 是否显示在列表 */
+    isList?: boolean;
+    /** 是否作为查询条件 */
+    isSearch?: boolean;
+    /** 查询类型 */
+    searchType?: string;
+    /** 是否显示在表单 */
+    isForm?: boolean;
+    /** 表单组件 */
+    formComponent?: string;
+    /** 是否必填 */
+    isRequired?: boolean;
+  };
+
+  type devEntityPropertyListParams = {
+    /** 业务实体id */
+    id: number;
+  };
+
+  type DevEntityPropertyVO = {
+    /** id */
+    id?: number;
+    /** 属性编号 */
+    code?: string;
+    /** 属性名称 */
+    name?: string;
+    /** 属性类型 */
+    type?: string;
+    /** 是否显示在列表 */
+    isList?: boolean;
+    /** 是否作为查询条件 */
+    isSearch?: boolean;
+    /** 查询类型 */
+    searchType?: string;
+    /** 是否显示在表单 */
+    isForm?: boolean;
+    /** 表单组件 */
+    formComponent?: string;
+    /** 是否必填 */
+    isRequired?: boolean;
+  };
+
+  type DevEntityVO = {
+    /** id */
+    id?: number;
+    /** 实体编号 */
+    code?: string;
+    /** 实体姓名 */
+    name?: string;
+    /** 后端包名 */
+    packageName?: string;
+    /** 数据库表名 */
+    tableName?: string;
+    /** 实体备注 */
+    remark?: string;
+    /** 继承父类的模式 */
+    extendMode?: string;
+    /** 最后一次生成的作者名 */
+    authName?: string;
+    /** 最后一次生成java代码的路径 */
+    javaCodePath?: string;
+    /** 最后一次生成ui代码的路径 */
+    uiCodePath?: string;
+  };
+
+  type GenerateCodeDTO = {
+    /** 所选实体id数组 */
+    ids?: number[];
+    /** 最后一次生成的作者名 */
+    authName?: string;
+    /** 最后一次生成java代码的路径 */
+    javaCodePath?: string;
+    /** 最后一次生成ui代码的路径 */
+    uiCodePath?: string;
+  };
+
+  type getAvatarParams = {
+    fileName: string;
+  };
+
+  type LoginDTO = {
+    /** 租户编号 */
+    code?: string;
+    /** 登录账号 */
+    username?: string;
+    /** 登录密码 */
+    password?: string;
+  };
+
+  type MenuDataItem = {
+    /** 菜单id */
+    key?: string;
+    /** 菜单名称 */
+    name?: string;
+    /** 菜单图标 */
+    icon?: string;
+    /** 菜单路径 */
+    path?: string;
+    /** 菜单排序 */
+    sort?: number;
+    /** 菜单类型 */
+    type?: number;
+    /** 子菜单 */
+    children?: MenuDataItem[];
+  };
+
+  type menuDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type MenuDTO = {
+    id?: number;
+    parentId?: number;
+    /** 菜单编号 */
+    code?: string;
+    /** 菜单名称 */
+    name?: string;
+    /** 菜单图标 */
+    icon?: string;
+    /** 路由地址 */
+    path?: string;
+    /** 菜单排序 */
+    sort?: number;
+    /** 菜单类型 */
+    type?: number;
+    /** 菜单备注 */
+    remark?: string;
+  };
+
+  type menuListByRoleParams = {
+    roleId: number;
+  };
+
+  type menuListParams = {
+    code?: string;
+    name?: string;
+  };
+
+  type MenuTreeVO = {
+    /** id */
+    id?: number;
+    /** 父菜单id */
+    parentId?: number;
+    value?: number;
+    key?: number;
+    title?: string;
+    children?: MenuTreeVO[];
+  };
+
+  type MenuVO = {
+    /** id */
+    id?: number;
+    /** 父菜单id */
+    parentId?: number;
+    /** 菜单编号 */
+    code?: string;
+    /** 菜单名称 */
+    name?: string;
+    /** 菜单图标 */
+    icon?: string;
+    /** 路由地址 */
+    path?: string;
+    /** 菜单排序 */
+    sort?: number;
+    /** 菜单类型 */
+    type?: number;
+    /** 菜单备注 */
+    remark?: string;
+    /** 子层级菜单 */
+    children?: MenuVO[];
+  };
+
+  type parameterDetailParams = {
+    id: number;
+  };
+
+  type ParameterDTO = {
+    id?: number;
+    /** 参数编号 */
+    code?: string;
+    /** 参数名称 */
+    name?: string;
+    /** 参数值 */
+    value?: string;
+    /** 参数备注 */
+    remark?: string;
+  };
+
+  type parameterPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    code?: string;
+    name?: string;
+  };
+
+  type ParameterVO = {
+    /** id */
+    id?: number;
+    /** 系统参数编号 */
+    code?: string;
+    /** 系统参数名称 */
+    name?: string;
+    /** 系统参数值 */
+    value?: string;
+    /** 系统参数备注 */
+    remark?: string;
+  };
+
+  type PListDemoVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: DemoVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListDevEntityVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: DevEntityVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListParameterVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: ParameterVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListRoleVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: RoleVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListSysApiVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: SysApiVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListTenantVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: TenantVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListUserVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: UserVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type RAuthUser = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: AuthUser;
+  };
+
+  type RBoolean = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: boolean;
+  };
+
+  type RDemoVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: DemoVO;
+  };
+
+  type RDepartmentVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: DepartmentVO;
+  };
+
+  type RDevEntityVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: DevEntityVO;
+  };
+
+  type resetPasswordParams = {
+    id: number;
+  };
+
+  type RListDemoVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: DemoVO[];
+  };
+
+  type RListDepartmentVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: DepartmentVO[];
+  };
+
+  type RListDevEntityPropertyVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: DevEntityPropertyVO[];
+  };
+
+  type RListDevEntityVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: DevEntityVO[];
+  };
+
+  type RListMenuDataItem = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: MenuDataItem[];
+  };
+
+  type RListMenuVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: MenuVO[];
+  };
+
+  type RListParameterVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: ParameterVO[];
+  };
+
+  type RListRoleVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: RoleVO[];
+  };
+
+  type RListSysApiVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: SysApiVO[];
+  };
+
+  type RListTenantVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: TenantVO[];
+  };
+
+  type RLong = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: number;
+  };
+
+  type RMenuVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: MenuVO;
+  };
+
+  type RObject = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: Record<string, any>;
+  };
+
+  type roleDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type RoleDTO = {
+    id?: number;
+    /** 角色编号 */
+    code?: string;
+    /** 角色名称 */
+    name?: string;
+    /** 角色备注 */
+    remark?: string;
+  };
+
+  type RoleGrantDTO = {
+    /** 角色id集合 */
+    roleIds?: number[];
+    /** 菜单id集合 */
+    menuIds?: number[];
+  };
+
+  type rolePageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    code?: string;
+    name?: string;
+  };
+
+  type RoleSelectVO = {
+    /** 角色名称 */
+    label?: string;
+    /** 角色id */
+    value?: number;
+  };
+
+  type RoleVO = {
+    /** id */
+    id?: number;
+    /** 角色编号 */
+    code?: string;
+    /** 角色姓名 */
+    name?: string;
+    /** 角色备注 */
+    remark?: string;
+  };
+
+  type RParameterVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: ParameterVO;
+  };
+
+  type RRoleVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: RoleVO;
+  };
+
+  type RString = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: string;
+  };
+
+  type RSysApiVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: SysApiVO;
+  };
+
+  type RTenantVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: TenantVO;
+  };
+
+  type RUserVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: UserVO;
+  };
+
+  type SaveDevEntityPropertiesDTO = {
+    /** 业务实体id */
+    id?: number;
+    /** 继承父类的模式 */
+    extendMode?: string;
+    /** 属性列表 */
+    properties?: DevEntityPropertyDTO[];
+  };
+
+  type sysApiDetailParams = {
+    id: number;
+  };
+
+  type SysApiDTO = {
+    id?: number;
+    /** 所属菜单id */
+    menuId?: number;
+    /** 接口编号 */
+    code?: string;
+    /** 接口名称 */
+    name?: string;
+    /** 接口地址 */
+    path?: string;
+    /** 请求方式 */
+    method?: string;
+    /** 备注 */
+    remark?: string;
+  };
+
+  type sysApiPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    menuId?: number;
+    code?: string;
+    name?: string;
+  };
+
+  type SysApiVO = {
+    /** id */
+    id?: number;
+    /** 所属菜单id */
+    menuId?: number;
+    /** 所属菜单名称 */
+    menuName?: string;
+    /** 接口编号 */
+    code?: string;
+    /** 接口名称 */
+    name?: string;
+    /** 接口地址 */
+    path?: string;
+    /** 请求方式 */
+    method?: string;
+    /** 备注 */
+    remark?: string;
+  };
+
+  type tenantDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type TenantDTO = {
+    id?: number;
+    /** 租户id */
+    tenantId?: string;
+    /** 租户编号 */
+    tenantCode?: string;
+    /** 租户名称 */
+    tenantName?: string;
+    /** 到期时间 */
+    expireTime?: string;
+    /** 联系人姓名 */
+    contactsName?: string;
+    /** 联系人电话 */
+    contactsPhone?: string;
+    /** 联系人地址 */
+    contactsAddress?: string;
+  };
+
+  type tenantPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    tenantCode?: string;
+    tenantName?: string;
+  };
+
+  type TenantVO = {
+    /** id */
+    id?: number;
+    /** 租户id */
+    tenantId?: string;
+    /** 租户编号 */
+    tenantCode?: string;
+    /** 租户名称 */
+    tenantName?: string;
+    /** 到期时间 */
+    expireTime?: string;
+    /** 联系人姓名 */
+    contactsName?: string;
+    /** 联系人电话 */
+    contactsPhone?: string;
+    /** 联系人地址 */
+    contactsAddress?: string;
+  };
+
+  type userDetailParams = {
+    id: number;
+  };
+
+  type UserDTO = {
+    id?: number;
+    /** 编号 */
+    code?: string;
+    /** 姓名 */
+    name?: string;
+    /** 手机 */
+    phone?: string;
+    /** 邮箱 */
+    email?: string;
+    /** 所属部门id */
+    departmentId?: number;
+    /** 角色id */
+    roleId?: number;
+    /** 登录账号 */
+    loginName?: string;
+    /** 登录密码 */
+    loginPassword?: string;
+    /** 头像 */
+    avatar?: string;
+  };
+
+  type UserInfoDTO = {
+    /** 用户id */
+    id?: number;
+    /** 用户姓名 */
+    name?: string;
+    /** 手机号 */
+    phone?: string;
+    /** 邮箱 */
+    email?: string;
+    /** 头像 */
+    avatar?: string;
+  };
+
+  type userPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    departmentId?: number;
+    code?: string;
+    name?: string;
+  };
+
+  type UserVO = {
+    /** id */
+    id?: number;
+    /** 编号 */
+    code?: string;
+    /** 用户姓名 */
+    name?: string;
+    /** 手机 */
+    phone?: string;
+    /** 邮箱 */
+    email?: string;
+    /** 所属部门id */
+    departmentId?: number;
+    /** 所属部门名称 */
+    departmentName?: string;
+    /** 所属角色id */
+    roleId?: number;
+    /** 所属角色名称 */
+    roleName?: string;
+    /** 登录账号 */
+    loginName?: string;
+    /** 头像 */
+    avatar?: string;
+  };
+}
