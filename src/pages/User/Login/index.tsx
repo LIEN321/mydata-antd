@@ -166,9 +166,9 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
-          subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
+          logo={<img alt="logo" src="/logo.png" />}
+          title="MyData 数据融合平台"
+          subTitle="一款开源的数据集成系统，为简化数据对接和可持续的数据集成提供支持"
           initialValues={{
             autoLogin: true,
           }}

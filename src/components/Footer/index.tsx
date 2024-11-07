@@ -10,25 +10,19 @@ const Footer: React.FC = () => {
       }}
       links={[
         {
-          key: 'zhiwei',
-          title: '之微',
-          href: 'https://gitee.com/LIEN321/zhiwei_FrostMetal',
+          key: 'mydata',
+          title: 'MyData',
+          href: 'https://www.mydata.work',
           blankTarget: true,
         },
         {
-          key: 'Ant Design Pro',
-          title: 'Ant Design Pro',
-          href: 'https://pro.ant.design',
-          blankTarget: true,
-        },
-        {
-          key: 'Ant Design',
-          title: 'Ant Design',
-          href: 'https://ant.design',
+          key: 'gitee',
+          title: 'Gitee',
+          href: 'https://gitee.com/LIEN321',
           blankTarget: true,
         },
       ]}
-      copyright={`2024 lient321 v0.1.4`}
+      copyright={`2024 lient321 v0.9.0`}
     />
   );
 };
