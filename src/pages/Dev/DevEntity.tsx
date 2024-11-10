@@ -68,7 +68,9 @@ const DevEntity: React.FC = () => {
                 // 设置选中的记录id
                 setEntityIds([devEntity.id]);
                 // 设置继承模式
-                setExtendMode(devEntity.extendMode);
+                if(devEntity.extendMode){
+                    setExtendMode(devEntity.extendMode);
+                }
 
                 // 查询实体属性列表
                 const response = await devEntityPropertyList({ id: devEntity.id });
@@ -77,8 +79,8 @@ const DevEntity: React.FC = () => {
                     if (responseData) {
                         let count = 0;
                         let properties: DataType[] = [];
-                        responseData.map((p: DataType) => {
-                            const property = p;
+                        responseData.map(p => {
+                            const property = p as DataType;
                             property.key = count.toString();
                             count++;
 
