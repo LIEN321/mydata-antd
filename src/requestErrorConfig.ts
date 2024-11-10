@@ -87,7 +87,7 @@ export const errorConfig: RequestConfig = {
           message.warning('您没有访问或操作权限，请尝试刷新后操作或联系管理员。', 10);
         }
         if (status === 500) {
-          message.warning(error.response.data.message);
+          message.error(error.response.data.message);
         }
       } else if (error.request) {
         // 请求已经成功发起，但没有收到响应
