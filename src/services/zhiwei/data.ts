@@ -2,9 +2,9 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** 新增或更新生成代码示例1 POST /demo */
-export async function saveDemo(body: API.DemoDTO, options?: { [key: string]: any }) {
-  return request<API.RLong>(`/api/demo`, {
+/** 新增或更新标准数据 POST /data */
+export async function saveData(body: API.DataDTO, options?: { [key: string]: any }) {
+  return request<API.RLong>(`/api/data`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -14,9 +14,9 @@ export async function saveDemo(body: API.DemoDTO, options?: { [key: string]: any
   });
 }
 
-/** 批量删除生成代码示例1 DELETE /demo */
-export async function deleteDemos(body: number[], options?: { [key: string]: any }) {
-  return request<API.RBoolean>(`/api/demo`, {
+/** 批量删除标准数据 DELETE /data */
+export async function deleteDatas(body: number[], options?: { [key: string]: any }) {
+  return request<API.RBoolean>(`/api/data`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -26,49 +26,49 @@ export async function deleteDemos(body: number[], options?: { [key: string]: any
   });
 }
 
-/** 生成代码示例1详情 GET /demo/${param0} */
-export async function demoDetail(
+/** 标准数据详情 GET /data/${param0} */
+export async function dataDetail(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.demoDetailParams,
+  params: API.dataDetailParams,
   options?: { [key: string]: any },
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.RDemoVO>(`/api/demo/${param0}`, {
+  return request<API.RDataVO>(`/api/data/${param0}`, {
     method: 'GET',
     params: { ...queryParams },
     ...(options || {}),
   });
 }
 
-/** 单个删除生成代码示例1 DELETE /demo/${param0} */
-export async function deleteDemo(
+/** 单个删除标准数据 DELETE /data/${param0} */
+export async function deleteData(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.deleteDemoParams,
+  params: API.deleteDataParams,
   options?: { [key: string]: any },
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.RBoolean>(`/api/demo/${param0}`, {
+  return request<API.RBoolean>(`/api/data/${param0}`, {
     method: 'DELETE',
     params: { ...queryParams },
     ...(options || {}),
   });
 }
 
-/** 查询所有生成代码示例1 GET /demo/list */
-export async function demoList(options?: { [key: string]: any }) {
-  return request<API.RListDemoVO>(`/api/demo/list`, {
+/** 查询所有标准数据 GET /data/list */
+export async function dataList(options?: { [key: string]: any }) {
+  return request<API.RListDataVO>(`/api/data/list`, {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-/** 分页查询生成代码示例1 GET /demo/page */
-export async function demoPage(
+/** 分页查询标准数据 GET /data/page */
+export async function dataPage(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.demoPageParams,
+  params: API.dataPageParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.PListDemoVO>(`/api/demo/page`, {
+  return request<API.PListDataVO>(`/api/data/page`, {
     method: 'GET',
     params: {
       ...params,

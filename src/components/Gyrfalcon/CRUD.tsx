@@ -39,6 +39,19 @@ export type CRUDProps = {
     /** 批量删除接口 */
     handleBatchDelete?: (params: any, options?: { [key: string]: any }) => any;
 
+    /** 
+     * 新建按钮点击事件
+     */
+    onClickCreateBtn?: () => any;
+    /** 
+     * 编辑按钮点击事件
+     */
+    onClickEditBtn?: (record: any) => any;
+    /** 
+     * 删除按钮点击事件
+     */
+    onClickDeleteBtn?: (record: any) => any;
+
     /** 左侧布局内容 */
     leftContent?: any;
     /** 左侧布局col span */
@@ -150,6 +163,9 @@ const CRUD: React.FC<CRUDProps> = (props) => {
                         <Fragment>
                             {props.handleUpdate &&
                                 <a key="edit" onClick={() => {
+                                    if (props.onClickEditBtn) {
+                                        props.onClickEditBtn(record);
+                                    }
                                     setCurrentRow(record);
                                     handleUpdateModalOpen(true);
                                 }}>编辑</a>
@@ -159,6 +175,9 @@ const CRUD: React.FC<CRUDProps> = (props) => {
                             {props.handleDelete && <Popconfirm
                                 title={`是否确认删除?`}
                                 onConfirm={async () => {
+                                    if (props.onClickDeleteBtn) {
+                                        props.onClickDeleteBtn(record);
+                                    }
                                     const success = await handleDelete(record.id as number);
                                     if (success) {
                                         tableRef.current?.reloadAndRest?.();
@@ -188,6 +207,9 @@ const CRUD: React.FC<CRUDProps> = (props) => {
                     type="primary"
                     key="primary"
                     onClick={() => {
+                        if(props.onClickCreateBtn){
+                            props.onClickCreateBtn();
+                        }
                         // 打开新建窗口
                         handleCreateModalOpen(true);
                     }}

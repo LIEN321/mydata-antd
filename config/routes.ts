@@ -28,6 +28,23 @@ export default [
     icon: 'smile',
     component: './Welcome',
   },
+  // -------------------- 数据集成 --------------------
+  {
+    path: '/mydata',
+    name: '数据集成',
+    routes: [
+      {
+        path: '/mydata/project',
+        name: '项目管理',
+        component: './MyData/Project/Project',
+      },
+      {
+        path: '/mydata/data',
+        name: '数据管理',
+        component: './MyData/Data/Data',
+      },
+    ],
+  },
   // -------------------- 组织管理 --------------------
   {
     path: '/organization',
@@ -94,19 +111,6 @@ export default [
         path: '/dev/dev_entity',
         name: '生成代码',
         component: './Dev/DevEntity',
-      },
-    ],
-  },
-  // -------------------- 示例模块 --------------------
-  {
-    path: '/demo',
-    name: '',
-    icon: 'Smile',
-    routes: [
-      {
-        path: '/demo/demo',
-        name: '生成代码示例',
-        component: './Demo/Demo',
       },
     ],
   },

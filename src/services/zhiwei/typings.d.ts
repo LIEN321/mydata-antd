@@ -33,7 +33,91 @@ declare namespace API {
     confirmPassword?: string;
   };
 
-  type deleteDemoParams = {
+  type dataDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type DataDTO = {
+    id?: number;
+    /** 所属项目 */
+    projectId?: number;
+    /** 数据编号 */
+    dataCode?: string;
+    /** 数据名称 */
+    dataName?: string;
+    /** 业务数据 */
+    dataCount?: number;
+    /** 字段列表 */
+    dataFields?: DataFieldDTO[];
+  };
+
+  type DataFieldDTO = {
+    id?: number;
+    /** 所属数据 */
+    dataId?: number;
+    /** 字段编号 */
+    fieldCode?: string;
+    /** 字段名称 */
+    fieldName?: string;
+    /** 字段类型 */
+    fieldType?: string;
+    /** 字段默认值 */
+    defaultValue?: string;
+    /** 是否标识 */
+    isId?: boolean;
+    /** 显示模式 */
+    displayMode?: boolean;
+  };
+
+  type DataFieldVO = {
+    /** id */
+    id?: number;
+    /** 所属数据 */
+    dataId?: number;
+    /** 字段编号 */
+    fieldCode?: string;
+    /** 字段名称 */
+    fieldName?: string;
+    /** 字段类型 */
+    fieldType?: string;
+    /** 字段默认值 */
+    defaultValue?: string;
+    /** 是否标识 */
+    isId?: number;
+    /** 显示模式 */
+    displayMode?: number;
+  };
+
+  type dataPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    dataCode?: string;
+    dataName?: string;
+  };
+
+  type DataVO = {
+    /** id */
+    id?: number;
+    /** 所属项目id */
+    projectId?: number;
+    /** 所属项目名称 */
+    projectName?: string;
+    /** 数据编号 */
+    dataCode?: string;
+    /** 数据名称 */
+    dataName?: string;
+    /** 业务数据 */
+    dataCount?: number;
+    /** 字段列表 */
+    dataFields?: DataFieldVO[];
+  };
+
+  type deleteDataParams = {
     /** 记录id */
     id: number;
   };
@@ -57,6 +141,11 @@ declare namespace API {
     id: number;
   };
 
+  type deleteProjectParams = {
+    /** 记录id */
+    id: number;
+  };
+
   type deleteRoleParams = {
     /** 记录id */
     id: number;
@@ -74,90 +163,6 @@ declare namespace API {
   type deleteUserParams = {
     /** 记录id */
     id: number;
-  };
-
-  type demoDetailParams = {
-    /** 记录id */
-    id: number;
-  };
-
-  type DemoDTO = {
-    id?: number;
-    /** 字符串 */
-    a?: string;
-    /** 长整型 */
-    b?: number;
-    /** 整数 */
-    c?: number;
-    /** 日期 */
-    d?: string;
-    /** 时间 */
-    e?: string;
-    /** 浮点数 */
-    f?: number;
-    /** 布尔 */
-    g?: boolean;
-    /** 高精度数 */
-    h?: number;
-    /** 多行文本 */
-    i?: string;
-    /** 下拉框 */
-    j?: string;
-    /** 树型下拉框 */
-    k?: string;
-    /** 单选 */
-    l?: string;
-    /** 多选 */
-    m?: string[];
-  };
-
-  type demoPageParams = {
-    /** 当前页数 */
-    current?: number;
-    /** 每页数量 */
-    pageSize?: number;
-    /** 记录总数 */
-    total?: number;
-    a?: string;
-    b?: string;
-    d?: string;
-    e?: string;
-    f?: string;
-    g?: string;
-    h?: string;
-    i?: string;
-    j?: string;
-  };
-
-  type DemoVO = {
-    /** id */
-    id?: number;
-    /** 字符串 */
-    a?: string;
-    /** 长整型 */
-    b?: number;
-    /** 整数 */
-    c?: number;
-    /** 日期 */
-    d?: string;
-    /** 时间 */
-    e?: string;
-    /** 浮点数 */
-    f?: number;
-    /** 布尔 */
-    g?: boolean;
-    /** 高精度数 */
-    h?: number;
-    /** 多行文本 */
-    i?: string;
-    /** 下拉框 */
-    j?: string;
-    /** 树型下拉框 */
-    k?: string;
-    /** 单选 */
-    l?: string;
-    /** 多选 */
-    m?: string[];
   };
 
   type departmentDetailParams = {
@@ -336,6 +341,8 @@ declare namespace API {
     username?: string;
     /** 登录密码 */
     password?: string;
+    /** 自动登录 */
+    autoLogin?: boolean;
   };
 
   type MenuDataItem = {
@@ -462,7 +469,7 @@ declare namespace API {
     remark?: string;
   };
 
-  type PListDemoVO = {
+  type PListDataVO = {
     /** 响应状态码 */
     code?: number;
     /** true-成功，false-失败 */
@@ -470,7 +477,7 @@ declare namespace API {
     /** 响应提示消息 */
     message?: string;
     /** 响应数据 */
-    data?: DemoVO[];
+    data?: DataVO[];
     /** 当前页数 */
     current?: number;
     /** 每页记录数量 */
@@ -505,6 +512,23 @@ declare namespace API {
     message?: string;
     /** 响应数据 */
     data?: ParameterVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListProjectVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: ProjectVO[];
     /** 当前页数 */
     current?: number;
     /** 每页记录数量 */
@@ -581,6 +605,52 @@ declare namespace API {
     total?: number;
   };
 
+  type projectDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type ProjectDTO = {
+    id?: number;
+    /** 项目编号 */
+    projectCode?: string;
+    /** 项目名称 */
+    projectName?: string;
+    /** 项目描述 */
+    projectDesc?: string;
+  };
+
+  type projectPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    projectCode?: string;
+    projectName?: string;
+  };
+
+  type ProjectSelectVO = {
+    /** id */
+    id?: number;
+    /** 项目名称 */
+    label?: string;
+    /** 项目id */
+    value?: number;
+  };
+
+  type ProjectVO = {
+    /** id */
+    id?: number;
+    /** 项目编号 */
+    projectCode?: string;
+    /** 项目名称 */
+    projectName?: string;
+    /** 项目描述 */
+    projectDesc?: string;
+  };
+
   type RAuthUser = {
     /** 响应状态码 */
     code?: number;
@@ -602,14 +672,14 @@ declare namespace API {
     data?: boolean;
   };
 
-  type RDemoVO = {
+  type RDataVO = {
     /** 响应状态码 */
     code?: number;
     /** true-成功，false-失败 */
     success?: boolean;
     /** 响应提示消息 */
     message?: string;
-    data?: DemoVO;
+    data?: DataVO;
   };
 
   type RDepartmentVO = {
@@ -636,7 +706,7 @@ declare namespace API {
     id: number;
   };
 
-  type RListDemoVO = {
+  type RListDataVO = {
     /** 响应状态码 */
     code?: number;
     /** true-成功，false-失败 */
@@ -644,7 +714,7 @@ declare namespace API {
     /** 响应提示消息 */
     message?: string;
     /** 响应数据 */
-    data?: DemoVO[];
+    data?: DataVO[];
   };
 
   type RListDepartmentVO = {
@@ -711,6 +781,17 @@ declare namespace API {
     message?: string;
     /** 响应数据 */
     data?: ParameterVO[];
+  };
+
+  type RListProjectVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: ProjectVO[];
   };
 
   type RListRoleVO = {
@@ -837,6 +918,16 @@ declare namespace API {
     /** 响应提示消息 */
     message?: string;
     data?: ParameterVO;
+  };
+
+  type RProjectVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: ProjectVO;
   };
 
   type RRoleVO = {

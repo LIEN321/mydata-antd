@@ -6,13 +6,14 @@ import * as role from './role';
 import * as user from './user';
 import * as tenant from './tenant';
 import * as api from './api';
+import * as project from './project';
 import * as parameter from './parameter';
 import * as menu from './menu';
 import * as me from './me';
 import * as generateCode from './generateCode';
 import * as devEntity from './devEntity';
 import * as department from './department';
-import * as demo from './demo';
+import * as data from './data';
 import * as auth from './auth';
 import * as portal from './portal';
 import * as devEntityProperty from './devEntityProperty';
@@ -21,13 +22,14 @@ export default {
   user,
   tenant,
   api,
+  project,
   parameter,
   menu,
   me,
   generateCode,
   devEntity,
   department,
-  demo,
+  data,
   auth,
   portal,
   devEntityProperty,
