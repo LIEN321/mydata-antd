@@ -796,15 +796,6 @@ declare namespace API {
     projectName?: string;
   };
 
-  type ProjectSelectVO = {
-    /** id */
-    id?: number;
-    /** 项目名称 */
-    label?: string;
-    /** 项目id */
-    value?: number;
-  };
-
   type ProjectVO = {
     /** id */
     id?: number;

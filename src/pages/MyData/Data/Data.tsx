@@ -37,7 +37,7 @@ const Data: React.FC = () => {
     ];
 
     const dataForm = <>
-        <Row gutter={12}>
+        <Row gutter={24}>
             <Col span={12}>
                 <ProFormSelect
                     rules={[
@@ -53,7 +53,7 @@ const Data: React.FC = () => {
                 />
             </Col>
         </Row>
-        <Row gutter={12}>
+        <Row gutter={24}>
             <Col span={12}>
                 <ProFormText
                     rules={[

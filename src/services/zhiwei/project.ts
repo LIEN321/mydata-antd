@@ -79,7 +79,7 @@ export async function projectPage(
 
 /** 查询所有项目 GET /project/select */
 export async function projectSelect(options?: { [key: string]: any }) {
-  return request<API.ProjectSelectVO[]>(`/api/project/select`, {
+  return request<API.SelectVO[]>(`/api/project/select`, {
     method: 'GET',
     ...(options || {}),
   });
