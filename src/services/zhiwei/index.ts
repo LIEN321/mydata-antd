@@ -15,6 +15,8 @@ import * as devEntity from './devEntity';
 import * as department from './department';
 import * as data from './data';
 import * as auth from './auth';
+import * as app from './app';
+import * as appApi from './appApi';
 import * as portal from './portal';
 import * as devEntityProperty from './devEntityProperty';
 export default {
@@ -31,6 +33,8 @@ export default {
   department,
   data,
   auth,
+  app,
+  appApi,
   portal,
   devEntityProperty,
 };

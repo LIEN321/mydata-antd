@@ -1,4 +1,125 @@
 declare namespace API {
+  type appApiDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type AppApiDTO = {
+    id?: number;
+    /** 所属应用 */
+    appId?: number;
+    /** 接口名称 */
+    apiName?: string;
+    /** 操作类型 */
+    opType?: number;
+    /** 请求方法 */
+    apiMethod?: string;
+    /** 接口路径 */
+    apiUri?: string;
+    /** 数据类型 */
+    dataType?: string;
+    /** 数据层级 */
+    fieldPrefix?: string;
+    /** 请求Header */
+    reqHeaders?: string;
+    /** 请求参数 */
+    reqParams?: string;
+    /** 请求体 */
+    reqBody?: string;
+    /** 响应示例 */
+    respExample?: string;
+  };
+
+  type appApiPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    appId?: string;
+    apiName?: string;
+  };
+
+  type AppApiVO = {
+    /** id */
+    id?: number;
+    /** 所属应用 */
+    appId?: number;
+    /** 所属应用名称 */
+    appName?: string;
+    /** 接口名称 */
+    apiName?: string;
+    /** 操作类型 */
+    opType?: number;
+    /** 请求方法 */
+    apiMethod?: string;
+    /** 接口路径 */
+    apiUri?: string;
+    /** 数据类型 */
+    dataType?: string;
+    /** 数据层级 */
+    fieldPrefix?: string;
+    /** 请求Header */
+    reqHeaders?: string;
+    /** 请求参数 */
+    reqParams?: string;
+    /** 请求体 */
+    reqBody?: string;
+    /** 响应示例 */
+    respExample?: string;
+  };
+
+  type appDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type AppDTO = {
+    id?: number;
+    /** 应用编号 */
+    appCode?: string;
+    /** 应用名称 */
+    appName?: string;
+    /** 访问地址 */
+    appUrl?: string;
+    /** 接口前缀地址 */
+    apiPrefix?: string;
+    /** 应用描述 */
+    appDesc?: string;
+    /** 接口数量 */
+    apiCount?: number;
+  };
+
+  type appPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    appCode?: string;
+    appName?: string;
+    appUrl?: string;
+  };
+
+  type AppVO = {
+    /** id */
+    id?: number;
+    /** 应用编号 */
+    appCode?: string;
+    /** 应用名称 */
+    appName?: string;
+    /** 访问地址 */
+    appUrl?: string;
+    /** 接口前缀地址 */
+    apiPrefix?: string;
+    /** 应用描述 */
+    appDesc?: string;
+    /** 接口数量 */
+    apiCount?: number;
+  };
+
   type AuthUser = {
     /** 所属租户 */
     tenantId?: string;
@@ -115,6 +236,16 @@ declare namespace API {
     dataCount?: number;
     /** 字段列表 */
     dataFields?: DataFieldVO[];
+  };
+
+  type deleteAppApiParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type deleteAppParams = {
+    /** 记录id */
+    id: number;
   };
 
   type deleteDataParams = {
@@ -469,6 +600,40 @@ declare namespace API {
     remark?: string;
   };
 
+  type PListAppApiVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: AppApiVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListAppVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: AppVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
   type PListDataVO = {
     /** 响应状态码 */
     code?: number;
@@ -651,6 +816,26 @@ declare namespace API {
     projectDesc?: string;
   };
 
+  type RAppApiVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: AppApiVO;
+  };
+
+  type RAppVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: AppVO;
+  };
+
   type RAuthUser = {
     /** 响应状态码 */
     code?: number;
@@ -704,6 +889,28 @@ declare namespace API {
 
   type resetPasswordParams = {
     id: number;
+  };
+
+  type RListAppApiVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: AppApiVO[];
+  };
+
+  type RListAppVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: AppVO[];
   };
 
   type RListDataVO = {
@@ -988,6 +1195,15 @@ declare namespace API {
     extendMode?: string;
     /** 属性列表 */
     properties?: DevEntityPropertyDTO[];
+  };
+
+  type SelectVO = {
+    /** id */
+    id?: number;
+    /** 项目名称 */
+    label?: string;
+    /** 项目id */
+    value?: number;
   };
 
   type sysApiDetailParams = {

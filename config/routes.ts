@@ -43,6 +43,16 @@ export default [
         name: '数据管理',
         component: './MyData/Data/Data',
       },
+      {
+        path: '/mydata/app',
+        name: '应用管理',
+        component: './MyData/App/App',
+      },
+      {
+        path: '/mydata/api',
+        name: 'API管理',
+        component: './MyData/AppApi/AppApi',
+      },
     ],
   },
   // -------------------- 组织管理 --------------------
