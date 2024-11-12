@@ -21,9 +21,9 @@ declare namespace API {
     /** 数据层级 */
     fieldPrefix?: string;
     /** 请求Header */
-    reqHeaders?: string;
+    reqHeaders?: Record<string, any>[];
     /** 请求参数 */
-    reqParams?: string;
+    reqParams?: Record<string, any>[];
     /** 请求体 */
     reqBody?: string;
     /** 响应示例 */
@@ -61,9 +61,9 @@ declare namespace API {
     /** 数据层级 */
     fieldPrefix?: string;
     /** 请求Header */
-    reqHeaders?: string;
+    reqHeaders?: Record<string, any>[];
     /** 请求参数 */
-    reqParams?: string;
+    reqParams?: Record<string, any>[];
     /** 请求体 */
     reqBody?: string;
     /** 响应示例 */

@@ -3,9 +3,15 @@ import { appSelect } from "@/services/zhiwei/app";
 import { deleteAppApi, deleteAppApis, appApiPage, saveAppApi } from "@/services/zhiwei/appApi";
 import { ActionType, ProColumns, ProFormText, ProFormSelect, ProFormRadio, } from "@ant-design/pro-components";
 import { Col, Row, Tabs, TabsProps } from "antd";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import ApiParamsTable, { DataType } from "./ApiParamsTable";
 
 const AppApi: React.FC = () => {
+
+    // 请求参数
+    const [reqParams, setReqParams] = useState<DataType[]>([]);
+    // 请求Header
+    const [reqHeaders, setReqHeaders] = useState<DataType[]>([]);
 
     // 表格列
     const columns: ProColumns<API.AppApiVO>[] = [
@@ -51,12 +57,22 @@ const AppApi: React.FC = () => {
         {
             key: '1',
             label: 'Params',
-            children: 'Params',
+            children: (
+                <ApiParamsTable
+                    params={reqParams}
+                    handleUpdateParams={setReqParams}
+                />
+            ),
         },
         {
             key: '2',
             label: 'Headers',
-            children: 'Headers',
+            children: (
+                <ApiParamsTable
+                    params={reqHeaders}
+                    handleUpdateParams={setReqHeaders}
+                />
+            ),
         },
         {
             key: '3',
@@ -215,6 +231,20 @@ const AppApi: React.FC = () => {
 
     const tableRef = useRef<ActionType>();
 
+    const handleOnClickEditBtn = (record: any) => {
+        setReqParams(record.reqParams);
+        setReqHeaders(record.reqHeaders);
+    }
+
+    const handleSaveAppApi = async (formData: any) => {
+        const body = {
+            ...formData
+            , reqParams: reqParams
+            , reqHeaders: reqHeaders
+        };
+        await saveAppApi(body);
+    }
+
     return (
         <>
             <CRUD
@@ -222,15 +252,17 @@ const AppApi: React.FC = () => {
                 title="应用接口"
                 columns={columns}
 
-                formWidth={600}
+                formWidth={800}
                 createForm={appApiForm}
                 updateForm={appApiForm}
 
                 handlePage={appApiPage}
-                handleCreate={saveAppApi}
-                handleUpdate={saveAppApi}
+                handleCreate={handleSaveAppApi}
+                handleUpdate={handleSaveAppApi}
                 handleDelete={deleteAppApi}
                 handleBatchDelete={deleteAppApis}
+
+                onClickEditBtn={handleOnClickEditBtn}
             />
         </>
     );
