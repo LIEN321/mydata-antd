@@ -24,8 +24,12 @@ declare namespace API {
     reqHeaders?: Record<string, any>[];
     /** 请求参数 */
     reqParams?: Record<string, any>[];
-    /** 请求体 */
-    reqBody?: string;
+    /** 请求体类型 */
+    reqBodyType?: string;
+    /** 请求体，form格式 */
+    reqBodyForm?: Record<string, any>[];
+    /** 请求体，raw格式 */
+    reqBodyRaw?: string;
     /** 响应示例 */
     respExample?: string;
   };
@@ -64,8 +68,12 @@ declare namespace API {
     reqHeaders?: Record<string, any>[];
     /** 请求参数 */
     reqParams?: Record<string, any>[];
-    /** 请求体 */
-    reqBody?: string;
+    /** 请求体类型 */
+    reqBodyType?: string;
+    /** 请求体，form格式 */
+    reqBodyForm?: Record<string, any>[];
+    /** 请求体，raw格式 */
+    reqBodyRaw?: string;
     /** 响应示例 */
     respExample?: string;
   };

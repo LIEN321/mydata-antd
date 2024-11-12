@@ -2,7 +2,7 @@ import CRUD from "@/components/Gyrfalcon/CRUD";
 import { appSelect } from "@/services/zhiwei/app";
 import { deleteAppApi, deleteAppApis, appApiPage, saveAppApi } from "@/services/zhiwei/appApi";
 import { ActionType, ProColumns, ProFormText, ProFormSelect, ProFormRadio, } from "@ant-design/pro-components";
-import { Col, Row, Tabs, TabsProps } from "antd";
+import { Col, Input, Radio, Row, Tabs, TabsProps } from "antd";
 import { useRef, useState } from "react";
 import ApiParamsTable, { DataType } from "./ApiParamsTable";
 
@@ -12,6 +12,12 @@ const AppApi: React.FC = () => {
     const [reqParams, setReqParams] = useState<DataType[]>([]);
     // 请求Header
     const [reqHeaders, setReqHeaders] = useState<DataType[]>([]);
+    // 请求body类型
+    const [reqBodyType, setReqBodyType] = useState<string>("");
+    // 请求body，form格式
+    const [reqBodyForm, setReqBodyForm] = useState<DataType[]>([]);
+    // 请求body，raw格式
+    const [reqBodyRaw, setReqBodyRaw] = useState<string>("");
 
     // 表格列
     const columns: ProColumns<API.AppApiVO>[] = [
@@ -77,7 +83,34 @@ const AppApi: React.FC = () => {
         {
             key: '3',
             label: 'Body',
-            children: 'Body',
+            children: (
+                <>
+                    <Radio.Group
+                        options={[
+                            { label: "空", value: "" }
+                            , { label: "x-www-form-urlencoded", value: "x-www-form-urlencoded" }
+                            , { label: "json", value: "json" }
+                        ]}
+                        defaultValue={reqBodyType}
+                        onChange={(e) => {
+                            setReqBodyType(e.target.value);
+                        }}
+                    />
+                    {
+                        reqBodyType == "x-www-form-urlencoded" &&
+                        <ApiParamsTable
+                            params={reqBodyForm}
+                            handleUpdateParams={setReqBodyForm}
+                        />
+                    }
+                    {
+                        reqBodyType == "json" &&
+                        <Input.TextArea value={reqBodyRaw} style={{ height: 300 }} onChange={(e) => {
+                            setReqBodyRaw(e.target.value);
+                        }} />
+                    }
+                </>
+            ),
         },
         {
             key: '4',
@@ -234,6 +267,8 @@ const AppApi: React.FC = () => {
     const handleOnClickEditBtn = (record: any) => {
         setReqParams(record.reqParams);
         setReqHeaders(record.reqHeaders);
+        setReqBodyType(record.reqBodyType);
+        setReqBodyRaw(record.reqBodyRaw);
     }
 
     const handleSaveAppApi = async (formData: any) => {
@@ -241,6 +276,9 @@ const AppApi: React.FC = () => {
             ...formData
             , reqParams: reqParams
             , reqHeaders: reqHeaders
+            , reqBodyType: reqBodyType
+            , reqBodyForm: reqBodyForm
+            , reqBodyRaw: reqBodyRaw
         };
         await saveAppApi(body);
     }
