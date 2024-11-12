@@ -72,7 +72,7 @@ const AppApi: React.FC = () => {
 
     const appApiForm = <>
         <Row gutter={24}>
-            <Col span={12}>
+            <Col span={6}>
                 <ProFormSelect
                     rules={[
                         {
@@ -86,10 +86,7 @@ const AppApi: React.FC = () => {
                     request={appSelect}
                 />
             </Col>
-            <Col span={12}></Col>
-        </Row>
-        <Row gutter={24}>
-            <Col span={12}>
+            <Col span={18}>
                 <ProFormText
                     rules={[
                         {
@@ -100,31 +97,6 @@ const AppApi: React.FC = () => {
                     name="apiName"
                     label="API名称"
                     placeholder="请输入接口名称"
-                />
-            </Col>
-            <Col span={12}>
-                <ProFormRadio.Group
-                    rules={[
-                        {
-                            required: true,
-                            message: "请选择API类型",
-                        }
-                    ]}
-                    name="opType"
-                    label="API类型"
-                    placeholder="请选择请求方法"
-                    options={[
-                        {
-                            label: '提供数据',
-                            value: '1',
-                        },
-                        {
-                            label: '消费数据',
-                            value: '2',
-                        },
-                    ]}
-                    radioType="button"
-                    initialValue={"1"}
                 />
             </Col>
         </Row>
@@ -181,6 +153,32 @@ const AppApi: React.FC = () => {
                     rules={[
                         {
                             required: true,
+                            message: "请选择API类型",
+                        }
+                    ]}
+                    name="opType"
+                    label="数据角色"
+                    placeholder="请选择请求方法"
+                    options={[
+                        {
+                            label: '提供者',
+                            value: 1,
+                        },
+                        {
+                            label: '消费者',
+                            value: 2,
+                        },
+                    ]}
+                    radioType="button"
+                    initialValue={1}
+                    fieldProps={{ block: true }}
+                />
+            </Col>
+            <Col span={4}>
+                <ProFormRadio.Group
+                    rules={[
+                        {
+                            required: true,
                             message: "请选择数据类型",
                         }
                     ]}
@@ -195,9 +193,10 @@ const AppApi: React.FC = () => {
                     ]}
                     radioType="button"
                     initialValue={"JSON"}
+                    fieldProps={{ block: true }}
                 />
             </Col>
-            <Col span={8}>
+            <Col span={14}>
                 <ProFormText
                     rules={[
                         {
