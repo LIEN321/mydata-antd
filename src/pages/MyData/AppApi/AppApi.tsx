@@ -18,6 +18,8 @@ const AppApi: React.FC = () => {
     const [reqBodyForm, setReqBodyForm] = useState<DataType[]>([]);
     // 请求body，raw格式
     const [reqBodyRaw, setReqBodyRaw] = useState<string>("");
+    // 响应体示例
+    const [respExample, setRespExample] = useState<string>("");
 
     // 表格列
     const columns: ProColumns<API.AppApiVO>[] = [
@@ -115,7 +117,11 @@ const AppApi: React.FC = () => {
         {
             key: '4',
             label: '响应示例',
-            children: '响应示例',
+            children: (
+                <Input.TextArea value={respExample} style={{ height: 300 }} onChange={(e) => {
+                    setRespExample(e.target.value);
+                }} />
+            ),
         },
     ];
 
@@ -269,6 +275,7 @@ const AppApi: React.FC = () => {
         setReqHeaders(record.reqHeaders);
         setReqBodyType(record.reqBodyType);
         setReqBodyRaw(record.reqBodyRaw);
+        setRespExample(record.respExample);
     }
 
     const handleSaveAppApi = async (formData: any) => {
@@ -279,6 +286,7 @@ const AppApi: React.FC = () => {
             , reqBodyType: reqBodyType
             , reqBodyForm: reqBodyForm
             , reqBodyRaw: reqBodyRaw
+            , respExample: respExample
         };
         await saveAppApi(body);
     }
