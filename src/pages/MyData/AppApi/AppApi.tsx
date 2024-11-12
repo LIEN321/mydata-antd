@@ -18,7 +18,7 @@ const AppApi: React.FC = () => {
     const [reqBodyForm, setReqBodyForm] = useState<DataType[]>([]);
     // 请求body，raw格式
     const [reqBodyRaw, setReqBodyRaw] = useState<string>("");
-    // 响应体示例
+    // 响应示例
     const [respExample, setRespExample] = useState<string>("");
 
     // 表格列
@@ -98,6 +98,8 @@ const AppApi: React.FC = () => {
                             setReqBodyType(e.target.value);
                         }}
                     />
+                    <br />
+                    <br />
                     {
                         reqBodyType == "x-www-form-urlencoded" &&
                         <ApiParamsTable
@@ -107,7 +109,7 @@ const AppApi: React.FC = () => {
                     }
                     {
                         reqBodyType == "json" &&
-                        <Input.TextArea value={reqBodyRaw} style={{ height: 300 }} onChange={(e) => {
+                        <Input.TextArea value={reqBodyRaw} style={{ height: 350 }} onChange={(e) => {
                             setReqBodyRaw(e.target.value);
                         }} />
                     }
@@ -118,7 +120,7 @@ const AppApi: React.FC = () => {
             key: '4',
             label: '响应示例',
             children: (
-                <Input.TextArea value={respExample} style={{ height: 300 }} onChange={(e) => {
+                <Input.TextArea value={respExample} style={{ height: 400 }} onChange={(e) => {
                     setRespExample(e.target.value);
                 }} />
             ),
@@ -168,22 +170,10 @@ const AppApi: React.FC = () => {
                     label="请求方法"
                     placeholder="请选择请求方法"
                     options={[
-                        {
-                            label: 'GET',
-                            value: 'GET',
-                        },
-                        {
-                            label: 'POST',
-                            value: 'POST',
-                        },
-                        {
-                            label: 'PUT',
-                            value: 'PUT',
-                        },
-                        {
-                            label: 'DELETE',
-                            value: 'DELETE',
-                        },
+                        { label: 'GET', value: 'GET' }
+                        , { label: 'POST', value: 'POST' }
+                        , { label: 'PUT', value: 'PUT' }
+                        , { label: 'DELETE', value: 'DELETE' }
                     ]}
                     initialValue={"GET"}
                 />
@@ -229,7 +219,7 @@ const AppApi: React.FC = () => {
                     fieldProps={{ block: true }}
                 />
             </Col>
-            <Col span={4}>
+            <Col span={6}>
                 <ProFormRadio.Group
                     rules={[
                         {
@@ -241,17 +231,15 @@ const AppApi: React.FC = () => {
                     label="数据类型"
                     placeholder="请选择数据类型"
                     options={[
-                        {
-                            label: 'JSON',
-                            value: 'JSON',
-                        },
+                        { label: 'JSON', value: 'JSON' }
+                        , { label: '待扩展', value: '', disabled: true }
                     ]}
                     radioType="button"
                     initialValue={"JSON"}
                     fieldProps={{ block: true }}
                 />
             </Col>
-            <Col span={14}>
+            <Col span={12}>
                 <ProFormText
                     rules={[
                         {
@@ -265,7 +253,7 @@ const AppApi: React.FC = () => {
                 />
             </Col>
         </Row>
-        <Tabs defaultActiveKey="1" items={tabItems} />
+        <Tabs defaultActiveKey="1" items={tabItems} type="card" />
     </>;
 
     const tableRef = useRef<ActionType>();
