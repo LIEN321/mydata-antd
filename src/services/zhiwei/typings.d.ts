@@ -1199,10 +1199,10 @@ declare namespace API {
   type SelectVO = {
     /** id */
     id?: number;
-    /** 项目名称 */
+    /** 选项名称 */
     label?: string;
-    /** 项目id */
-    value?: number;
+    /** 选项值 */
+    value?: string;
   };
 
   type sysApiDetailParams = {
