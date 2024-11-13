@@ -7,6 +7,7 @@ import * as user from './user';
 import * as tenant from './tenant';
 import * as api from './api';
 import * as project from './project';
+import * as pipelineGroup from './pipelineGroup';
 import * as parameter from './parameter';
 import * as menu from './menu';
 import * as me from './me';
@@ -25,6 +26,7 @@ export default {
   tenant,
   api,
   project,
+  pipelineGroup,
   parameter,
   menu,
   me,

@@ -227,6 +227,7 @@ declare namespace API {
     total?: number;
     dataCode?: string;
     dataName?: string;
+    projectId?: number;
   };
 
   type DataVO = {
@@ -277,6 +278,11 @@ declare namespace API {
   };
 
   type deleteParameterParams = {
+    id: number;
+  };
+
+  type deletePipelineGroupParams = {
+    /** 记录id */
     id: number;
   };
 
@@ -608,6 +614,45 @@ declare namespace API {
     remark?: string;
   };
 
+  type pipelineGroupDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type PipelineGroupDTO = {
+    id?: number;
+    /** 所属项目 */
+    projectId?: number;
+    /** 分组名称 */
+    groupName?: string;
+    /** 分组描述 */
+    groupDesc?: string;
+  };
+
+  type pipelineGroupListParams = {
+    projectId?: number;
+  };
+
+  type pipelineGroupPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PipelineGroupVO = {
+    /** id */
+    id?: number;
+    /** 所属项目 */
+    projectId?: number;
+    /** 分组名称 */
+    groupName?: string;
+    /** 分组描述 */
+    groupDesc?: string;
+  };
+
   type PListAppApiVO = {
     /** 响应状态码 */
     code?: number;
@@ -685,6 +730,23 @@ declare namespace API {
     message?: string;
     /** 响应数据 */
     data?: ParameterVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListPipelineGroupVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: PipelineGroupVO[];
     /** 当前页数 */
     current?: number;
     /** 每页记录数量 */
@@ -989,6 +1051,17 @@ declare namespace API {
     data?: ParameterVO[];
   };
 
+  type RListPipelineGroupVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: PipelineGroupVO[];
+  };
+
   type RListProjectVO = {
     /** 响应状态码 */
     code?: number;
@@ -1124,6 +1197,16 @@ declare namespace API {
     /** 响应提示消息 */
     message?: string;
     data?: ParameterVO;
+  };
+
+  type RPipelineGroupVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: PipelineGroupVO;
   };
 
   type RProjectVO = {

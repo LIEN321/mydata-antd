@@ -60,6 +60,8 @@ export type CRUDProps = {
     rightContent?: any;
     /** 右侧布局col span */
     rightColSpan?: number;
+    /** 表格上方内容 */
+    upContent?: any;
 
     tableRef?: any;
 };
@@ -207,7 +209,7 @@ const CRUD: React.FC<CRUDProps> = (props) => {
                     type="primary"
                     key="primary"
                     onClick={() => {
-                        if(props.onClickCreateBtn){
+                        if (props.onClickCreateBtn) {
                             props.onClickCreateBtn();
                         }
                         // 打开新建窗口
@@ -265,6 +267,7 @@ const CRUD: React.FC<CRUDProps> = (props) => {
 
     return (
         <PageContainer>
+            {props.upContent && props.upContent}
             <Row gutter={12}>
                 <Col span={mainColSpan[0]}>
                     {props.leftContent && props.leftContent}
@@ -281,7 +284,6 @@ const CRUD: React.FC<CRUDProps> = (props) => {
                         toolBarRender={toolBarRender}
                         rowSelection={props.rowSelectionType === 'none' ? undefined : rowSelection}
                         options={false}
-
                     />
 
                     {/* 新建窗口 */}

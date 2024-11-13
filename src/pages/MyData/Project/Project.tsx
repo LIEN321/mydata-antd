@@ -2,6 +2,7 @@ import CRUD from "@/components/Gyrfalcon/CRUD";
 import { deleteProject, deleteProjects, projectPage, saveProject } from "@/services/zhiwei/project";
 import { ActionType, ProColumns, ProFormText, ProFormTextArea, } from "@ant-design/pro-components";
 import { useRef } from "react";
+import ProjectForm from "./components/ProjectForm";
 
 const Project: React.FC = () => {
 
@@ -19,42 +20,6 @@ const Project: React.FC = () => {
         },
     ];
 
-    const projectForm = <>
-        <ProFormText
-            rules={[
-                {
-                    required: true,
-                    message: "请输入项目编号",
-                }
-            ]}
-            name="projectCode"
-            label="项目编号"
-            placeholder="请输入项目编号"
-        />
-        <ProFormText
-            rules={[
-                {
-                    required: true,
-                    message: "请输入项目名称",
-                }
-            ]}
-            name="projectName"
-            label="项目名称"
-            placeholder="请输入项目名称"
-        />
-        <ProFormTextArea
-            rules={[
-                {
-                    required: false,
-                    message: "请输入项目描述",
-                }
-            ]}
-            name="projectDesc"
-            label="项目描述"
-            placeholder="请输入项目描述"
-        />
-    </>;
-
     const tableRef = useRef<ActionType>();
 
     return (
@@ -65,8 +30,8 @@ const Project: React.FC = () => {
                 columns={columns}
 
                 formWidth={400}
-                createForm={projectForm}
-                updateForm={projectForm}
+                createForm={ProjectForm}
+                updateForm={ProjectForm}
 
                 handlePage={projectPage}
                 handleCreate={saveProject}

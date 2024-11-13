@@ -5,6 +5,7 @@ import { ActionType, ProColumns, ProFormText, ProFormSelect, } from "@ant-design
 import { Col, Row } from "antd";
 import { useEffect, useRef, useState } from "react";
 import DataFieldTable, { DataType } from "./DataFieldTable";
+import DataForm from "./components/DataForm";
 
 const Data: React.FC = () => {
 
@@ -36,64 +37,7 @@ const Data: React.FC = () => {
         },
     ];
 
-    const dataForm = <>
-        <Row gutter={24}>
-            <Col span={12}>
-                <ProFormSelect
-                    rules={[
-                        {
-                            required: true,
-                            message: "请输入所属项目",
-                        }
-                    ]}
-                    name="projectId"
-                    label="所属项目"
-                    placeholder="请输入所属项目"
-                    request={projectSelect}
-                />
-            </Col>
-        </Row>
-        <Row gutter={24}>
-            <Col span={12}>
-                <ProFormText
-                    rules={[
-                        {
-                            required: true,
-                            message: "请输入数据编号",
-                        }
-                    ]}
-                    name="dataCode"
-                    label="数据编号"
-                    placeholder="请输入数据编号"
-                />
-            </Col>
-            <Col span={12}>
-                <ProFormText
-                    rules={[
-                        {
-                            required: true,
-                            message: "请输入数据名称",
-                        }
-                    ]}
-                    name="dataName"
-                    label="数据名称"
-                    placeholder="请输入数据名称"
-                />
-            </Col>
-        </Row>
-        <Row>
-            <Col span={24}>
-                {loading && <p>加载中...</p>}
-                {/* 加载完成后再显示字段列表 */}
-                {!loading && <DataFieldTable
-                    dataFields={dataFields}
-                    handleUpdateDataFields={setDataFields}
-                    loading={loading}
-                />
-                }
-            </Col>
-        </Row>
-    </>;
+    const dataForm = <DataForm loading={loading} dataFields={dataFields} setDataFields={setDataFields} />;
 
     const tableRef = useRef<ActionType>();
 

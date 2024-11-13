@@ -34,6 +34,11 @@ export default [
     name: '数据集成',
     routes: [
       {
+        path: '/mydata/warehouse',
+        name: '集成管理',
+        component: './MyData/Warehouse/Warehouse',
+      },
+      {
         path: '/mydata/project',
         name: '项目管理',
         component: './MyData/Project/Project',
