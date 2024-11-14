@@ -12,6 +12,8 @@ export type PipelineFormProp = {
     groupId: any;
     /** 流水线id */
     id?: any;
+    /** 保存成功的回调 */
+    onSuccess?: () => any;
 };
 
 const PipelineForm: React.FC<PipelineFormProp> = (props) => {
@@ -90,6 +92,9 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                     hide();
                     if (response.success) {
                         message.success("提交成功");
+                        if(props.onSuccess){
+                            props.onSuccess();
+                        }
                         return true;
                     }
                 }}

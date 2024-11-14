@@ -1,7 +1,7 @@
 import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
 import { DeleteOutlined, EditOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { DrawerForm, ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Button, Card, Col, message, Popconfirm, Row, Space } from "antd";
+import { Button, Card, Col, Form, message, Popconfirm, Row, Space } from "antd";
 import { Fragment, useEffect, useState } from "react";
 import PipelineForm from "./PipelineForm";
 
@@ -54,6 +54,8 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         />
     </>
 
+    const [form] = Form.useForm();
+
     return (
         <>
             <DrawerForm
@@ -86,6 +88,9 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                 title="新建流水线"
                                                 projectId={project.id}
                                                 groupId={group.id}
+                                                onSuccess={() => {
+                                                    loadPipelineGroups();
+                                                }}
                                             />
                                             {/* 编辑分组 */}
                                             <ModalForm
@@ -145,6 +150,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                         {/* 新建流水线分组 */}
                         <Card style={{ width: 300 }}>
                             <ModalForm
+                                form={form}
                                 trigger={
                                     <Button type="dashed" block>
                                         <PlusOutlined />
@@ -157,14 +163,18 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                     const hide = message.loading("正在提交...");
                                     const params = { ...value, projectId: project.id };
                                     const response = await savePipelineGroup(params);
-                                    if (response && response.success === true) {
-                                        hide();
-                                        message.success("新建成功");
-                                        loadPipelineGroups();
-                                        return true;
+                                    try {
+                                        if (response && response.success === true) {
+                                            hide();
+                                            message.success("新建成功");
+                                            loadPipelineGroups();
+                                            return true;
+                                        }
+                                    } finally {
+                                        // 提交后重置表单
+                                        form.resetFields();
                                     }
                                 }}
-                                initialValues={{}}
                             >
                                 {pipelineGroupForm}
                             </ModalForm>
