@@ -11,6 +11,7 @@ export type PipelineProp = {
 
 const Pipeline: React.FC<PipelineProp> = (props) => {
 
+    const cardWidth = 300;
     const { project } = props;
     const [groups, setGroups] = useState<API.PipelineGroupVO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -133,7 +134,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                     }
                                 >
                                     {/* 分组的 流水线列表 */}
-                                    <Space direction="vertical" style={{ width: 300 }}>
+                                    <Space direction="vertical" style={{ width: cardWidth }}>
                                         {
                                             group.pipelines && group.pipelines.length > 0 && group.pipelines.map(pipeline => (
                                                 <Card title={pipeline.pipelineName} type="inner" size="small"></Card>
@@ -148,7 +149,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                     })}
                     <Col>
                         {/* 新建流水线分组 */}
-                        <Card style={{ width: 300 }}>
+                        <Card style={{ width: cardWidth }}>
                             <ModalForm
                                 form={form}
                                 trigger={
