@@ -57,7 +57,7 @@ export async function deletePipelineGroup(
   });
 }
 
-/** 查询所有流水线分组 GET /pipelineGroup/list */
+/** 查询项目中的流水线分组 GET /pipelineGroup/list */
 export async function pipelineGroupList(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.pipelineGroupListParams,

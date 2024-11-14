@@ -286,6 +286,11 @@ declare namespace API {
     id: number;
   };
 
+  type deletePipelineParams = {
+    /** 记录id */
+    id: number;
+  };
+
   type deleteProjectParams = {
     /** 记录id */
     id: number;
@@ -614,6 +619,39 @@ declare namespace API {
     remark?: string;
   };
 
+  type pipelineDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type PipelineDTO = {
+    id?: number;
+    /** 所属项目 */
+    projectId?: number;
+    /** 所属分组 */
+    groupId?: number;
+    /** 流水线名称 */
+    pipelineName?: string;
+    /** 流水线描述 */
+    pipelineDesc?: string;
+    /** 是否启用定时 */
+    isSchedule?: number;
+    /** 定时周期（cron） */
+    schedulePeriod?: string;
+    /** 是否启用webhook */
+    isWebhook?: number;
+    /** webhook认证方式 */
+    webhookAuthType?: string;
+    /** webhook认证参数 */
+    webhookAuthParams?: string;
+    /** 是否启用邮件 */
+    isEmail?: number;
+    /** 邮件通知策略 */
+    emailStrategy?: number[];
+    /** 接收人 */
+    emailReceiver?: string;
+  };
+
   type pipelineGroupDetailParams = {
     /** 记录id */
     id: number;
@@ -630,7 +668,7 @@ declare namespace API {
   };
 
   type pipelineGroupListParams = {
-    projectId?: number;
+    projectId: number;
   };
 
   type pipelineGroupPageParams = {
@@ -651,6 +689,46 @@ declare namespace API {
     groupName?: string;
     /** 分组描述 */
     groupDesc?: string;
+    /** 分组里的流水线列表 */
+    pipelines?: PipelineVO[];
+  };
+
+  type pipelinePageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PipelineVO = {
+    /** id */
+    id?: number;
+    /** 所属项目 */
+    projectId?: number;
+    /** 所属分组 */
+    groupId?: number;
+    /** 流水线名称 */
+    pipelineName?: string;
+    /** 流水线描述 */
+    pipelineDesc?: string;
+    /** 是否启用定时 */
+    isSchedule?: number;
+    /** 定时周期（cron） */
+    schedulePeriod?: string;
+    /** 是否启用webhook */
+    isWebhook?: number;
+    /** webhook认证方式 */
+    webhookAuthType?: string;
+    /** webhook认证参数 */
+    webhookAuthParams?: string;
+    /** 是否启用邮件 */
+    isEmail?: number;
+    /** 邮件通知策略 */
+    emailStrategy?: number[];
+    /** 接收人 */
+    emailReceiver?: string;
   };
 
   type PListAppApiVO = {
@@ -747,6 +825,23 @@ declare namespace API {
     message?: string;
     /** 响应数据 */
     data?: PipelineGroupVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListPipelineVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: PipelineVO[];
     /** 当前页数 */
     current?: number;
     /** 每页记录数量 */
@@ -1062,6 +1157,17 @@ declare namespace API {
     data?: PipelineGroupVO[];
   };
 
+  type RListPipelineVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: PipelineVO[];
+  };
+
   type RListProjectVO = {
     /** 响应状态码 */
     code?: number;
@@ -1207,6 +1313,16 @@ declare namespace API {
     /** 响应提示消息 */
     message?: string;
     data?: PipelineGroupVO;
+  };
+
+  type RPipelineVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: PipelineVO;
   };
 
   type RProjectVO = {
