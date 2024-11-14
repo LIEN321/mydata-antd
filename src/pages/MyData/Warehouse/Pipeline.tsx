@@ -1,7 +1,7 @@
-import { pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
+import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { DrawerForm, ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Button, Card, Col, message, Row } from "antd";
+import { Button, Card, Col, message, Popconfirm, Row } from "antd";
 import { Fragment, useEffect, useState } from "react";
 
 export type PipelineProp = {
@@ -65,12 +65,15 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                         return (
                             <Col>
                                 <Card
-                                    style={{ width: 300, minHeight: 800 }}
+                                    style={{ width: 300, height: 'auto' }}
+                                    bordered={false}
                                     title={group.groupName}
                                     extra={
                                         <Fragment>
                                             <Button icon={<EditOutlined />} type="text" />
-                                            <Button icon={<DeleteOutlined />} type="text" />
+                                            <Popconfirm title={'是否确认删除?'}>
+                                                <Button icon={<DeleteOutlined />} type="text" />
+                                            </Popconfirm>
                                         </Fragment>
                                     }
                                 >
@@ -79,7 +82,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                         )
                     })}
                     <Col>
-                        <Card style={{ width: 300, minHeight: 800 }}>
+                        <Card style={{ width: 300 }}>
                             <ModalForm
                                 trigger={
                                     <Button type="dashed" block>
@@ -96,6 +99,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                     if (response && response.success === true) {
                                         hide();
                                         message.success("新建成功");
+                                        loadPipelineGroups();
                                         return true;
                                     }
                                 }}
@@ -103,46 +107,6 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                 {pipelineGroupForm}
                             </ModalForm>
 
-                        </Card>
-                    </Col>
-                    <Col>
-                        <Card style={{ width: 300, minHeight: 800 }}>
-                            <Button type="dashed" block>
-                                <PlusOutlined />
-                                新建流水线分组
-                            </Button>
-                        </Card>
-                    </Col>
-                    <Col>
-                        <Card style={{ width: 300, minHeight: 800 }}>
-                            <Button type="dashed" block>
-                                <PlusOutlined />
-                                新建流水线分组
-                            </Button>
-                        </Card>
-                    </Col>
-                    <Col>
-                        <Card style={{ width: 300, minHeight: 800 }}>
-                            <Button type="dashed" block>
-                                <PlusOutlined />
-                                新建流水线分组
-                            </Button>
-                        </Card>
-                    </Col>
-                    <Col>
-                        <Card style={{ width: 300, minHeight: 800 }}>
-                            <Button type="dashed" block>
-                                <PlusOutlined />
-                                新建流水线分组
-                            </Button>
-                        </Card>
-                    </Col>
-                    <Col>
-                        <Card style={{ width: 300, minHeight: 800 }}>
-                            <Button type="dashed" block>
-                                <PlusOutlined />
-                                新建流水线分组
-                            </Button>
                         </Card>
                     </Col>
                 </Row>
