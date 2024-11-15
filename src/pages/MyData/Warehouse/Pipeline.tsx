@@ -1,7 +1,7 @@
 import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
-import { DeleteOutlined, EditOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, HistoryOutlined, LoadingOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined } from "@ant-design/icons";
 import { DrawerForm, ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Button, Card, Col, Form, message, Popconfirm, Row, Skeleton, Space, Spin } from "antd";
+import { Button, Card, Col, Dropdown, Form, MenuProps, message, Popconfirm, Row, Skeleton, Space, Spin } from "antd";
 import { Fragment, useEffect, useState } from "react";
 import PipelineForm from "./PipelineForm";
 
@@ -14,8 +14,11 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
     const cardWidth = 300;
     const { project } = props;
     const [groups, setGroups] = useState<API.PipelineGroupVO[]>([]);
+    const [group, setGroup] = useState<API.PipelineGroupVO>({});
+    const [pipeline, setPipeline] = useState<API.PipelineVO>({});
     const [loading, setLoading] = useState<boolean>(false);
 
+    // 加载分组
     const loadPipelineGroups = async () => {
         setGroups([]);
         if (project && project.id) {
@@ -30,6 +33,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         }
     };
 
+    // 分组的编辑表单内容
     const pipelineGroupForm = <>
         <ProFormText
             rules={[
@@ -55,7 +59,40 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         />
     </>
 
+    // 流水线表单显示状态
+    const [pipelineFormOpen, setPipelineFormOpen] = useState<boolean>(false);
+
     const [form] = Form.useForm();
+
+    // 流水线卡片···的下拉按钮
+    const dropdownItems: MenuProps['items'] = [
+        {
+            key: 'edit',
+            label: '编辑',
+            icon: <EditOutlined />
+        },
+        {
+            key: '2',
+            label: '复制(TODO)',
+            icon: <CopyOutlined />
+        },
+        {
+            key: '3',
+            label: '禁用(TODO)',
+            icon: <StopOutlined />
+        },
+        {
+            key: '4',
+            label: '删除(TODO)',
+            icon: <DeleteOutlined />,
+        },
+    ];
+
+    const handleDropdownClick: MenuProps['onClick'] = ({ key }) => {
+        if (key === 'edit') {
+            setPipelineFormOpen(true);
+        }
+    };
 
     return (
         <>
@@ -85,14 +122,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                         extra={
                                             <Fragment>
                                                 {/* 新建流水线 */}
-                                                <PipelineForm
-                                                    title="新建流水线"
-                                                    projectId={project.id}
-                                                    groupId={group.id}
-                                                    onSuccess={() => {
-                                                        loadPipelineGroups();
-                                                    }}
-                                                />
+                                                <Button icon={<PlusOutlined title="新建流水线" />} type="text" onClick={() => { setPipelineFormOpen(true); }} />
                                                 {/* 编辑分组 */}
                                                 <ModalForm
                                                     trigger={
@@ -137,7 +167,28 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                         <Space direction="vertical" style={{ width: cardWidth }}>
                                             {
                                                 group.pipelines && group.pipelines.length > 0 && group.pipelines.map(pipeline => (
-                                                    <Card title={pipeline.pipelineName} type="inner" size="small"></Card>
+                                                    <Card
+                                                        title={pipeline.pipelineName}
+                                                        type="inner"
+                                                        size="small"
+                                                        actions={[
+                                                            <PlayCircleOutlined />
+                                                            , <HistoryOutlined />
+                                                            , <StarOutlined />
+                                                            , <Dropdown menu={{
+                                                                items: dropdownItems, onClick: (info) => {
+                                                                    setGroup(() => group);
+                                                                    setPipeline(() => pipeline);
+                                                                    handleDropdownClick(info);
+                                                                }
+                                                            }}
+                                                            >
+                                                                <EllipsisOutlined />
+                                                            </Dropdown>
+                                                        ]}
+                                                    >
+
+                                                    </Card>
                                                 ))
                                             }
                                             {/* 当没有流水线时，可撑起Space的宽度 */}
@@ -182,6 +233,19 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                             </Card>
                         </Col>
                     </Row>
+
+                    {pipelineFormOpen && <PipelineForm
+                        open={pipelineFormOpen}
+                        onOpenChange={setPipelineFormOpen}
+                        title="新建流水线"
+                        projectId={project.id}
+                        groupId={group.id}
+                        id={pipeline.id}
+                        onSuccess={() => {
+                            loadPipelineGroups();
+                        }}
+                    />
+                    }
                 </Skeleton>
             </DrawerForm >
         </>

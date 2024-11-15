@@ -1,10 +1,13 @@
-import { savePipeline } from "@/services/zhiwei/pipeline";
-import { PlusOutlined } from "@ant-design/icons";
+import { pipelineDetail, savePipeline } from "@/services/zhiwei/pipeline";
 import { ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Button, Col, message, Row, Tabs, TabsProps } from "antd";
-import { useState } from "react";
+import { Col, message, Row, Tabs, TabsProps } from "antd";
+import { useEffect, useState } from "react";
 
 export type PipelineFormProp = {
+    /** 表单显示状态 */
+    open: boolean;
+    /** 切换显示状态 */
+    onOpenChange: (open: boolean) => void;
     /** 表单的标题 */
     title: React.ReactNode;
     /** 所属项目id */
@@ -20,7 +23,24 @@ export type PipelineFormProp = {
 const PipelineForm: React.FC<PipelineFormProp> = (props) => {
 
     const [id, setId] = useState(props.id);
+    const [pipeline, setPipeline] = useState<API.PipelineVO>({})
     const [activeKey, setActiveKey] = useState("1");
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const loadPipeline = async () => {
+            if (id) {
+                setLoading(true);
+                const response = await pipelineDetail({ id });
+                if (response.success && response.data) {
+                    setPipeline(() => response.data || {});
+                }
+                setLoading(false);
+            }
+        }
+
+        loadPipeline();
+    }, []);
 
     const tabItems: TabsProps['items'] = [
         {
@@ -79,8 +99,8 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
 
     return (
         <>
-            <ModalForm
-                trigger={<Button icon={<PlusOutlined title="新建流水线" />} type="text" />}
+            {!loading && <ModalForm
+                open={props.open}
                 title={props.title}
                 onOpenChange={(open) => {
                     if (open === false) {
@@ -88,6 +108,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                             props.onSuccess();
                         }
                     }
+                    props.onOpenChange(open);
                 }}
                 onFinish={async (value) => {
                     const hide = message.loading("正在提交...");
@@ -113,9 +134,11 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                     }
                     return true;
                 }}
+                initialValues={pipeline}
             >
                 <Tabs items={tabItems} centered activeKey={activeKey} onChange={(key) => setActiveKey(key)} />
             </ModalForm>
+            }
         </>
     );
 };
