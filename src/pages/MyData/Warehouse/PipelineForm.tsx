@@ -2,6 +2,7 @@ import { savePipeline } from "@/services/zhiwei/pipeline";
 import { PlusOutlined } from "@ant-design/icons";
 import { ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Button, Col, message, Row, Tabs, TabsProps } from "antd";
+import { useState } from "react";
 
 export type PipelineFormProp = {
     /** 表单的标题 */
@@ -17,6 +18,9 @@ export type PipelineFormProp = {
 };
 
 const PipelineForm: React.FC<PipelineFormProp> = (props) => {
+
+    const [id, setId] = useState(props.id);
+    const [activeKey, setActiveKey] = useState("1");
 
     const tabItems: TabsProps['items'] = [
         {
@@ -54,7 +58,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
         },
     ];
 
-    if (props.id) {
+    if (id) {
         tabItems.push(
             {
                 key: '2',
@@ -78,10 +82,17 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             <ModalForm
                 trigger={<Button icon={<PlusOutlined title="新建流水线" />} type="text" />}
                 title={props.title}
+                onOpenChange={(open) => {
+                    if (open === false) {
+                        if (props.onSuccess) {
+                            props.onSuccess();
+                        }
+                    }
+                }}
                 onFinish={async (value) => {
                     const hide = message.loading("正在提交...");
 
-                    const params : API.PipelineDTO = { ...value };
+                    const params: API.PipelineDTO = { ...value };
                     if (props.id) {
                         params.id = props.id;
                     }
@@ -92,14 +103,18 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                     hide();
                     if (response.success) {
                         message.success("提交成功");
-                        if(props.onSuccess){
-                            props.onSuccess();
+
+                        // 初始的id无效，则为新建流水线，不关闭表单
+                        if (id === undefined) {
+                            setId(response.data);
+                            setActiveKey("2");
+                            return false;
                         }
-                        return true;
                     }
+                    return true;
                 }}
             >
-                <Tabs items={tabItems} centered />
+                <Tabs items={tabItems} centered activeKey={activeKey} onChange={(key) => setActiveKey(key)} />
             </ModalForm>
         </>
     );
