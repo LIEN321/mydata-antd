@@ -22,7 +22,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
 
     const [id, setId] = useState(props.id);
     const [pipeline, setPipeline] = useState<API.PipelineVO>({})
-    const [activeKey, setActiveKey] = useState("1");
+    const [activeKey, setActiveKey] = useState(props.id ? "2" : "1");
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
