@@ -1,15 +1,18 @@
 import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
-import { CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, HistoryOutlined, LoadingOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined } from "@ant-design/icons";
+import { CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, HistoryOutlined, LoadingOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined } from "@ant-design/icons";
 import { DrawerForm, ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Button, Card, Col, Dropdown, Form, MenuProps, message, Popconfirm, Row, Skeleton, Space, Spin } from "antd";
+import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space, Spin } from "antd";
 import { Fragment, useEffect, useState } from "react";
 import PipelineForm from "./PipelineForm";
+import { deletePipeline } from "@/services/zhiwei/pipeline";
 
 export type PipelineProp = {
     project: API.ProjectVO;
 };
 
 const Pipeline: React.FC<PipelineProp> = (props) => {
+
+    const [modal, contextHolder] = Modal.useModal();
 
     const cardWidth = 300;
     const { project } = props;
@@ -82,23 +85,45 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
             icon: <StopOutlined />
         },
         {
-            key: '4',
-            label: '删除(TODO)',
+            key: 'delete',
+            label: '删除',
             icon: <DeleteOutlined />,
         },
     ];
 
-    const handleDropdownClick: MenuProps['onClick'] = ({ key }) => {
+    // const handleDropdownClick: MenuProps['onClick'] = ({key}) => {
+    const handleDropdownClick = (key: string, pipeline: API.PipelineVO) => {
         if (key === 'edit') {
             setPipelineFormOpen(true);
+        }
+        if (key === 'delete') {
+            if (!pipeline.id)
+                return;
+            modal.confirm({
+                title: '是否确认删除',
+                icon: <ExclamationCircleOutlined />,
+                content: `您确认删除流水线 ${pipeline.pipelineName} 吗？`,
+                okType: 'danger',
+                okText: '删除',
+                onOk: async () => {
+                    if (pipeline.id) {
+                        const hide = message.loading("正在删除...");
+                        await deletePipeline({ id: pipeline.id });
+                        hide();
+                        message.success("删除成功");
+                        loadPipelineGroups();
+                    }
+                }
+            });
         }
     };
 
     return (
         <>
+            {contextHolder}
             <DrawerForm
                 trigger={
-                    <Button onClick={() => { loadPipelineGroups(); }}>
+                    <Button onClick={() => { loadPipelineGroups(); }} disabled={!project.id}>
                         流水线管理
                     </Button>
                 }
@@ -122,7 +147,14 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                         extra={
                                             <Fragment>
                                                 {/* 新建流水线 */}
-                                                <Button icon={<PlusOutlined title="新建流水线" />} type="text" onClick={() => { setPipelineFormOpen(true); }} />
+                                                <Button
+                                                    icon={<PlusOutlined title="新建流水线" />}
+                                                    type="text"
+                                                    onClick={() => {
+                                                        setPipeline({});
+                                                        setGroup(() => group);
+                                                        setPipelineFormOpen(true);
+                                                    }} />
                                                 {/* 编辑分组 */}
                                                 <ModalForm
                                                     trigger={
@@ -179,7 +211,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                 items: dropdownItems, onClick: (info) => {
                                                                     setGroup(() => group);
                                                                     setPipeline(() => pipeline);
-                                                                    handleDropdownClick(info);
+                                                                    handleDropdownClick(info.key, pipeline);
                                                                 }
                                                             }}
                                                             >
