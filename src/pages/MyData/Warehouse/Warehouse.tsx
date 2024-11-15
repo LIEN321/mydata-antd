@@ -2,7 +2,7 @@ import CRUD from "@/components/Gyrfalcon/CRUD";
 import { dataDetail, dataPage, deleteData, deleteDatas, saveData } from "@/services/zhiwei/data";
 import { projectList } from "@/services/zhiwei/project";
 import { ActionType, DrawerForm, ProColumns } from "@ant-design/pro-components";
-import { Button, Divider, Drawer, Tabs, TabsProps } from "antd";
+import { Button, Divider, Drawer, Skeleton, Tabs, TabsProps } from "antd";
 import { Fragment, useEffect, useRef, useState } from "react";
 import AddProject from "./components/AddProject";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -75,7 +75,7 @@ const Warehouse: React.FC = () => {
     // 项目 Tab
     const projectTabs = (
         <>
-            {tabLoading && <LoadingOutlined />}
+            {tabLoading && <Skeleton.Button active block />}
             {
                 !tabLoading && <Tabs
                     defaultActiveKey="1"
