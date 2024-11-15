@@ -2,6 +2,7 @@ import { pipelineDetail, savePipeline } from "@/services/zhiwei/pipeline";
 import { ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, message, Row, Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
+import PipelineTasks from "./components/PipelineTasks";
 
 export type PipelineFormProp = {
     /** 表单显示状态 */
@@ -81,7 +82,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             {
                 key: '2',
                 label: '任务编排',
-                children: <></>
+                children: <PipelineTasks />
             },
             {
                 key: '3',
