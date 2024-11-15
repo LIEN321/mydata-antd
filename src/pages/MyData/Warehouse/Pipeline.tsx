@@ -269,7 +269,6 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                     {pipelineFormOpen && <PipelineForm
                         open={pipelineFormOpen}
                         onOpenChange={setPipelineFormOpen}
-                        title="新建流水线"
                         projectId={project.id}
                         groupId={group.id}
                         id={pipeline.id}

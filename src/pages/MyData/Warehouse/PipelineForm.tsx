@@ -8,8 +8,6 @@ export type PipelineFormProp = {
     open: boolean;
     /** 切换显示状态 */
     onOpenChange: (open: boolean) => void;
-    /** 表单的标题 */
-    title: React.ReactNode;
     /** 所属项目id */
     projectId: any;
     /** 所属分组id */
@@ -101,7 +99,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
         <>
             {!loading && <ModalForm
                 open={props.open}
-                title={props.title}
+                title={id ? '编辑流水线' : '新建流水线'}
                 onOpenChange={(open) => {
                     if (open === false) {
                         if (props.onSuccess) {
