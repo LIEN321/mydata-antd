@@ -26,7 +26,10 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
     const [activeKey, setActiveKey] = useState(props.id ? "2" : "1");
     const [loading, setLoading] = useState(false);
 
+    const [tasks, setTasks] = useState<API.PipelineTaskVO[]>();
+
     useEffect(() => {
+        // 初始时 加载流水线详情
         const loadPipeline = async () => {
             if (id) {
                 setLoading(true);
@@ -82,7 +85,10 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             {
                 key: '2',
                 label: '任务编排',
-                children: <PipelineTasks />
+                children: <PipelineTasks
+                    tasks={pipeline.tasks || []}
+                    setTasks={setTasks}
+                />
             },
             {
                 key: '3',
@@ -110,6 +116,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                     props.onOpenChange(open);
                 }}
                 onFinish={async (value) => {
+                    console.info(tasks);
                     const hide = message.loading("正在提交...");
 
                     const params: API.PipelineDTO = { ...value };

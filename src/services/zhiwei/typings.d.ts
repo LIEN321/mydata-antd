@@ -291,6 +291,11 @@ declare namespace API {
     id: number;
   };
 
+  type deletePipelineTaskParams = {
+    /** 记录id */
+    id: number;
+  };
+
   type deleteProjectParams = {
     /** 记录id */
     id: number;
@@ -702,6 +707,54 @@ declare namespace API {
     total?: number;
   };
 
+  type pipelineTaskDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type PipelineTaskDTO = {
+    id?: number;
+    /** 所属流水线 */
+    pipelineId?: number;
+    /** 任务类型 */
+    taskType?: string;
+    /** 任务名称 */
+    taskName?: string;
+    /** 关联应用 */
+    appId?: number;
+    /** 关联API */
+    apiId?: number;
+    /** 任务配置 */
+    taskConfig?: string;
+  };
+
+  type pipelineTaskPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    pipelineId?: string;
+  };
+
+  type PipelineTaskVO = {
+    /** id */
+    id?: number;
+    /** 所属流水线 */
+    pipelineId?: number;
+    /** 任务类型 */
+    taskType?: string;
+    /** 任务名称 */
+    taskName?: string;
+    /** 关联应用 */
+    appId?: number;
+    /** 关联API */
+    apiId?: number;
+    /** 任务配置 */
+    taskConfig?: string;
+  };
+
   type PipelineVO = {
     /** id */
     id?: number;
@@ -729,6 +782,8 @@ declare namespace API {
     emailStrategy?: number[];
     /** 接收人 */
     emailReceiver?: string;
+    /** 流水线任务列表 */
+    tasks?: PipelineTaskVO[];
   };
 
   type PListAppApiVO = {
@@ -825,6 +880,23 @@ declare namespace API {
     message?: string;
     /** 响应数据 */
     data?: PipelineGroupVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListPipelineTaskVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: PipelineTaskVO[];
     /** 当前页数 */
     current?: number;
     /** 每页记录数量 */
@@ -1157,6 +1229,17 @@ declare namespace API {
     data?: PipelineGroupVO[];
   };
 
+  type RListPipelineTaskVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: PipelineTaskVO[];
+  };
+
   type RListPipelineVO = {
     /** 响应状态码 */
     code?: number;
@@ -1313,6 +1396,16 @@ declare namespace API {
     /** 响应提示消息 */
     message?: string;
     data?: PipelineGroupVO;
+  };
+
+  type RPipelineTaskVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: PipelineTaskVO;
   };
 
   type RPipelineVO = {

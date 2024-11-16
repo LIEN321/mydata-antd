@@ -8,6 +8,7 @@ import * as tenant from './tenant';
 import * as api from './api';
 import * as project from './project';
 import * as pipeline from './pipeline';
+import * as pipelineTask from './pipelineTask';
 import * as pipelineGroup from './pipelineGroup';
 import * as parameter from './parameter';
 import * as menu from './menu';
@@ -28,6 +29,7 @@ export default {
   api,
   project,
   pipeline,
+  pipelineTask,
   pipelineGroup,
   parameter,
   menu,

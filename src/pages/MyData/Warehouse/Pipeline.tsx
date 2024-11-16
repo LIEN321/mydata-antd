@@ -1,8 +1,8 @@
 import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
-import { CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, HistoryOutlined, LoadingOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined } from "@ant-design/icons";
+import { CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HistoryOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined } from "@ant-design/icons";
 import { DrawerForm, ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space, Spin } from "antd";
-import { Fragment, useEffect, useState } from "react";
+import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space } from "antd";
+import { Fragment, useState } from "react";
 import PipelineForm from "./PipelineForm";
 import { deletePipeline } from "@/services/zhiwei/pipeline";
 
@@ -136,6 +136,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                         gutter={12}
                         wrap={false}
                     >
+                        {/* 分组列 */}
                         {groups.map((group) => {
                             return (
                                 <Col>
