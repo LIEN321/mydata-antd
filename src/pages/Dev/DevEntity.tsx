@@ -79,7 +79,7 @@ const DevEntity: React.FC = () => {
                     if (responseData) {
                         let count = 0;
                         let properties: DataType[] = [];
-                        responseData.map(p => {
+                        responseData.map((p: DataType) => {
                             const property = p as DataType;
                             property.key = count.toString();
                             count++;
