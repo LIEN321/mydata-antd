@@ -1,4 +1,8 @@
 declare namespace API {
+  type apiSelectParams = {
+    appId?: number;
+  };
+
   type appApiDetailParams = {
     /** 记录id */
     id: number;
@@ -228,6 +232,10 @@ declare namespace API {
     dataCode?: string;
     dataName?: string;
     projectId?: number;
+  };
+
+  type dataSelectParams = {
+    projectId: number;
   };
 
   type DataVO = {
@@ -724,6 +732,8 @@ declare namespace API {
     appId?: number;
     /** 关联API */
     apiId?: number;
+    /** 关联数据 */
+    dataId?: number;
     /** 任务配置 */
     taskConfig?: string;
   };
@@ -751,6 +761,8 @@ declare namespace API {
     appId?: number;
     /** 关联API */
     apiId?: number;
+    /** 关联数据 */
+    dataId?: number;
     /** 任务配置 */
     taskConfig?: string;
   };

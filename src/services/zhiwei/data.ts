@@ -76,3 +76,18 @@ export async function dataPage(
     ...(options || {}),
   });
 }
+
+/** 查询标准数据 GET /data/select */
+export async function dataSelect(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.dataSelectParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.SelectVO[]>(`/api/data/select`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

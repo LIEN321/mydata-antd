@@ -76,3 +76,18 @@ export async function appApiPage(
     ...(options || {}),
   });
 }
+
+/** 查询接口 GET /appApi/select */
+export async function apiSelect(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.apiSelectParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.SelectVO[]>(`/api/appApi/select`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
