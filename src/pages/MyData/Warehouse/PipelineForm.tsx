@@ -88,6 +88,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                 children: <PipelineTasks
                     tasks={pipeline.tasks || []}
                     setTasks={setTasks}
+                    projectId={props.projectId}
                 />
             },
             {
@@ -107,6 +108,9 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             {!loading && <ModalForm
                 open={props.open}
                 title={id ? '编辑流水线' : '新建流水线'}
+                width={1200}
+                style={{ height: '70vh' }}
+                modalProps={{ centered: true, destroyOnClose: true }}
                 onOpenChange={(open) => {
                     if (open === false) {
                         if (props.onSuccess) {
