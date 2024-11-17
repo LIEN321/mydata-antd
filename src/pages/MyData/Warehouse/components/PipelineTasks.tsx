@@ -1,11 +1,15 @@
-import { DownCircleFilled, PlusCircleFilled, PlusCircleTwoTone, PlusOutlined, UpCircleFilled } from "@ant-design/icons";
+import { DownCircleFilled, PlusCircleFilled, PlusOutlined, UpCircleFilled } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
-import { Button, Card, Col, Dropdown, MenuProps, Row, Space, Splitter, Typography, theme } from "antd";
-import { useState } from "react";
+import { Button, Card, Col, Dropdown, MenuProps, Splitter, Typography, theme } from "antd";
+import { useEffect, useState } from "react";
+import TaskForm from "./TaskForm";
+import { TASK_TEMPLATE, TaskKey } from "./task";
 
 export type PipelineTasksProp = {
     tasks: API.PipelineTaskVO[],
     setTasks: (tasks: API.PipelineTaskVO[]) => void,
+    /** 所属项目id */
+    projectId: any;
 };
 
 const { useToken } = theme;
@@ -22,29 +26,34 @@ const DownwardArrowLine = (
     </div>
 );
 
-const TASK_TEMPLATE = {
-    "API_GET_DATA": { taskType: "API_GET_DATA", taskName: "获取数据", },
-    "API_SEND_DATA": { taskType: "API_SEND_DATA", taskName: "发送数据", },
-    "WEBHOOK_GET_DATA": { taskType: "WEBHOOK_GET_DATA", taskName: "解析webhook数据", },
-    "API_GET_VAR": { taskType: "API_GET_VAR", taskName: "设置参数", },
-    "SAVE_DATA": { taskType: "SAVE_DATA", taskName: "保存数据", },
-    "QUERY_DATA": { taskType: "QUERY_DATA", taskName: "查询数据", },
-    "FILTER_DATA": { taskType: "FILTER_DATA", taskName: "过滤数据", },
-    "OPERATE_DATA": { taskType: "OPERATE_DATA", taskName: "处理数据", },
-    "WRITE_EXCEL": { taskType: "WRITE_EXCEL", taskName: "写入Excel文件", },
-    "SEND_EMAIL": { taskType: "SEND_EMAIL", taskName: "发送邮件", },
-}
-
-type TaskKey = keyof typeof TASK_TEMPLATE;
+export type TaskItem = {
+    key: any;
+    /** id */
+    id?: number;
+    /** 所属流水线 */
+    pipelineId?: number;
+    /** 任务类型 */
+    taskType?: string;
+    /** 任务名称 */
+    taskName?: string;
+    /** 关联应用 */
+    appId?: number;
+    /** 关联API */
+    apiId?: number;
+    /** 关联数据 */
+    dataId?: number;
+    /** 任务配置 */
+    taskConfig?: string;
+};
 
 const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
 
     // 任务列表
-    const [tasks, setTasks] = useState<API.PipelineTaskVO[]>(props.tasks);
+    const [tasks, setTasks] = useState<TaskItem[]>(props.tasks as TaskItem[]);
     // 鼠标悬停的任务卡片
     const [hoveredCard, setHoveredCard] = useState<any>(null);
     // 当前选中的任务卡片
-    const [task, setTask] = useState<API.PipelineTaskVO>();
+    const [task, setTask] = useState<TaskItem>();
 
     // 下拉菜单选项
     const dropDownItems: MenuProps['items'] = [
@@ -54,20 +63,20 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
             label: 'API',
             children: [
                 {
-                    key: 'API_GET_DATA',
-                    label: '获取数据',
+                    key: TASK_TEMPLATE.API_GET_DATA.taskType,
+                    label: TASK_TEMPLATE.API_GET_DATA.taskName,
                 },
                 {
-                    key: 'API_SEND_DATA',
-                    label: '发送数据',
+                    key: TASK_TEMPLATE.API_SEND_DATA.taskType,
+                    label: TASK_TEMPLATE.API_SEND_DATA.taskName,
                 },
                 {
-                    key: 'WEBHOOK_GET_DATA',
-                    label: '解析webhook数据',
+                    key: TASK_TEMPLATE.WEBHOOK_GET_DATA.taskType,
+                    label: TASK_TEMPLATE.WEBHOOK_GET_DATA.taskName,
                 },
                 {
-                    key: 'API_GET_VAR',
-                    label: '设置参数',
+                    key: TASK_TEMPLATE.API_GET_VAR.taskType,
+                    label: TASK_TEMPLATE.API_GET_VAR.taskName,
                 },
             ],
         },
@@ -77,12 +86,12 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
             label: '数据仓库',
             children: [
                 {
-                    key: 'SAVE_DATA',
-                    label: '保存数据',
+                    key: TASK_TEMPLATE.SAVE_DATA.taskType,
+                    label: TASK_TEMPLATE.SAVE_DATA.taskName,
                 },
                 {
-                    key: 'QUERY_DATA',
-                    label: '查询数据',
+                    key: TASK_TEMPLATE.QUERY_DATA.taskType,
+                    label: TASK_TEMPLATE.QUERY_DATA.taskName,
                 }
             ],
         },
@@ -92,16 +101,16 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
             label: '数据处理',
             children: [
                 {
-                    key: 'FILTER_DATA',
-                    label: '过滤数据',
+                    key: TASK_TEMPLATE.FILTER_DATA.taskType,
+                    label: TASK_TEMPLATE.FILTER_DATA.taskName,
                 },
                 {
-                    key: 'OPERATE_DATA',
-                    label: '处理数据',
+                    key: TASK_TEMPLATE.OPERATE_DATA.taskType,
+                    label: TASK_TEMPLATE.OPERATE_DATA.taskName,
                 },
                 {
-                    key: 'WRITE_EXCEL',
-                    label: '写入Excel文件',
+                    key: TASK_TEMPLATE.WRITE_EXCEL.taskType,
+                    label: TASK_TEMPLATE.WRITE_EXCEL.taskName,
                 },
             ],
         },
@@ -111,19 +120,27 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
             label: '邮件',
             children: [
                 {
-                    key: 'SEND_EMAIL',
-                    label: '发送邮件',
+                    key: TASK_TEMPLATE.SEND_EMAIL.taskType,
+                    label: TASK_TEMPLATE.SEND_EMAIL.taskName,
                 }
             ],
         },
     ];
 
+    useEffect(() => {
+        var index = 0;
+        tasks.map(task => {
+            task.key = index;
+        });
+    }, []);
+
     // 下拉菜单点击事件
     // const handleDropdownClick: MenuProps['onClick'] = (info) => {
     const handleDropdownClick = (index: number, type: string) => {
         const newTasks = [...tasks];
-        const newTask = TASK_TEMPLATE[type as TaskKey];
-        newTasks.splice(index, 0, newTask);
+        const newTask = TASK_TEMPLATE[type as TaskKey] as TaskItem;
+        newTasks.splice(index, 0, newTask as TaskItem);
+        newTask.key = newTasks.length - 1;
         setTask(newTask)
         setTasks(newTasks);
         props.setTasks(newTasks);
@@ -141,12 +158,20 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
         props.setTasks(newTasks);
     }
 
+    const updateTask = (task: TaskItem) => {
+        const newTasks = [...tasks];
+        const index = tasks.findIndex(({ key }) => key === task.key);
+        newTasks[index] = task;
+        setTask(task);
+        props.setTasks(newTasks)
+    }
+
     const { token } = useToken();
 
     return (
         <>
             <Splitter>
-                <Splitter.Panel defaultSize={"40%"} min={"30%"} max={"60%"}>
+                <Splitter.Panel defaultSize={"30%"} min={"30%"} max={"50%"}>
                     {/* 左侧任务列表外层Card */}
                     <Card bordered={false} style={{ maxHeight: "70vh" }}>
                         {
@@ -173,7 +198,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                                     >
                                         {
                                             hoveredCard === index &&
-                                            <div style={{ position: "absolute", right: 0, top: -18, width: 100, height: 50, paddingTop: 10, paddingLeft: 10 }}>
+                                            <div style={{ position: "absolute", right: 0, top: -18, width: 80, height: 50, paddingTop: 10, paddingLeft: 10 }}>
                                                 <Dropdown menu={{
                                                     items: dropDownItems, onClick: ({ key }) => {
                                                         handleDropdownClick(index, key);
@@ -192,7 +217,8 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
 
                                         {/* 卡片下方添加图标 */}
                                         {
-                                            hoveredCard === index && <div style={{ position: "absolute", right: 0, bottom: -18, width: 100, height: 50, paddingTop: 20, paddingLeft: 10 }}>
+                                            hoveredCard === index &&
+                                            <div style={{ position: "absolute", right: 0, bottom: -18, width: 80, height: 50, paddingTop: 20, paddingLeft: 10 }}>
                                                 <Dropdown menu={{
                                                     items: dropDownItems, onClick: ({ key }) => {
                                                         handleDropdownClick(index + 1, key);
@@ -213,8 +239,8 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                         }
                     </Card>
                 </Splitter.Panel>
-                <Splitter.Panel defaultSize={"60%"} min={"40%"} max={"70%"}>
-                    {task && task.taskName}
+                <Splitter.Panel defaultSize={"70%"} min={"30%"} max={"70%"}>
+                    {task && <TaskForm task={task} updateTask={updateTask} projectId={props.projectId} />}
                 </Splitter.Panel>
             </Splitter >
         </>
