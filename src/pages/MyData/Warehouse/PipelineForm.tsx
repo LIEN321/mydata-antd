@@ -126,7 +126,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
 
                     const params: API.PipelineDTO = { ...value };
                     if (id) {
-                        params.id = props.id;
+                        params.id = id;
                     }
                     params.projectId = props.projectId;
                     params.groupId = props.groupId;
