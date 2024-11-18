@@ -482,6 +482,10 @@ declare namespace API {
     uiCodePath?: string;
   };
 
+  type fieldListParams = {
+    dataId: number;
+  };
+
   type GenerateCodeDTO = {
     /** 所选实体id数组 */
     ids?: number[];
@@ -663,6 +667,8 @@ declare namespace API {
     emailStrategy?: number[];
     /** 接收人 */
     emailReceiver?: string;
+    /** 任务编排列表 */
+    tasks?: PipelineTaskDTO[];
   };
 
   type pipelineGroupDetailParams = {
@@ -721,7 +727,6 @@ declare namespace API {
   };
 
   type PipelineTaskDTO = {
-    id?: number;
     /** 所属流水线 */
     pipelineId?: number;
     /** 任务类型 */
@@ -735,7 +740,7 @@ declare namespace API {
     /** 关联数据 */
     dataId?: number;
     /** 任务配置 */
-    taskConfig?: string;
+    taskConfig?: Record<string, any>;
   };
 
   type pipelineTaskPageParams = {
@@ -764,7 +769,7 @@ declare namespace API {
     /** 关联数据 */
     dataId?: number;
     /** 任务配置 */
-    taskConfig?: string;
+    taskConfig?: Record<string, any>;
   };
 
   type PipelineVO = {
@@ -1151,6 +1156,17 @@ declare namespace API {
     message?: string;
     /** 响应数据 */
     data?: AppVO[];
+  };
+
+  type RListDataFieldVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: DataFieldVO[];
   };
 
   type RListDataVO = {

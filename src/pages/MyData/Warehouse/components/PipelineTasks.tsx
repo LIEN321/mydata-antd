@@ -2,7 +2,7 @@ import { DownCircleFilled, PlusCircleFilled, PlusOutlined, UpCircleFilled } from
 import { ProCard } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, MenuProps, Splitter, Typography, theme } from "antd";
 import { useEffect, useState } from "react";
-import TaskForm from "./TaskForm";
+import PipelineTaskForm from "./PipelineTaskForm";
 import { TASK_TEMPLATE, TaskKey } from "./task";
 
 export type PipelineTasksProp = {
@@ -43,7 +43,7 @@ export type TaskItem = {
     /** 关联数据 */
     dataId?: number;
     /** 任务配置 */
-    taskConfig?: string;
+    taskConfig: Record<string, any>;
 };
 
 const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
@@ -129,9 +129,17 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
 
     useEffect(() => {
         var index = 0;
-        tasks.map(task => {
-            task.key = index;
-        });
+        if (tasks.length > 0) {
+            // 默认选中第一个任务
+            setTask(tasks[0]);
+            // 初始化任务的taskConfig为空{}
+            tasks.map(task => {
+                task.key = index;
+                if (!task.taskConfig) {
+                    task.taskConfig = {};
+                }
+            });
+        }
     }, []);
 
     // 下拉菜单点击事件
@@ -163,7 +171,8 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
         const index = tasks.findIndex(({ key }) => key === task.key);
         newTasks[index] = task;
         setTask(task);
-        props.setTasks(newTasks)
+        props.setTasks(newTasks);
+        console.info('PipelineTasks.task', task);
     }
 
     const { token } = useToken();
@@ -240,7 +249,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                     </Card>
                 </Splitter.Panel>
                 <Splitter.Panel defaultSize={"70%"} min={"30%"} max={"70%"}>
-                    {task && <TaskForm task={task} updateTask={updateTask} projectId={props.projectId} />}
+                    {task && <PipelineTaskForm task={task} updateTask={updateTask} projectId={props.projectId} />}
                 </Splitter.Panel>
             </Splitter >
         </>

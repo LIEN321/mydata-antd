@@ -1,13 +1,15 @@
 import { ProCard, ProForm, ProFormItem, ProFormSelect, ProFormText, ProTable } from "@ant-design/pro-components";
-import { Button, Col, Form, Row, Table } from "antd";
+import { Button, Col, Form, Row, Skeleton, Table } from "antd";
 import { API_GET_DATA } from "./task";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTasks";
 import { appSelect } from "@/services/zhiwei/app";
 import { apiSelect } from "@/services/zhiwei/appApi";
-import { dataSelect } from "@/services/zhiwei/data";
+import { dataSelect, fieldList } from "@/services/zhiwei/data";
 import AddApp from "./AddApp";
+import AddApi from "./AddApi";
+import FieldMappingTable, { FieldMappingDataType } from "./task_components/FieldMappingTable";
 
 export type TaskFormProp = {
     /** 任务信息 */
@@ -18,7 +20,7 @@ export type TaskFormProp = {
     projectId: any;
 };
 
-const TaskForm: React.FC<TaskFormProp> = (props) => {
+const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
 
     // 获取外部传入的task信息
     const { task } = props;
@@ -38,6 +40,38 @@ const TaskForm: React.FC<TaskFormProp> = (props) => {
             form.resetFields();
         }
     }, [task]);
+
+    // 字段映射 相关对象
+    const [fieldMappings, setFieldMappings] = useState<FieldMappingDataType[]>(task.taskConfig?.fieldMappings);
+
+    console.info('task.taskConfig?.fieldMappings = ', task.taskConfig?.fieldMappings)
+
+    // 加载标准数据的字段列表
+    const loadDataFields = async (dataId: number) => {
+        if (dataId) {
+            setLoading(true);
+            const response = await fieldList({ dataId });
+            if (response.success) {
+                const fieldList = response.data;
+                setFieldMappings(() => fieldList as FieldMappingDataType[]);
+                console.info('PipelineTaskForm', fieldMappings);
+            }
+            setLoading(false);
+        }
+        else {
+            setFieldMappings(() => []);
+            console.info('PipelineTaskForm clear');
+        }
+    };
+
+    const handleUpdateFieldMappings = (fieldMappings: FieldMappingDataType[]) => {
+        setFieldMappings(fieldMappings);
+        task.taskConfig.fieldMappings = fieldMappings;
+        updateTask();
+    };
+
+    /** 加载状态 */
+    const [loading, setLoading] = useState<boolean>(false);
 
     return (
         <>
@@ -87,6 +121,7 @@ const TaskForm: React.FC<TaskFormProp> = (props) => {
                                                 }
                                             ]}
                                             width={"sm"}
+                                            // 新建应用
                                             addonAfter={<AddApp onSuccess={(newAppId) => {
                                                 // 重新加载应用列表
                                                 form.resetFields(['appId']);
@@ -107,6 +142,7 @@ const TaskForm: React.FC<TaskFormProp> = (props) => {
                                         <ProFormSelect
                                             name="apiId"
                                             label="选择API"
+                                            disabled={!task.appId || task.appId <= 0}
                                             rules={[
                                                 {
                                                     required: true,
@@ -114,7 +150,15 @@ const TaskForm: React.FC<TaskFormProp> = (props) => {
                                                 }
                                             ]}
                                             width={"sm"}
-                                            addonAfter={<Button icon={<PlusOutlined />} />}
+                                            // 新建API
+                                            addonAfter={<AddApi
+                                                appId={task.appId || 0}
+                                                onSuccess={(newApiId) => {
+                                                    // 重新加载API列表
+                                                    form.resetFields(['apiId']);
+                                                    // 选择新增的API
+                                                    form.setFieldValue('apiId', newApiId);
+                                                }} />}
                                             // 基于应用Select联动
                                             dependencies={['appId']}
                                             request={apiSelect}
@@ -139,6 +183,7 @@ const TaskForm: React.FC<TaskFormProp> = (props) => {
                                             ]}
                                             request={() => { return dataSelect({ projectId: props.projectId }); }}
                                             onChange={(dataId: number) => {
+                                                loadDataFields(dataId);
                                                 task.dataId = dataId;
                                                 updateTask();
                                             }}
@@ -151,8 +196,15 @@ const TaskForm: React.FC<TaskFormProp> = (props) => {
                                     <Col span={24}>
                                         <ProFormItem
                                             label="字段映射"
-                                        />
-                                        <Table/>
+                                        >
+                                            <Skeleton loading={loading} active>
+                                                <FieldMappingTable
+                                                    fieldMappings={fieldMappings}
+                                                    handleUpdateFieldMappings={handleUpdateFieldMappings}
+                                                    loading={loading}
+                                                />
+                                            </Skeleton>
+                                        </ProFormItem>
                                     </Col>
                                 </Row>
                             </>
@@ -164,4 +216,4 @@ const TaskForm: React.FC<TaskFormProp> = (props) => {
     );
 };
 
-export default TaskForm;
+export default PipelineTaskForm;

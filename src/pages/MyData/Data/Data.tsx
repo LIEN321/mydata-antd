@@ -4,13 +4,13 @@ import { projectList, projectSelect } from "@/services/zhiwei/project";
 import { ActionType, ProColumns, ProFormText, ProFormSelect, } from "@ant-design/pro-components";
 import { Col, Row } from "antd";
 import { useEffect, useRef, useState } from "react";
-import DataFieldTable, { DataType } from "./DataFieldTable";
+import DataFieldTable, { DataFieldDataType } from "./DataFieldTable";
 import DataForm from "./components/DataForm";
 
 const Data: React.FC = () => {
 
     // 用户自定义字段列表
-    const [dataFields, setDataFields] = useState<DataType[]>([]);
+    const [dataFields, setDataFields] = useState<DataFieldDataType[]>([]);
     const [loading, setLoading] = useState(false);
 
     // 表格列
@@ -53,7 +53,7 @@ const Data: React.FC = () => {
                 const dataFields = await response.data?.dataFields;
                 if (dataFields) {
                     setDataFields(prevFields => {
-                        return dataFields as DataType[]
+                        return dataFields as DataFieldDataType[]
                     });
                 }
             }

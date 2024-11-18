@@ -6,7 +6,7 @@ import { Button, Divider, Drawer, Skeleton, Tabs, TabsProps } from "antd";
 import { Fragment, useEffect, useRef, useState } from "react";
 import AddProject from "./components/AddProject";
 import { LoadingOutlined } from "@ant-design/icons";
-import { DataType } from "../Data/DataFieldTable";
+import { DataFieldDataType } from "../Data/DataFieldTable";
 import DataForm from "../Data/components/DataForm";
 import Pipeline from "./Pipeline";
 
@@ -146,7 +146,7 @@ const Warehouse: React.FC = () => {
     };
 
     // 用户自定义字段列表
-    const [dataFields, setDataFields] = useState<DataType[]>([]);
+    const [dataFields, setDataFields] = useState<DataFieldDataType[]>([]);
     const [loading, setLoading] = useState(false);
     const dataForm = <DataForm
         loading={loading}
@@ -167,7 +167,7 @@ const Warehouse: React.FC = () => {
                 const dataFields = await response.data?.dataFields;
                 if (dataFields) {
                     setDataFields(prevFields => {
-                        return dataFields as DataType[]
+                        return dataFields as DataFieldDataType[]
                     });
                 }
             }

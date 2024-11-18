@@ -12,14 +12,8 @@ interface Item {
     fieldCode: string;
     /** 字段名称 */
     fieldName: string;
-    /** 数据类型 */
-    fieldType: string;
-    /** 默认值 */
-    defaultValue: string;
-    /** 是否标识 */
-    isId?: boolean;
-    /** 显示模式 */
-    displayMode?: number;
+    /** 接口字段 */
+    apiField: string;
 }
 
 interface EditableRowProps {
@@ -84,23 +78,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
-        if (dataIndex == "fieldType") {
-            return <Select
-                defaultValue="String"
-                options={[
-                    { value: "default", label: "默认" }
-                    , { value: "number", label: "数值" }
-                    , { value: "int", label: "整数" }
-                    , { value: "string", label: "字符串" }
-                    , { value: "date", label: "日期时间" }
-                ]}
-                onSelect={save}
-            />
-        } else if (dataIndex == "isId") {
-            return <Switch onChange={save} />
-        } else if (dataIndex == "displayMode") {
-            return <Switch onChange={save} />
-        } else {
+        if (dataIndex == "apiField") {
             return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
         }
     };
@@ -132,39 +110,35 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-export interface DataFieldDataType {
+export interface FieldMappingDataType {
     key: React.Key;
     /** 字段编号 */
     fieldCode: string;
     /** 字段名称 */
     fieldName: string;
-    /** 数据类型 */
-    fieldType: string;
-    /** 默认值 */
-    defaultValue: string;
-    /** 是否标识 */
-    isId?: boolean;
-    /** 显示模式 */
-    displayMode?: number;
+    /** 接口字段 */
+    apiField: string;
 }
 
-type ColumnTypes = Exclude<TableProps<DataFieldDataType>['columns'], undefined>;
+type ColumnTypes = Exclude<TableProps<FieldMappingDataType>['columns'], undefined>;
 
 // -------------------- 表格属性 --------------------
 export type EditableTableProps = {
     /** 用户自定义属性列表 */
-    dataFields: DataFieldDataType[];
+    fieldMappings: FieldMappingDataType[];
     /** 更新属性列表 */
-    handleUpdateDataFields: (dataFields: DataFieldDataType[]) => any;
+    handleUpdateFieldMappings: (fieldMappings: FieldMappingDataType[]) => any;
     /** 加载状态 */
     loading: boolean;
 };
 
 // -------------------- 表格 --------------------
-const DataFieldTable: React.FC<EditableTableProps> = (props) => {
-    const [dataFields, setDataFields] = useState<DataFieldDataType[]>(props.dataFields);
+const FieldMappingTable: React.FC<EditableTableProps> = (props) => {
 
-    const [count, setCount] = useState(props.dataFields.length);
+    const [fieldMappings, setFieldMappings] = useState<FieldMappingDataType[]>(props.fieldMappings || []);
+    console.info('FieldMappingTable', fieldMappings);
+
+    const [count, setCount] = useState(fieldMappings.length);
 
     const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
         {
@@ -172,61 +146,28 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
             dataIndex: 'fieldCode',
             width: 200,
             align: 'center',
-            editable: true,
+            editable: false,
         },
         {
             title: '字段名称',
             dataIndex: 'fieldName',
             width: 200,
             align: 'center',
-            editable: true,
+            editable: false,
         },
         {
-            title: '数据类型',
-            dataIndex: 'fieldType',
-            width: 130,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '默认值',
-            dataIndex: 'defaultValue',
+            title: '接口字段',
+            dataIndex: 'apiField',
             width: 200,
             align: 'center',
             editable: true,
-        },
-        {
-            title: '是否标识',
-            dataIndex: 'isId',
-            width: 80,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '显示模式',
-            dataIndex: 'displayMode',
-            width: 80,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '操作',
-            dataIndex: 'operation',
-            align: 'center',
-            width: 60,
-            render: (_, record) =>
-                dataFields.length >= 1 ? (
-                    <Popconfirm title="确认删除该字段?" onConfirm={() => handleDelete(record.key)}>
-                        <a>删除</a>
-                    </Popconfirm>
-                ) : null,
         },
     ];
 
     useEffect(() => {
         var index = 0;
-        if (dataFields && dataFields.length > 0) {
-            dataFields.map(f => {
+        if (fieldMappings && fieldMappings.length > 0) {
+            fieldMappings.map(f => {
                 f.key = index;
                 index++;
             });
@@ -235,35 +176,34 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
 
     // 新增行
     const handleAdd = () => {
-        const newData: DataFieldDataType = {
+        const newData: FieldMappingDataType = {
             key: count
             , fieldCode: ''
             , fieldName: ''
-            , fieldType: 'default'
-            , defaultValue: ''
+            , apiField: ''
         };
 
-        setDataFields([...dataFields, newData]);
+        setFieldMappings([...fieldMappings, newData]);
         setCount(count + 1);
     };
 
     // 更新数据
-    const handleSave = (row: DataFieldDataType) => {
-        const newData = [...dataFields];
+    const handleSave = (row: FieldMappingDataType) => {
+        const newData = [...fieldMappings];
         const index = newData.findIndex((item) => row.key === item.key);
         const item = newData[index];
         newData.splice(index, 1, {
             ...item,
             ...row,
         });
-        setDataFields(newData);
-        props.handleUpdateDataFields(newData);
+        setFieldMappings(newData);
+        props.handleUpdateFieldMappings(newData);
     };
 
     const handleDelete = (key: React.Key) => {
-        const newData = dataFields.filter((item) => item.key !== key);
-        setDataFields(newData);
-        props.handleUpdateDataFields(newData);
+        const newData = fieldMappings.filter((item) => item.key !== key);
+        setFieldMappings(newData);
+        props.handleUpdateFieldMappings(newData);
     };
 
     const components = {
@@ -279,7 +219,7 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
         }
         return {
             ...col,
-            onCell: (record: DataFieldDataType) => ({
+            onCell: (record: FieldMappingDataType) => ({
                 record,
                 editable: col.editable,
                 dataIndex: col.dataIndex,
@@ -291,18 +231,11 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
 
     return (
         <div>
-            <Fragment>
-                <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-                    添加字段
-                </Button>
-                {/* <Divider type="vertical" />
-                <Switch /> 启用多字段组合标识 */}
-            </Fragment>
-            <Table<DataFieldDataType>
+            <Table<FieldMappingDataType>
                 components={components}
                 rowClassName={() => 'editable-row'}
                 bordered
-                dataSource={dataFields}
+                dataSource={fieldMappings}
                 columns={columns as ColumnTypes}
                 pagination={{ pageSize: 100, position: ['none', 'none'] }}
                 scroll={{ y: 500 }}
@@ -313,4 +246,4 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
     );
 };
 
-export default DataFieldTable;
+export default FieldMappingTable;

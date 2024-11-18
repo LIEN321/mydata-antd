@@ -15,7 +15,7 @@ const AddApp: React.FC<AddAppProp> = (props) => {
             <ModalForm
                 title={'新建应用'}
                 width={400}
-                trigger={<Button icon={<PlusOutlined />} />}
+                trigger={<Button icon={<PlusOutlined />} title="新建应用" />}
                 onFinish={async (value) => {
                     const response = await saveApp(value);
                     if (response.success) {

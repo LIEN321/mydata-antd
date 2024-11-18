@@ -54,6 +54,21 @@ export async function deleteData(
   });
 }
 
+/** 查询标准数据 GET /data/fieldList */
+export async function fieldList(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.fieldListParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.RListDataFieldVO>(`/api/data/fieldList`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** 查询所有标准数据 GET /data/list */
 export async function dataList(options?: { [key: string]: any }) {
   return request<API.RListDataVO>(`/api/data/list`, {

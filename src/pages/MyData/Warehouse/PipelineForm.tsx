@@ -109,7 +109,8 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                 open={props.open}
                 title={id ? '编辑流水线' : '新建流水线'}
                 width={1200}
-                style={{ height: '70vh' }}
+                style={{ height: 800 }}
+                clearOnDestroy
                 modalProps={{ centered: true, destroyOnClose: true }}
                 onOpenChange={(open) => {
                     if (open === false) {
@@ -124,11 +125,12 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                     const hide = message.loading("正在提交...");
 
                     const params: API.PipelineDTO = { ...value };
-                    if (props.id) {
+                    if (id) {
                         params.id = props.id;
                     }
                     params.projectId = props.projectId;
                     params.groupId = props.groupId;
+                    params.tasks = tasks;
 
                     const response = await savePipeline(params);
                     hide();
@@ -136,7 +138,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                         message.success("提交成功");
 
                         // 初始的id无效，则为新建流水线，不关闭表单
-                        if (id === undefined) {
+                        if (!id) {
                             setId(response.data);
                             setActiveKey("2");
                             return false;
