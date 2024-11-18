@@ -4,18 +4,19 @@ import { deleteAppApi, deleteAppApis, appApiPage, saveAppApi } from "@/services/
 import { ActionType, ProColumns, ProFormText, ProFormSelect, ProFormRadio, } from "@ant-design/pro-components";
 import { Col, Input, Radio, Row, Tabs, TabsProps } from "antd";
 import { useRef, useState } from "react";
-import ApiParamsTable, { DataType } from "./ApiParamsTable";
+import ApiParamsTable, { ApiParamDataType } from "./ApiParamsTable";
+import ApiForm from "./ApiForm";
 
 const AppApi: React.FC = () => {
 
     // 请求参数
-    const [reqParams, setReqParams] = useState<DataType[]>([]);
+    const [reqParams, setReqParams] = useState<ApiParamDataType[]>([]);
     // 请求Header
-    const [reqHeaders, setReqHeaders] = useState<DataType[]>([]);
+    const [reqHeaders, setReqHeaders] = useState<ApiParamDataType[]>([]);
     // 请求body类型
     const [reqBodyType, setReqBodyType] = useState<string>("");
     // 请求body，form格式
-    const [reqBodyForm, setReqBodyForm] = useState<DataType[]>([]);
+    const [reqBodyForm, setReqBodyForm] = useState<ApiParamDataType[]>([]);
     // 请求body，raw格式
     const [reqBodyRaw, setReqBodyRaw] = useState<string>("");
     // 响应示例
@@ -61,200 +62,20 @@ const AppApi: React.FC = () => {
         },
     ];
 
-    const tabItems: TabsProps['items'] = [
-        {
-            key: '1',
-            label: 'Params',
-            children: (
-                <ApiParamsTable
-                    params={reqParams}
-                    handleUpdateParams={setReqParams}
-                />
-            ),
-        },
-        {
-            key: '2',
-            label: 'Headers',
-            children: (
-                <ApiParamsTable
-                    params={reqHeaders}
-                    handleUpdateParams={setReqHeaders}
-                />
-            ),
-        },
-        {
-            key: '3',
-            label: 'Body',
-            children: (
-                <>
-                    <Radio.Group
-                        options={[
-                            { label: "空", value: "" }
-                            , { label: "x-www-form-urlencoded", value: "x-www-form-urlencoded" }
-                            , { label: "json", value: "json" }
-                        ]}
-                        defaultValue={reqBodyType}
-                        onChange={(e) => {
-                            setReqBodyType(e.target.value);
-                        }}
-                    />
-                    <br />
-                    <br />
-                    {
-                        reqBodyType == "x-www-form-urlencoded" &&
-                        <ApiParamsTable
-                            params={reqBodyForm}
-                            handleUpdateParams={setReqBodyForm}
-                        />
-                    }
-                    {
-                        reqBodyType == "json" &&
-                        <Input.TextArea value={reqBodyRaw} style={{ height: 350 }} onChange={(e) => {
-                            setReqBodyRaw(e.target.value);
-                        }} />
-                    }
-                </>
-            ),
-        },
-        {
-            key: '4',
-            label: '响应示例',
-            children: (
-                <Input.TextArea value={respExample} style={{ height: 400 }} onChange={(e) => {
-                    setRespExample(e.target.value);
-                }} />
-            ),
-        },
-    ];
-
-    const appApiForm = <>
-        <Row gutter={24}>
-            <Col span={6}>
-                <ProFormSelect
-                    rules={[
-                        {
-                            required: true,
-                            message: "请输入所属应用",
-                        }
-                    ]}
-                    name="appId"
-                    label="所属应用"
-                    placeholder="请输入所属应用"
-                    request={appSelect}
-                />
-            </Col>
-            <Col span={18}>
-                <ProFormText
-                    rules={[
-                        {
-                            required: true,
-                            message: "请输入接口名称",
-                        }
-                    ]}
-                    name="apiName"
-                    label="API名称"
-                    placeholder="请输入接口名称"
-                />
-            </Col>
-        </Row>
-        <Row gutter={24}>
-            <Col span={6}>
-                <ProFormSelect
-                    rules={[
-                        {
-                            required: true,
-                            message: "请选择请求方法",
-                        }
-                    ]}
-                    name="apiMethod"
-                    label="请求方法"
-                    placeholder="请选择请求方法"
-                    options={[
-                        { label: 'GET', value: 'GET' }
-                        , { label: 'POST', value: 'POST' }
-                        , { label: 'PUT', value: 'PUT' }
-                        , { label: 'DELETE', value: 'DELETE' }
-                    ]}
-                    initialValue={"GET"}
-                />
-            </Col>
-            <Col span={18}>
-                <ProFormText
-                    rules={[
-                        {
-                            required: true,
-                            message: "请输入接口路径",
-                        }
-                    ]}
-                    name="apiUri"
-                    label="接口路径"
-                    placeholder="请输入接口路径"
-                />
-            </Col>
-        </Row>
-        <Row gutter={24}>
-            <Col span={6}>
-                <ProFormRadio.Group
-                    rules={[
-                        {
-                            required: true,
-                            message: "请选择API类型",
-                        }
-                    ]}
-                    name="opType"
-                    label="数据角色"
-                    placeholder="请选择请求方法"
-                    options={[
-                        {
-                            label: '提供者',
-                            value: 1,
-                        },
-                        {
-                            label: '消费者',
-                            value: 2,
-                        },
-                    ]}
-                    radioType="button"
-                    initialValue={1}
-                    fieldProps={{ block: true }}
-                />
-            </Col>
-            <Col span={6}>
-                <ProFormRadio.Group
-                    rules={[
-                        {
-                            required: true,
-                            message: "请选择数据类型",
-                        }
-                    ]}
-                    name="dataType"
-                    label="数据类型"
-                    placeholder="请选择数据类型"
-                    options={[
-                        { label: 'JSON', value: 'JSON' }
-                        , { label: '待扩展', value: '', disabled: true }
-                    ]}
-                    radioType="button"
-                    initialValue={"JSON"}
-                    fieldProps={{ block: true }}
-                />
-            </Col>
-            <Col span={12}>
-                <ProFormText
-                    rules={[
-                        {
-                            required: false,
-                            message: "请输入数据层级",
-                        }
-                    ]}
-                    name="fieldPrefix"
-                    label="数据层级"
-                    placeholder="请输入数据层级"
-                />
-            </Col>
-        </Row>
-        <Tabs defaultActiveKey="1" items={tabItems} type="card" />
-    </>;
+    const appApiForm = <ApiForm
+        reqParams={reqParams}
+        setReqParams={setReqParams}
+        reqHeaders={reqHeaders}
+        setReqHeaders={setReqHeaders}
+        reqBodyType={reqBodyType}
+        setReqBodyType={setReqBodyType}
+        reqBodyForm={reqBodyForm}
+        setReqBodyForm={setReqBodyForm}
+        reqBodyRaw={reqBodyRaw}
+        setReqBodyRaw={setReqBodyRaw}
+        respExample={respExample}
+        setRespExample={setRespExample}
+    />;
 
     const tableRef = useRef<ActionType>();
 
@@ -262,6 +83,7 @@ const AppApi: React.FC = () => {
         setReqParams(record.reqParams);
         setReqHeaders(record.reqHeaders);
         setReqBodyType(record.reqBodyType);
+        setReqBodyForm(record.reqBodyForm);
         setReqBodyRaw(record.reqBodyRaw);
         setRespExample(record.respExample);
     }

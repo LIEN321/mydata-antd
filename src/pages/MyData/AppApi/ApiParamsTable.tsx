@@ -114,7 +114,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-export interface DataType {
+export interface ApiParamDataType {
     key: React.Key;
     /** 参数名 */
     k: string;
@@ -126,21 +126,21 @@ export interface DataType {
     enable: boolean;
 }
 
-type ColumnTypes = Exclude<TableProps<DataType>['columns'], undefined>;
+type ColumnTypes = Exclude<TableProps<ApiParamDataType>['columns'], undefined>;
 
 // -------------------- 表格属性 --------------------
 export type EditableTableProps = {
     /** 参数列表 */
-    params: DataType[];
+    params: ApiParamDataType[];
     /** 更新属性列表 */
-    handleUpdateParams: (dataFields: DataType[]) => any;
+    handleUpdateParams: (dataFields: ApiParamDataType[]) => any;
     /** 加载状态 */
     loading?: boolean;
 };
 
 // -------------------- 表格 --------------------
 const ApiParamsTable: React.FC<EditableTableProps> = (props) => {
-    const [params, setParams] = useState<DataType[]>(props.params);
+    const [params, setParams] = useState<ApiParamDataType[]>(props.params);
 
     const [count, setCount] = useState(props.params.length);
 
@@ -199,7 +199,7 @@ const ApiParamsTable: React.FC<EditableTableProps> = (props) => {
 
     // 新增行
     const handleAdd = () => {
-        const newData: DataType = {
+        const newData: ApiParamDataType = {
             key: count
             , k: ''
             , v: ''
@@ -212,7 +212,7 @@ const ApiParamsTable: React.FC<EditableTableProps> = (props) => {
     };
 
     // 更新数据
-    const handleSave = (row: DataType) => {
+    const handleSave = (row: ApiParamDataType) => {
         const newData = [...params];
         const index = newData.findIndex((item) => row.key === item.key);
         const item = newData[index];
@@ -243,7 +243,7 @@ const ApiParamsTable: React.FC<EditableTableProps> = (props) => {
         }
         return {
             ...col,
-            onCell: (record: DataType) => ({
+            onCell: (record: ApiParamDataType) => ({
                 record,
                 editable: col.editable,
                 dataIndex: col.dataIndex,
@@ -260,7 +260,7 @@ const ApiParamsTable: React.FC<EditableTableProps> = (props) => {
                     添加
                 </Button>
             </Fragment>
-            <Table<DataType>
+            <Table<ApiParamDataType>
                 components={components}
                 rowClassName={() => 'editable-row'}
                 bordered
