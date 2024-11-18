@@ -1,6 +1,6 @@
 import { ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 
-const DataForm: React.FC = () => {
+const AppForm: React.FC = () => {
     return (
         <>
             <ProFormText
@@ -62,4 +62,4 @@ const DataForm: React.FC = () => {
     )
 };
 
-export default DataForm;
+export default AppForm;
