@@ -652,7 +652,7 @@ declare namespace API {
     /** 流水线描述 */
     pipelineDesc?: string;
     /** 是否启用定时 */
-    isSchedule?: number;
+    isSchedule?: boolean;
     /** 定时周期（cron） */
     schedulePeriod?: string;
     /** 是否启用webhook */
@@ -784,7 +784,7 @@ declare namespace API {
     /** 流水线描述 */
     pipelineDesc?: string;
     /** 是否启用定时 */
-    isSchedule?: number;
+    isSchedule?: boolean;
     /** 定时周期（cron） */
     schedulePeriod?: string;
     /** 是否启用webhook */

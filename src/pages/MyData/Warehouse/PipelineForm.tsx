@@ -1,5 +1,5 @@
 import { pipelineDetail, savePipeline } from "@/services/zhiwei/pipeline";
-import { ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
+import { ModalForm, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, message, Row, Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTasks from "./components/PipelineTasks";
@@ -99,7 +99,20 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             {
                 key: '4',
                 label: '执行计划',
-                children: <></>
+                children: <>
+                    <Row gutter={24}>
+                        <Col span={6}></Col>
+                        <Col span={4}>
+                            <ProFormSwitch
+                                label="启用定时"
+                                name="isSchedule"
+                            />
+                        </Col>
+                        <Col span={12}>
+                            
+                        </Col>
+                    </Row>
+                </>
             },);
     }
 
