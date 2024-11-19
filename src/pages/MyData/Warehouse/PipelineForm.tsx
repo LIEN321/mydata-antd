@@ -105,7 +105,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                         <Col span={4}>
                             <ProFormSwitch
                                 label="启用定时"
-                                name="enable"
+                                name="isSchedule"
                             />
                         </Col>
                         <Col span={12}>
