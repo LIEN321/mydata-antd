@@ -1,5 +1,5 @@
 import { pipelineDetail, savePipeline } from "@/services/zhiwei/pipeline";
-import { ModalForm, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
+import { ModalForm, ProFormCheckbox, ProFormItem, ProFormSwitch, ProFormText, ProFormTextArea, ProFormTimePicker } from "@ant-design/pro-components";
 import { Col, message, Row, Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTasks from "./components/PipelineTasks";
@@ -105,11 +105,41 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                         <Col span={4}>
                             <ProFormSwitch
                                 label="启用定时"
-                                name="isSchedule"
+                                name="enable"
                             />
                         </Col>
                         <Col span={12}>
-                            
+                            <ProFormCheckbox.Group
+                                label="执行日"
+                                name="dayOfWeek"
+                                rules={[{ required: true, message: "请选择执行日" }]}
+                                options={[
+                                    { label: "周日", value: 1 }
+                                    , { label: "周一", value: 2 }
+                                    , { label: "周二", value: 3 }
+                                    , { label: "周三", value: 4 }
+                                    , { label: "周四", value: 5 }
+                                    , { label: "周五", value: 6 }
+                                    , { label: "周六", value: 7 }
+                                ]}
+                                initialValue={[2, 3, 4, 5, 6]}
+                            />
+                            <ProFormItem
+                                label="时间段"
+                            >
+                                <Row>
+                                    <ProFormTimePicker name="startTime" allowClear={false} fieldProps={{ format: "HH:mm" }} initialValue={"00:00"} rules={[{ required: true, message: "请选择开始时间" }]} />
+                                    <span style={{ marginLeft: 12, marginRight: 12 }}>至</span>
+                                    <ProFormTimePicker name="endTime" allowClear={false} fieldProps={{ format: "HH:mm" }} initialValue={"00:00"} rules={[{ required: true, message: "请选择结束时间" }]} />
+                                </Row>
+                            </ProFormItem>
+                            <ProFormTimePicker
+                                label="时间间隔"
+                                name="intervalTime"
+                                allowClear={false}
+                                rules={[{ required: true, message: "请选择时间间隔" }]}
+                                initialValue={"00:15:00"}
+                            />
                         </Col>
                     </Row>
                 </>
