@@ -126,6 +126,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                             />
                             <ProFormItem
                                 label="时间段"
+                                style={{ marginBottom: 0 }}
                             >
                                 <Row>
                                     <ProFormTimePicker
