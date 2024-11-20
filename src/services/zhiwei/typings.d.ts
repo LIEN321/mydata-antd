@@ -653,8 +653,16 @@ declare namespace API {
     pipelineDesc?: string;
     /** 是否启用定时 */
     isSchedule?: boolean;
-    /** 定时周期（cron） */
-    schedulePeriod?: string;
+    /** 执行日 */
+    dayOfWeek?: number[];
+    /** 开始时间，HH:mm */
+    startTime?: string;
+    /** 结束时间，HH:mm */
+    endTime?: string;
+    /** 时间间隔，HH:mm:ss */
+    intervalTime?: string;
+    /** 时区 */
+    timeZone?: string;
     /** 是否启用webhook */
     isWebhook?: number;
     /** webhook认证方式 */
@@ -785,8 +793,16 @@ declare namespace API {
     pipelineDesc?: string;
     /** 是否启用定时 */
     isSchedule?: boolean;
-    /** 定时周期（cron） */
-    schedulePeriod?: string;
+    /** 执行日 */
+    dayOfWeek?: number[];
+    /** 开始时间，HH:mm */
+    startTime?: string;
+    /** 结束时间，HH:mm */
+    endTime?: string;
+    /** 时间间隔，HH:mm:ss */
+    intervalTime?: string;
+    /** 时区 */
+    timeZone?: string;
     /** 是否启用webhook */
     isWebhook?: number;
     /** webhook认证方式 */

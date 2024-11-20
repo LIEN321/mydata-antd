@@ -1,7 +1,7 @@
 import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
-import { CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HistoryOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined } from "@ant-design/icons";
+import { ApiTwoTone, ClockCircleTwoTone, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HistoryOutlined, HourglassTwoTone, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined } from "@ant-design/icons";
 import { DrawerForm, ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space } from "antd";
+import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space, theme } from "antd";
 import { Fragment, useState } from "react";
 import PipelineForm from "./PipelineForm";
 import { deletePipeline } from "@/services/zhiwei/pipeline";
@@ -11,6 +11,8 @@ export type PipelineProp = {
 };
 
 const Pipeline: React.FC<PipelineProp> = (props) => {
+    const { useToken } = theme;
+    const { token } = useToken();
 
     const [modal, contextHolder] = Modal.useModal();
 
@@ -196,7 +198,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                             </Fragment>
                                         }
                                     >
-                                        {/* 分组的 流水线列表 */}
+                                        {/* 流水线列表 */}
                                         <Space direction="vertical" style={{ width: cardWidth }}>
                                             {
                                                 group.pipelines && group.pipelines.length > 0 && group.pipelines.map(pipeline => (
@@ -219,6 +221,18 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                 <EllipsisOutlined />
                                                             </Dropdown>
                                                         ]}
+                                                        extra={
+                                                            <>
+                                                                <HourglassTwoTone
+                                                                    title={`定时执行：${pipeline.isSchedule ? '已启用' : '未启用'}`}
+                                                                    twoToneColor={pipeline.isSchedule ? token.green : token.colorBorder}
+                                                                />
+                                                                <ApiTwoTone
+                                                                    title={`Webhook：${pipeline.isWebhook ? '已启用' : '未启用'}`}
+                                                                    twoToneColor={pipeline.isWebhook ? token.green : token.colorBorder}
+                                                                />
+                                                            </>
+                                                        }
                                                     >
 
                                                     </Card>

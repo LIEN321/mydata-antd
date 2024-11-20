@@ -112,7 +112,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                             <ProFormCheckbox.Group
                                 label="执行日"
                                 name="dayOfWeek"
-                                rules={[{ required: true, message: "请选择执行日" }]}
+                                rules={[{ required: false, message: "请选择执行日" }]}
                                 options={[
                                     { label: "周日", value: 1 }
                                     , { label: "周一", value: 2 }
@@ -128,15 +128,28 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                 label="时间段"
                             >
                                 <Row>
-                                    <ProFormTimePicker name="startTime" allowClear={false} fieldProps={{ format: "HH:mm" }} initialValue={"00:00"} rules={[{ required: true, message: "请选择开始时间" }]} />
+                                    <ProFormTimePicker
+                                        name="startTime"
+                                        allowClear={false}
+                                        fieldProps={{ format: "HH:mm", needConfirm: false }}
+                                        initialValue={"00:00"}
+                                        rules={[{ required: true, message: "请选择开始时间" }]}
+                                    />
                                     <span style={{ marginLeft: 12, marginRight: 12 }}>至</span>
-                                    <ProFormTimePicker name="endTime" allowClear={false} fieldProps={{ format: "HH:mm" }} initialValue={"00:00"} rules={[{ required: true, message: "请选择结束时间" }]} />
+                                    <ProFormTimePicker
+                                        name="endTime"
+                                        allowClear={false}
+                                        fieldProps={{ format: "HH:mm", needConfirm: false }}
+                                        initialValue={"00:00"}
+                                        rules={[{ required: true, message: "请选择结束时间" }]}
+                                    />
                                 </Row>
                             </ProFormItem>
                             <ProFormTimePicker
                                 label="时间间隔"
                                 name="intervalTime"
                                 allowClear={false}
+                                fieldProps={{ needConfirm: false }}
                                 rules={[{ required: true, message: "请选择时间间隔" }]}
                                 initialValue={"00:15:00"}
                             />
