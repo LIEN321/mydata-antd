@@ -127,6 +127,9 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 form.resetFields(['appId']);
                                                 // 选择新增的应用
                                                 form.setFieldValue('appId', newAppId);
+                                                // 更新task的应用id
+                                                task.appId = newAppId;
+                                                updateTask();
                                             }} />}
                                             addonWarpStyle={{ width: "100%" }}
                                             request={appSelect}
@@ -158,6 +161,9 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                     form.resetFields(['apiId']);
                                                     // 选择新增的API
                                                     form.setFieldValue('apiId', newApiId);
+                                                    // 更新task的API id
+                                                    task.apiId = newApiId;
+                                                    updateTask();
                                                 }} />}
                                             // 基于应用Select联动
                                             dependencies={['appId']}
