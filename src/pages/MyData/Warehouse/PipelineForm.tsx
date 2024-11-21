@@ -36,6 +36,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                 const response = await pipelineDetail({ id });
                 if (response.success && response.data) {
                     setPipeline(() => response.data || {});
+                    setTasks(response.data.tasks);
                 }
                 setLoading(false);
             }
@@ -86,7 +87,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                 key: '2',
                 label: '任务编排',
                 children: <PipelineTasks
-                    tasks={pipeline.tasks || []}
+                    tasks={tasks || []}
                     setTasks={setTasks}
                     projectId={props.projectId}
                 />
