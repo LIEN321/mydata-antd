@@ -222,16 +222,18 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                             </Dropdown>
                                                         ]}
                                                         extra={
-                                                            <>
+                                                            <Space>
                                                                 <HourglassTwoTone
-                                                                    title={`定时执行：${pipeline.isSchedule ? '已启用' : '未启用'}`}
+                                                                    title={`定时：${pipeline.isSchedule ? pipeline.intervalTime : '未启用'}`}
                                                                     twoToneColor={pipeline.isSchedule ? token.green : token.colorBorder}
+                                                                    style={{ cursor: 'pointer' }}
                                                                 />
                                                                 <ApiTwoTone
                                                                     title={`Webhook：${pipeline.isWebhook ? '已启用' : '未启用'}`}
                                                                     twoToneColor={pipeline.isWebhook ? token.green : token.colorBorder}
+                                                                    style={{ cursor: 'pointer' }}
                                                                 />
-                                                            </>
+                                                            </Space>
                                                         }
                                                     >
 
