@@ -73,7 +73,7 @@ const AddApi: React.FC<AddApiProp> = (props) => {
                     setReqBodyRaw={setReqBodyRaw}
                     respExample={respExample}
                     setRespExample={setRespExample}
-                />;
+                />
             </ModalForm>
         </>
     );
