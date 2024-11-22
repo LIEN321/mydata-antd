@@ -36,6 +36,8 @@ declare namespace API {
     reqBodyRaw?: string;
     /** 响应示例 */
     respExample?: string;
+    /** 数据结构模式，1-对象、2-集合 */
+    dataMode?: number;
   };
 
   type appApiPageParams = {
@@ -80,6 +82,8 @@ declare namespace API {
     reqBodyRaw?: string;
     /** 响应示例 */
     respExample?: string;
+    /** 数据结构模式，1-对象、2-集合 */
+    dataMode?: number;
   };
 
   type appDetailParams = {
@@ -817,6 +821,8 @@ declare namespace API {
     emailReceiver?: string;
     /** 流水线任务列表 */
     tasks?: PipelineTaskVO[];
+    /** 下次执行时间 */
+    nextFireTime?: string;
   };
 
   type PListAppApiVO = {
