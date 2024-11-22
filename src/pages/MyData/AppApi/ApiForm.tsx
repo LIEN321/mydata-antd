@@ -1,7 +1,8 @@
 import { appSelect } from "@/services/zhiwei/app";
-import { ProFormRadio, ProFormSelect, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Col, Input, Radio, Row, Tabs, TabsProps } from "antd";
+import { ProFormRadio, ProFormSelect, ProFormText } from "@ant-design/pro-components";
+import { Button, Col, Divider, Input, Radio, Row, Tabs, TabsProps } from "antd";
 import ApiParamsTable, { ApiParamDataType } from "./ApiParamsTable";
+import { useEffect, useRef, useState } from "react";
 
 export type ApiFormProp = {
     // 请求参数
@@ -31,8 +32,31 @@ export type ApiFormProp = {
 };
 
 const ApiForm: React.FC<ApiFormProp> = (props) => {
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
     const [opType, setOpType] = useState<number>(props.record?.opType || 1);
+
+    const insertTextAtCursor = (text: string) => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            // 确保 TypeScript 知道 textarea 是 HTMLTextAreaElement
+            const { selectionStart, selectionEnd, value } = textarea;
+
+            // 插入内容
+            const newValue = value.slice(0, selectionStart) + text + value.slice(selectionEnd);
+
+            textarea.value = newValue;
+            props.setReqBodyRaw(newValue);
+
+            // 更新光标位置
+            const newCursorPosition = selectionStart + text.length;
+            textarea.setSelectionRange(newCursorPosition, newCursorPosition);
+
+            // 手动触发 React 的 onChange
+            // const event = new Event('input', { bubbles: true });
+            // textarea.dispatchEvent(event);
+        }
+    };
 
     const tabItems: TabsProps['items'] = [
         {
@@ -63,7 +87,7 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                     <Radio.Group
                         options={[
                             { label: "空", value: "" }
-                            , { label: "x-www-form-urlencoded", value: "x-www-form-urlencoded" }
+                            , { label: "x-www-form-urlencoded", value: "form" }
                             , { label: "json", value: "json" }
                         ]}
                         defaultValue={props.reqBodyType}
@@ -89,7 +113,11 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                     }
                     {
                         props.reqBodyType == "json" &&
-                        <Input.TextArea value={props.reqBodyRaw} style={{ height: 350 }} onChange={(e) => {
+                        <Input.TextArea ref={(input) => {
+                            if (input) {
+                                textareaRef.current = input.resizableTextArea?.textArea || null;
+                            }
+                        }} value={props.reqBodyRaw} style={{ height: 350 }} onChange={(e) => {
                             props.setReqBodyRaw(e.target.value);
                         }} />
                     }
