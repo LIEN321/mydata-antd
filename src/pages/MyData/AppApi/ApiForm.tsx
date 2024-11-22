@@ -25,9 +25,14 @@ export type ApiFormProp = {
 
     /** 初始默认应用id */
     appId?: number;
+
+    /** 编辑时的数据 */
+    record?: API.AppApiVO;
 };
 
 const ApiForm: React.FC<ApiFormProp> = (props) => {
+
+    const [opType, setOpType] = useState<number>(props.record?.opType || 1);
 
     const tabItems: TabsProps['items'] = [
         {
@@ -66,6 +71,13 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                             props.setReqBodyType(e.target.value);
                         }}
                     />
+                    <Divider type="vertical" />
+                    {opType == 2 && props.reqBodyType == "json" &&
+                        <Button type="link" title="插入业务数据占位符" onClick={() => {
+                            insertTextAtCursor('${BIZ_DATA}');
+                        }}>
+                            {'${BIZ_DATA}'}
+                        </Button>}
                     <br />
                     <br />
                     {
@@ -186,7 +198,12 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                         ]}
                         radioType="button"
                         initialValue={1}
-                        fieldProps={{ block: true }}
+                        fieldProps={{
+                            block: true
+                            , onChange: (e) => {
+                                setOpType(e.target.value);
+                            }
+                        }}
                     />
                 </Col>
                 <Col span={6}>
@@ -209,19 +226,49 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                         fieldProps={{ block: true }}
                     />
                 </Col>
-                <Col span={12}>
-                    <ProFormText
-                        rules={[
-                            {
-                                required: false,
-                                message: "请输入数据层级",
-                            }
-                        ]}
-                        name="fieldPrefix"
-                        label="数据层级"
-                        placeholder="请输入数据层级"
-                    />
-                </Col>
+                {
+                    opType == 1 && <Col span={6}>
+                        <ProFormText
+                            rules={[
+                                {
+                                    required: false,
+                                    message: "请输入数据层级",
+                                }
+                            ]}
+                            name="fieldPrefix"
+                            label="数据层级"
+                            placeholder="请输入数据层级"
+                        />
+                    </Col>
+                }
+                {
+                    opType == 2 && <Col span={6}>
+                        <ProFormRadio.Group
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "请选择数据模式",
+                                }
+                            ]}
+                            name="dataMode"
+                            label="数据结构"
+                            placeholder="请选择数据模式"
+                            options={[
+                                {
+                                    label: '集合',
+                                    value: 2,
+                                },
+                                {
+                                    label: '单个',
+                                    value: 1,
+                                },
+                            ]}
+                            radioType="button"
+                            initialValue={2}
+                            fieldProps={{ block: true }}
+                        />
+                    </Col>
+                }
             </Row>
             <Tabs defaultActiveKey="1" items={tabItems} type="card" />
         </>

@@ -22,6 +22,9 @@ const AppApi: React.FC = () => {
     // 响应示例
     const [respExample, setRespExample] = useState<string>("");
 
+    // 编辑时的数据
+    const [record, setRecord] = useState<API.AppApiVO>({});
+
     // 表格列
     const columns: ProColumns<API.AppApiVO>[] = [
         {
@@ -75,11 +78,13 @@ const AppApi: React.FC = () => {
         setReqBodyRaw={setReqBodyRaw}
         respExample={respExample}
         setRespExample={setRespExample}
+        record={record}
     />;
 
     const tableRef = useRef<ActionType>();
 
     const handleOnClickEditBtn = (record: any) => {
+        setRecord(record);
         setReqParams(record.reqParams);
         setReqHeaders(record.reqHeaders);
         setReqBodyType(record.reqBodyType);
