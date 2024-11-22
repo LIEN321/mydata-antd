@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormItem, ProFormSelect, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table } from "antd";
-import { API_GET_DATA } from "./task";
+import { API_GET_DATA, API_SEND_DATA } from "./task";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTasks";
@@ -34,39 +34,58 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
     const [form] = Form.useForm();
     // 当 task 变化时，更新表单内容
     useEffect(() => {
+        console.info("task", task);
+        form.resetFields();
         if (task) {
             form.setFieldsValue(task);
-        } else {
-            form.resetFields();
         }
+        loadDataFields(task.dataId || null);
     }, [task]);
 
     // 字段映射 相关对象
-    const [fieldMappings, setFieldMappings] = useState<FieldMappingDataType[]>(task.taskConfig?.fieldMappings);
-
-    console.info('task.taskConfig?.fieldMappings = ', task.taskConfig?.fieldMappings)
+    const [fieldMappings, setFieldMappings] = useState<FieldMappingDataType[]>([]);
 
     // 加载标准数据的字段列表
-    const loadDataFields = async (dataId: number) => {
+    const loadDataFields = async (dataId: number | null) => {
+        setLoading(true);
         if (dataId) {
-            setLoading(true);
             const response = await fieldList({ dataId });
             if (response.success) {
+                // 字段列表
                 const fieldList = response.data;
-                setFieldMappings(() => fieldList as FieldMappingDataType[]);
-                console.info('PipelineTaskForm', fieldMappings);
+                // 取字段的 code和name
+                const fieldMappings = fieldList as FieldMappingDataType[];
+                // 若任务中配置的字段映射，则并入fieldMappings 用于表格显示
+                const fieldMapping = task.taskConfig.FIELD_MAPPING;
+                if (fieldMapping) {
+                    fieldMappings.map(m => {
+                        m.apiField = fieldMapping[m.fieldCode] || "";
+                    });
+                }
+                setFieldMappings(() => fieldMappings);
             }
-            setLoading(false);
         }
         else {
             setFieldMappings(() => []);
-            console.info('PipelineTaskForm clear');
         }
+        setLoading(false);
     };
+
+    useEffect(() => {
+        if (task && task.dataId) {
+            loadDataFields(task.dataId);
+        }
+    }, []);
 
     const handleUpdateFieldMappings = (fieldMappings: FieldMappingDataType[]) => {
         setFieldMappings(fieldMappings);
-        task.taskConfig.fieldMappings = fieldMappings;
+        const fieldMapping = {} as any;
+        // 提取 数据字段-接口字段 的映射关系
+        fieldMappings.map(m => {
+            fieldMapping[m.fieldCode] = m.apiField;
+        });
+        // 映射关系写入taskConfig.FIELD_MAPPING
+        task.taskConfig.FIELD_MAPPING = fieldMapping;
         updateTask();
     };
 
@@ -106,8 +125,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             <Col span={12}></Col>
                         </Row>
                         {
-                            // 获取数据
-                            task.taskType === API_GET_DATA && <>
+                            // 获取数据 或 发送数据
+                            (task.taskType === API_GET_DATA || task.taskType === API_SEND_DATA) && <>
                                 <Row gutter={24}>
                                     {/* 选择应用 */}
                                     <Col span={12}>
@@ -204,11 +223,13 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             label="字段映射"
                                         >
                                             <Skeleton loading={loading} active>
-                                                <FieldMappingTable
-                                                    fieldMappings={fieldMappings}
-                                                    handleUpdateFieldMappings={handleUpdateFieldMappings}
-                                                    loading={loading}
-                                                />
+                                                {
+                                                    !loading && <FieldMappingTable
+                                                        fieldMappings={fieldMappings}
+                                                        handleUpdateFieldMappings={handleUpdateFieldMappings}
+                                                        loading={loading}
+                                                    />
+                                                }
                                             </Skeleton>
                                         </ProFormItem>
                                     </Col>
