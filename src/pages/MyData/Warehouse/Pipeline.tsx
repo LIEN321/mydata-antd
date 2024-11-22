@@ -236,7 +236,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                             </Space>
                                                         }
                                                     >
-
+                                                        下次执行：{pipeline.nextFireTime || '--'}
                                                     </Card>
                                                 ))
                                             }
