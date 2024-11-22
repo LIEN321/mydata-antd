@@ -149,6 +149,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
         const newTask = TASK_TEMPLATE[type as TaskKey] as TaskItem;
         newTasks.splice(index, 0, newTask as TaskItem);
         newTask.key = newTasks.length - 1;
+        newTask.taskConfig = {};
         setTask(newTask)
         setTasks(newTasks);
         props.setTasks(newTasks);
