@@ -132,6 +132,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                 width={"90%"}
                 title={`流水线管理 - ${project.projectName}`}
                 submitter={false}
+                drawerProps={{ extra: <Button onClick={loadPipelineGroups}>刷新</Button> }}
             >
                 <Skeleton loading={loading} active>
                     <Row
