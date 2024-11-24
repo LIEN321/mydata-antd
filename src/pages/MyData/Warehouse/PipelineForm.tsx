@@ -142,7 +142,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                         name="endTime"
                                         allowClear={false}
                                         fieldProps={{ format: "HH:mm", needConfirm: false }}
-                                        initialValue={"00:00"}
+                                        initialValue={"23:59"}
                                         rules={[{ required: true, message: "请选择结束时间" }]}
                                     />
                                 </Row>
