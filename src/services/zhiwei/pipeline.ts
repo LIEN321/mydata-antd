@@ -54,6 +54,20 @@ export async function deletePipeline(
   });
 }
 
+/** 执行流水线 GET /pipeline/execute/${param0} */
+export async function executePipeline(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.executePipelineParams,
+  options?: { [key: string]: any },
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.RBoolean>(`/api/pipeline/execute/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
 /** 查询所有流水线 GET /pipeline/list */
 export async function pipelineList(options?: { [key: string]: any }) {
   return request<API.RListPipelineVO>(`/api/pipeline/list`, {
@@ -73,6 +87,20 @@ export async function pipelinePage(
     params: {
       ...params,
     },
+    ...(options || {}),
+  });
+}
+
+/** 停止流水线 GET /pipeline/stop/${param0} */
+export async function stopPipeline(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.stopPipelineParams,
+  options?: { [key: string]: any },
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.RBoolean>(`/api/pipeline/stop/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
     ...(options || {}),
   });
 }

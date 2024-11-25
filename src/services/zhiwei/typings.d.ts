@@ -298,6 +298,11 @@ declare namespace API {
     id: number;
   };
 
+  type deletePipelineHistoryParams = {
+    /** 记录id */
+    id: number;
+  };
+
   type deletePipelineParams = {
     /** 记录id */
     id: number;
@@ -484,6 +489,10 @@ declare namespace API {
     javaCodePath?: string;
     /** 最后一次生成ui代码的路径 */
     uiCodePath?: string;
+  };
+
+  type executePipelineParams = {
+    id: number;
   };
 
   type fieldListParams = {
@@ -724,6 +733,39 @@ declare namespace API {
     pipelines?: PipelineVO[];
   };
 
+  type pipelineHistoryDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type pipelineHistoryPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PipelineHistoryVO = {
+    /** id */
+    id?: number;
+    /** 所属流水线 */
+    pipelineId?: number;
+    /** 开始时间 */
+    startTime?: string;
+    /** 结束时间 */
+    endTime?: string;
+    /** 耗时秒数 */
+    executionTime?: number;
+    /** 触发方式 */
+    triggerType?: number;
+    /** 流水线参数 */
+    pipelineVars?: string;
+    /** 执行状态 */
+    executionStatus?: number;
+  };
+
   type pipelinePageParams = {
     /** 当前页数 */
     current?: number;
@@ -823,6 +865,7 @@ declare namespace API {
     tasks?: PipelineTaskVO[];
     /** 下次执行时间 */
     nextFireTime?: string;
+    latestHistory?: PipelineHistoryVO;
   };
 
   type PListAppApiVO = {
@@ -919,6 +962,23 @@ declare namespace API {
     message?: string;
     /** 响应数据 */
     data?: PipelineGroupVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListPipelineHistoryVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: PipelineHistoryVO[];
     /** 当前页数 */
     current?: number;
     /** 每页记录数量 */
@@ -1279,6 +1339,17 @@ declare namespace API {
     data?: PipelineGroupVO[];
   };
 
+  type RListPipelineHistoryVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: PipelineHistoryVO[];
+  };
+
   type RListPipelineTaskVO = {
     /** 响应状态码 */
     code?: number;
@@ -1448,6 +1519,16 @@ declare namespace API {
     data?: PipelineGroupVO;
   };
 
+  type RPipelineHistoryVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: PipelineHistoryVO;
+  };
+
   type RPipelineTaskVO = {
     /** 响应状态码 */
     code?: number;
@@ -1545,6 +1626,10 @@ declare namespace API {
     label?: string;
     /** 选项值 */
     value?: string;
+  };
+
+  type stopPipelineParams = {
+    id: number;
   };
 
   type sysApiDetailParams = {
