@@ -122,7 +122,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
 
     const pipelineStatusIcons = [
         <></>
-        , <LoadingOutlined style={{ color: token.blue }} title="执行中"/>
+        , <LoadingOutlined style={{ color: token.blue }} title="执行中" />
         , <StopOutlined style={{ color: token.colorWarning }} title="手动停止" />
         , <CheckOutlined style={{ color: token.colorSuccess }} title="执行成功" />
         , <StopOutlined style={{ color: token.colorError }} title="执行失败" />
@@ -253,30 +253,37 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                             </Dropdown>
                                                         ]}
                                                         extra={
-                                                            <>
-                                                                {pipeline.latestHistory && pipelineStatusIcons[pipeline.latestHistory.executionStatus || 0]}
-                                                            </>
+                                                            <Space>
+                                                                <HourglassTwoTone
+                                                                    title={`定时：${pipeline.isSchedule ? pipeline.intervalTime : '未启用'}`}
+                                                                    twoToneColor={pipeline.isSchedule ? token.green : token.colorBorder}
+                                                                    style={{ cursor: 'pointer' }}
+                                                                />
+                                                                <ApiTwoTone
+                                                                    title={`Webhook：${pipeline.isWebhook ? '已启用' : '未启用'}`}
+                                                                    twoToneColor={pipeline.isWebhook ? token.green : token.colorBorder}
+                                                                    style={{ cursor: 'pointer' }}
+                                                                />
+                                                            </Space>
                                                         }
                                                     >
                                                         <Row>
-                                                            <Col span={18}>上次开始：{pipeline.latestHistory ? pipeline.latestHistory.startTime : '--'}</Col>
-                                                            <Col span={6} style={{ textAlign: "right" }}>耗时：{pipeline.latestHistory && pipeline.latestHistory.executionTime ? pipeline.latestHistory.executionTime + 's' : '--'}</Col>
+                                                            <Col span={18}>
+                                                                最近执行：{pipeline.latestHistory ? pipeline.latestHistory.startTime : '--'}
+                                                            </Col>
+                                                            <Col span={1}>
+                                                                {pipeline.latestHistory && pipelineStatusIcons[pipeline.latestHistory.executionStatus || 0]}
+                                                            </Col>
+                                                            <Col span={5} style={{ textAlign: "right" }}>
+                                                                耗时：{pipeline.latestHistory && pipeline.latestHistory.executionTime ? pipeline.latestHistory.executionTime + 's' : '--'}
+                                                            </Col>
                                                         </Row>
                                                         <Row>
-                                                            <Col span={20}>下次执行：{pipeline.nextFireTime || '--'}</Col>
+                                                            <Col span={20}>
+                                                                下次执行：{pipeline.nextFireTime || '--'}
+                                                                </Col>
                                                             <Col span={4} style={{ textAlign: "right" }}>
-                                                                <Space>
-                                                                    <HourglassTwoTone
-                                                                        title={`定时：${pipeline.isSchedule ? pipeline.intervalTime : '未启用'}`}
-                                                                        twoToneColor={pipeline.isSchedule ? token.green : token.colorBorder}
-                                                                        style={{ cursor: 'pointer' }}
-                                                                    />
-                                                                    <ApiTwoTone
-                                                                        title={`Webhook：${pipeline.isWebhook ? '已启用' : '未启用'}`}
-                                                                        twoToneColor={pipeline.isWebhook ? token.green : token.colorBorder}
-                                                                        style={{ cursor: 'pointer' }}
-                                                                    />
-                                                                </Space>
+
                                                             </Col>
                                                         </Row>
                                                     </Card>
