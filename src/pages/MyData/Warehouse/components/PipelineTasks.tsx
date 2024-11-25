@@ -30,6 +30,8 @@ export type TaskItem = {
     key: any;
     /** id */
     id?: number;
+    /** 所属项目 */
+    projectId?: number;
     /** 所属流水线 */
     pipelineId?: number;
     /** 任务类型 */
@@ -44,6 +46,8 @@ export type TaskItem = {
     dataId?: number;
     /** 任务配置 */
     taskConfig: Record<string, any>;
+    /** 数据仓库名称 */
+    warehouse?: string;
 };
 
 const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
@@ -150,6 +154,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
         newTasks.splice(index, 0, newTask as TaskItem);
         newTask.key = newTasks.length - 1;
         newTask.taskConfig = {};
+        newTask.projectId = props.projectId;
         setTask(newTask)
         setTasks(newTasks);
         props.setTasks(newTasks);

@@ -795,6 +795,8 @@ declare namespace API {
     dataId?: number;
     /** 任务配置 */
     taskConfig?: Record<string, any>;
+    /** 数据仓库名称 */
+    warehouse?: string;
   };
 
   type pipelineTaskPageParams = {
@@ -824,6 +826,8 @@ declare namespace API {
     dataId?: number;
     /** 任务配置 */
     taskConfig?: Record<string, any>;
+    /** 数据仓库名称 */
+    warehouse?: string;
   };
 
   type PipelineVO = {

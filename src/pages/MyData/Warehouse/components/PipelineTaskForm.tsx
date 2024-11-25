@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormItem, ProFormSelect, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table } from "antd";
-import { API_GET_DATA, API_SEND_DATA } from "./task";
+import { API_GET_DATA, API_SEND_DATA, SAVE_DATA } from "./task";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTasks";
@@ -235,6 +235,33 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     </Col>
                                 </Row>
                             </>
+                        }
+                        {
+                            // 保存数据
+                            (task.taskType === SAVE_DATA && <>
+                                <Row gutter={24}>
+                                    {/* 仓库名称 */}
+                                    <Col span={12}>
+                                        <ProFormText
+                                            name="warehouse"
+                                            label="仓库名称"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请输入仓库名称！',
+                                                }
+                                            ]}
+                                            fieldProps={{
+                                                onChange: (e) => {
+                                                    task.warehouse = e.target.value;
+                                                    updateTask();
+                                                }
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col span={12}></Col>
+                                </Row>
+                            </>)
                         }
                     </ProForm>
                 </ProCard>
