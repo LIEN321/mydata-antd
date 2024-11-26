@@ -20,6 +20,8 @@ const Project: React.FC = () => {
         },
     ];
 
+    const projectForm = <ProjectForm />;
+
     const tableRef = useRef<ActionType>();
 
     return (
@@ -30,8 +32,8 @@ const Project: React.FC = () => {
                 columns={columns}
 
                 formWidth={400}
-                createForm={ProjectForm}
-                updateForm={ProjectForm}
+                createForm={projectForm}
+                updateForm={projectForm}
 
                 handlePage={projectPage}
                 handleCreate={saveProject}
