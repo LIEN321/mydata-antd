@@ -1,10 +1,11 @@
 import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
-import { ApiTwoTone, CheckOutlined, ClockCircleTwoTone, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HistoryOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined } from "@ant-design/icons";
+import { ApiOutlined, ApiTwoTone, CheckOutlined, ClockCircleOutlined, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HistoryOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined, UserOutlined } from "@ant-design/icons";
 import { DrawerForm, ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space, theme } from "antd";
 import { Fragment, useState } from "react";
 import PipelineForm from "./PipelineForm";
 import { deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
+import { timeAgo } from "@/util/DateUtil";
 
 export type PipelineProp = {
     project: API.ProjectVO;
@@ -120,12 +121,21 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         }
     };
 
+    // 流水线状态图标
     const pipelineStatusIcons = [
         <></>
         , <LoadingOutlined style={{ color: token.blue }} title="执行中" />
         , <StopOutlined style={{ color: token.colorWarning }} title="手动停止" />
         , <CheckOutlined style={{ color: token.colorSuccess }} title="执行成功" />
         , <StopOutlined style={{ color: token.colorError }} title="执行失败" />
+    ];
+
+    // 流水线触发类型图标
+    const pipelineTriggerIcons = [
+        <></>
+        , <UserOutlined title="手动执行" />
+        , <ClockCircleOutlined title="定时任务" />
+        , <ApiOutlined title="webhook触发" />
     ];
 
     return (
@@ -218,7 +228,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                         actions={[
                                                             (
                                                                 (pipeline.latestHistory && pipeline.latestHistory.executionStatus == 1) ?
-                                                                    <PauseOutlined title="停止" onClick={async () => {
+                                                                    <Popconfirm title="确认停止吗？" onConfirm={async () => {
                                                                         if (pipeline.id) {
                                                                             // 暂停执行
                                                                             const response = await stopPipeline({ id: pipeline.id });
@@ -226,9 +236,11 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                                 loadPipelineGroups();
                                                                             }
                                                                         }
-                                                                    }} />
+                                                                    }}>
+                                                                        <PauseOutlined title="停止" />
+                                                                    </Popconfirm>
                                                                     :
-                                                                    <PlayCircleOutlined title="执行" onClick={async () => {
+                                                                    <Popconfirm title="确认执行吗？" onConfirm={async () => {
                                                                         if (pipeline.id) {
                                                                             // 手动执行
                                                                             const response = await executePipeline({ id: pipeline.id });
@@ -236,8 +248,9 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                                 loadPipelineGroups();
                                                                             }
                                                                         }
-                                                                    }}
-                                                                    />
+                                                                    }}>
+                                                                        <PlayCircleOutlined title="执行" />
+                                                                    </Popconfirm>
                                                             )
                                                             , <HistoryOutlined />
                                                             , <StarOutlined />
@@ -257,31 +270,38 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                 <HourglassTwoTone
                                                                     title={`定时：${pipeline.isSchedule ? pipeline.intervalTime : '未启用'}`}
                                                                     twoToneColor={pipeline.isSchedule ? token.green : token.colorBorder}
-                                                                    style={{ cursor: 'pointer' }}
+                                                                    style={{ cursor: "help" }}
                                                                 />
                                                                 <ApiTwoTone
                                                                     title={`Webhook：${pipeline.isWebhook ? '已启用' : '未启用'}`}
                                                                     twoToneColor={pipeline.isWebhook ? token.green : token.colorBorder}
-                                                                    style={{ cursor: 'pointer' }}
+                                                                    style={{ cursor: 'help' }}
                                                                 />
                                                             </Space>
                                                         }
                                                     >
                                                         <Row>
-                                                            <Col span={18}>
-                                                                最近执行：{pipeline.latestHistory ? pipeline.latestHistory.startTime : '--'}
+                                                            <Col span={12}>
+                                                                最近执行：{pipeline.latestHistory ? <span title={pipeline.latestHistory.startTime}>{timeAgo(pipeline.latestHistory.startTime || '')}</span> : '--'}
                                                             </Col>
-                                                            <Col span={1}>
-                                                                {pipeline.latestHistory && pipelineStatusIcons[pipeline.latestHistory.executionStatus || 0]}
-                                                            </Col>
-                                                            <Col span={5} style={{ textAlign: "right" }}>
+                                                            <Col span={8} style={{ textAlign: "center" }}>
                                                                 耗时：{pipeline.latestHistory && pipeline.latestHistory.executionTime ? pipeline.latestHistory.executionTime + 's' : '--'}
+                                                            </Col>
+                                                            <Col span={4} style={{ textAlign: "right" }}>
+                                                                <Space>
+                                                                    <span style={{ cursor: "help" }}>
+                                                                        {pipeline.latestHistory && pipelineTriggerIcons[pipeline.latestHistory.triggerType || 0]}
+                                                                    </span>
+                                                                    <span style={{ cursor: "help" }}>
+                                                                        {pipeline.latestHistory && pipelineStatusIcons[pipeline.latestHistory.executionStatus || 0]}
+                                                                    </span>
+                                                                </Space>
                                                             </Col>
                                                         </Row>
                                                         <Row>
                                                             <Col span={20}>
                                                                 下次执行：{pipeline.nextFireTime || '--'}
-                                                                </Col>
+                                                            </Col>
                                                             <Col span={4} style={{ textAlign: "right" }}>
 
                                                             </Col>
