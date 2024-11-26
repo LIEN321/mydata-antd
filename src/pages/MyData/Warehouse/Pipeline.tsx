@@ -2,7 +2,7 @@ import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/ser
 import { ApiOutlined, ApiTwoTone, CheckOutlined, ClockCircleOutlined, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HistoryOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined, UserOutlined } from "@ant-design/icons";
 import { DrawerForm, ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space, theme } from "antd";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import PipelineForm from "./PipelineForm";
 import { deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
 import { timeAgo } from "@/util/DateUtil";
@@ -10,6 +10,8 @@ import { timeAgo } from "@/util/DateUtil";
 export type PipelineProp = {
     project: API.ProjectVO;
 };
+
+const timeout = 2000;
 
 const Pipeline: React.FC<PipelineProp> = (props) => {
     const { useToken } = theme;
@@ -23,6 +25,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
     const [group, setGroup] = useState<API.PipelineGroupVO>({});
     const [pipeline, setPipeline] = useState<API.PipelineVO>({});
     const [loading, setLoading] = useState<boolean>(false);
+    const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
     // 加载分组
     const loadPipelineGroups = async () => {
@@ -38,6 +41,51 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
             message.warning("项目参数无效，请重试...");
         }
     };
+
+    // 只加载分组数据，不使用loading效果
+    const fetchPipelineGroups = async () => {
+        if (project && project.id) {
+            // 查询分组
+            const response = await pipelineGroupList({ projectId: project.id });
+
+            var hasRunningPipeline = false;
+
+            if (response && response.success) {
+                const groups = response.data || [];
+                if (groups.length > 0) {
+                    // 若有运行中的流水线，则自动刷新
+                    for (const group of groups) {
+                        const { pipelines } = group;
+                        if (pipelines && pipelines.length > 0) {
+                            for (const pipeline of pipelines) {
+                                if (pipeline.latestHistory?.executionStatus === 1) {
+                                    hasRunningPipeline = true;
+                                    break;
+                                }
+                            }
+                            if (hasRunningPipeline) {
+                                break;
+                            }
+                        }
+                    }
+                }
+                setGroups(response.data || []);
+            }
+
+            setIsRefreshing(hasRunningPipeline);
+        }
+    };
+
+    useEffect(() => {
+        if (!isRefreshing)
+            return;
+
+        const interval = setInterval(() => {
+            fetchPipelineGroups();
+        }, timeout);
+
+        return () => clearInterval(interval);
+    }, [isRefreshing]);
 
     // 分组的编辑表单内容
     const pipelineGroupForm = <>
@@ -246,6 +294,9 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                             const response = await executePipeline({ id: pipeline.id });
                                                                             if (response.success) {
                                                                                 loadPipelineGroups();
+                                                                                setTimeout(() => {
+                                                                                    setIsRefreshing(true);
+                                                                                }, timeout);
                                                                             }
                                                                         }
                                                                     }}>
