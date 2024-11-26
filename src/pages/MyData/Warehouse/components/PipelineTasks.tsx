@@ -77,10 +77,12 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.WEBHOOK_GET_DATA.taskType,
                     label: TASK_TEMPLATE.WEBHOOK_GET_DATA.taskName,
+                    disabled: true,
                 },
                 {
                     key: TASK_TEMPLATE.API_GET_VAR.taskType,
                     label: TASK_TEMPLATE.API_GET_VAR.taskName,
+                    disabled: true,
                 },
             ],
         },
@@ -96,6 +98,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.QUERY_DATA.taskType,
                     label: TASK_TEMPLATE.QUERY_DATA.taskName,
+                    disabled: true,
                 }
             ],
         },
@@ -107,14 +110,17 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.FILTER_DATA.taskType,
                     label: TASK_TEMPLATE.FILTER_DATA.taskName,
+                    disabled: true,
                 },
                 {
                     key: TASK_TEMPLATE.OPERATE_DATA.taskType,
                     label: TASK_TEMPLATE.OPERATE_DATA.taskName,
+                    disabled: true,
                 },
                 {
                     key: TASK_TEMPLATE.WRITE_EXCEL.taskType,
                     label: TASK_TEMPLATE.WRITE_EXCEL.taskName,
+                    disabled: true,
                 },
             ],
         },
@@ -126,6 +132,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.SEND_EMAIL.taskType,
                     label: TASK_TEMPLATE.SEND_EMAIL.taskName,
+                    disabled: true,
                 }
             ],
         },
@@ -186,7 +193,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
     return (
         <>
             <Splitter>
-                <Splitter.Panel defaultSize={"30%"} min={"30%"} max={"50%"}>
+                <Splitter.Panel defaultSize={"30%"} min={"20%"} max={"50%"}>
                     {/* 左侧任务列表外层Card */}
                     <Card bordered={false} style={{ maxHeight: "70vh" }}>
                         {
@@ -254,7 +261,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                         }
                     </Card>
                 </Splitter.Panel>
-                <Splitter.Panel defaultSize={"70%"} min={"30%"} max={"70%"}>
+                <Splitter.Panel defaultSize={"70%"}>
                     {task && <PipelineTaskForm task={task} updateTask={updateTask} projectId={props.projectId} />}
                 </Splitter.Panel>
             </Splitter >
