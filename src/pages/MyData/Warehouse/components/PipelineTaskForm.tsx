@@ -239,8 +239,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         {
                             // 保存数据
                             (task.taskType === SAVE_DATA && <>
-                                <Row gutter={24}>
-                                    {/* 仓库名称 */}
+                                {/* <Row gutter={24}>
+                                    // 仓库名称
                                     <Col span={12}>
                                         <ProFormText
                                             name="warehouse"
@@ -260,7 +260,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                         />
                                     </Col>
                                     <Col span={12}></Col>
-                                </Row>
+                                </Row> */}
                             </>)
                         }
                     </ProForm>
