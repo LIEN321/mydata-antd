@@ -151,7 +151,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                 label="时间间隔"
                                 name="intervalTime"
                                 allowClear={false}
-                                fieldProps={{ needConfirm: false }}
+                                fieldProps={{ needConfirm: false, showNow: false }}
                                 rules={[{ required: true, message: "请选择时间间隔" }]}
                                 initialValue={"00:15:00"}
                             />
