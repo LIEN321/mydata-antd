@@ -12,7 +12,7 @@ export const SEND_EMAIL = "SEND_EMAIL";
 export const TASK_TEMPLATE = {
     API_GET_DATA: { taskType: API_GET_DATA, taskName: "从API获取数据", },
     API_SEND_DATA: { taskType: API_SEND_DATA, taskName: "向API发送数据", },
-    WEBHOOK_GET_DATA: { taskType: WEBHOOK_GET_DATA, taskName: "解析webhook数据", },
+    WEBHOOK_GET_DATA: { taskType: WEBHOOK_GET_DATA, taskName: "接收webhook数据", },
     API_GET_VAR: { taskType: API_GET_VAR, taskName: "从API获取参数", },
     SAVE_DATA: { taskType: SAVE_DATA, taskName: "保存数据到数仓", },
     QUERY_DATA: { taskType: QUERY_DATA, taskName: "从数仓查询数据", },
