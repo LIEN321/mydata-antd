@@ -132,13 +132,15 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         },
         {
             key: '2',
-            label: '复制(TODO)',
-            icon: <CopyOutlined />
+            label: '复制',
+            icon: <CopyOutlined />,
+            disabled: true,
         },
         {
             key: '3',
-            label: '禁用(TODO)',
-            icon: <StopOutlined />
+            label: '禁用',
+            icon: <StopOutlined />,
+            disabled: true,
         },
         {
             key: 'delete',
