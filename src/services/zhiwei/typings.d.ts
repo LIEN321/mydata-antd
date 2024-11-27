@@ -677,11 +677,11 @@ declare namespace API {
     /** 时区 */
     timeZone?: string;
     /** 是否启用webhook */
-    isWebhook?: number;
+    isWebhook?: boolean;
     /** webhook认证方式 */
-    webhookAuthType?: string;
+    webhookAuthType?: number;
     /** webhook认证参数 */
-    webhookAuthParams?: string;
+    webhookAuthParams?: Record<string, any>;
     /** 是否启用邮件 */
     isEmail?: number;
     /** 邮件通知策略 */
@@ -781,6 +781,8 @@ declare namespace API {
   };
 
   type PipelineTaskDTO = {
+    /** 所属项目 */
+    projectId?: number;
     /** 所属流水线 */
     pipelineId?: number;
     /** 任务类型 */
@@ -812,6 +814,8 @@ declare namespace API {
   type PipelineTaskVO = {
     /** id */
     id?: number;
+    /** 所属项目 */
+    projectId?: number;
     /** 所属流水线 */
     pipelineId?: number;
     /** 任务类型 */
@@ -854,11 +858,11 @@ declare namespace API {
     /** 时区 */
     timeZone?: string;
     /** 是否启用webhook */
-    isWebhook?: number;
+    isWebhook?: boolean;
     /** webhook认证方式 */
-    webhookAuthType?: string;
+    webhookAuthType?: number;
     /** webhook认证参数 */
-    webhookAuthParams?: string;
+    webhookAuthParams?: Record<string, any>;
     /** 是否启用邮件 */
     isEmail?: number;
     /** 邮件通知策略 */
@@ -870,6 +874,8 @@ declare namespace API {
     /** 下次执行时间 */
     nextFireTime?: string;
     latestHistory?: PipelineHistoryVO;
+    /** webhook标识编号 */
+    webhookCode?: string;
   };
 
   type PListAppApiVO = {
