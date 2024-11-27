@@ -36,6 +36,8 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
             if (response && response.success) {
                 setGroups(response.data || []);
                 setLoading(false);
+
+                checkIsRefresh(response.data || []);
             }
         } else {
             message.warning("项目参数无效，请重试...");
@@ -48,32 +50,35 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
             // 查询分组
             const response = await pipelineGroupList({ projectId: project.id });
 
-            var hasRunningPipeline = false;
-
             if (response && response.success) {
                 const groups = response.data || [];
-                if (groups.length > 0) {
-                    // 若有运行中的流水线，则自动刷新
-                    for (const group of groups) {
-                        const { pipelines } = group;
-                        if (pipelines && pipelines.length > 0) {
-                            for (const pipeline of pipelines) {
-                                if (pipeline.latestHistory?.executionStatus === 1) {
-                                    hasRunningPipeline = true;
-                                    break;
-                                }
-                            }
-                            if (hasRunningPipeline) {
-                                break;
-                            }
+                setGroups(response.data || []);
+
+                checkIsRefresh(response.data || []);
+            }
+        }
+    };
+
+    const checkIsRefresh = (groups: API.PipelineGroupVO[]) => {
+        var hasRunningPipeline = false;
+        if (groups.length > 0) {
+            // 若有运行中的流水线，则自动刷新
+            for (const group of groups) {
+                const { pipelines } = group;
+                if (pipelines && pipelines.length > 0) {
+                    for (const pipeline of pipelines) {
+                        if (pipeline.latestHistory?.executionStatus === 1) {
+                            hasRunningPipeline = true;
+                            break;
                         }
                     }
+                    if (hasRunningPipeline) {
+                        break;
+                    }
                 }
-                setGroups(response.data || []);
             }
-
-            setIsRefreshing(hasRunningPipeline);
         }
+        setIsRefreshing(hasRunningPipeline);
     };
 
     useEffect(() => {
@@ -181,9 +186,9 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
     // 流水线触发类型图标
     const pipelineTriggerIcons = [
         <></>
-        , <UserOutlined title="手动执行" />
-        , <ClockCircleOutlined title="定时任务" />
-        , <ApiOutlined title="webhook触发" />
+        , <UserOutlined title="触发：手动执行" />
+        , <ClockCircleOutlined title="触发：定时任务" />
+        , <ApiOutlined title="触发：webhook推送" />
     ];
 
     return (
@@ -319,7 +324,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                         extra={
                                                             <Space>
                                                                 <HourglassTwoTone
-                                                                    title={`定时：${pipeline.isSchedule ? pipeline.intervalTime : '未启用'}`}
+                                                                    title={`定时周期：${pipeline.isSchedule ? pipeline.intervalTime : '未启用'}`}
                                                                     twoToneColor={pipeline.isSchedule ? token.green : token.colorBorder}
                                                                     style={{ cursor: "help" }}
                                                                 />
