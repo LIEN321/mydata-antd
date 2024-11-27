@@ -1,8 +1,10 @@
 import { pipelineDetail, savePipeline } from "@/services/zhiwei/pipeline";
-import { ModalForm, ProFormCheckbox, ProFormItem, ProFormSwitch, ProFormText, ProFormTextArea, ProFormTimePicker } from "@ant-design/pro-components";
-import { Col, message, Row, Tabs, TabsProps } from "antd";
+import { ModalForm, ProFormCheckbox, ProFormItem, ProFormRadio, ProFormSwitch, ProFormText, ProFormTextArea, ProFormTimePicker } from "@ant-design/pro-components";
+import { Button, Col, message, Row, Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTasks from "./components/PipelineTasks";
+import { CopyOutlined } from "@ant-design/icons";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 export type PipelineFormProp = {
     /** 表单显示状态 */
@@ -157,6 +159,150 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                             />
                         </Col>
                     </Row>
+                    <Row gutter={24}>
+                        <Col span={6}></Col>
+                        <Col span={4}>
+                            <ProFormSwitch
+                                label="Webhook"
+                                name="isWebhook"
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <ProFormText
+                                label="Webhook地址"
+                                disabled
+                                fieldProps={{
+                                    addonAfter: (
+                                        <CopyToClipboard
+                                            text={`https://api.mydata.work/webhook/${pipeline.id}/${pipeline.webhookCode}`}
+                                            onCopy={() => {
+                                                message.success('拷贝成功');
+                                            }}
+                                        >
+                                            <Button type="text" size="small" disabled={false} icon={<CopyOutlined />} />
+                                        </CopyToClipboard>
+                                    ),
+                                    value: `https://api.mydata.work/webhook/${pipeline.id}/${pipeline.webhookCode}`,
+                                }}
+                            />
+                            <ProFormRadio.Group
+                                radioType="button"
+                                label="认证方式"
+                                name="webhookAuthType"
+                                rules={[{ required: false, message: "请选择认证方式" }]}
+                                options={[
+                                    { label: "无", value: 0 }
+                                    , { label: "API Key", value: 1 }
+                                    , { label: "Basic Auth", value: 2 }
+                                    // , { label: "HMAC", value: 3 }
+                                ]}
+                                initialValue={0}
+                                fieldProps={{
+                                    onChange: (e) => {
+                                        const updatePipeline = { ...pipeline, webhookAuthType: e.target.value };
+                                        setPipeline(updatePipeline);
+                                    }
+                                }}
+                            />
+                            <Row gutter={24}>
+                                <Col span={2}></Col>
+                                {pipeline.webhookAuthType === 1 &&
+                                    <>
+                                        <Col span={10}>
+                                            <ProFormText label="Header Key"
+                                                fieldProps={{
+                                                    onChange: (e) => {
+                                                        const webhookAuthParams = { ...pipeline.webhookAuthParams };
+                                                        if(!webhookAuthParams.ApiKey){
+                                                            webhookAuthParams.ApiKey = {};
+                                                        }
+                                                        webhookAuthParams.ApiKey.key = e.target.value;
+                                                        const updatePipeline = { ...pipeline, webhookAuthParams };
+                                                        setPipeline(updatePipeline);
+                                                    },
+                                                    value: pipeline.webhookAuthParams && pipeline.webhookAuthParams.ApiKey?.key,
+                                                }}
+                                            />
+                                        </Col>
+                                        <Col span={10}>
+                                            <ProFormText label="Header Value"
+                                                fieldProps={{
+                                                    onChange: (e) => {
+                                                        const webhookAuthParams = { ...pipeline.webhookAuthParams };
+                                                        if(!webhookAuthParams.ApiKey){
+                                                            webhookAuthParams.ApiKey = {};
+                                                        }
+                                                        webhookAuthParams.ApiKey.value = e.target.value;
+                                                        const updatePipeline = { ...pipeline, webhookAuthParams };
+                                                        setPipeline(updatePipeline);
+                                                    },
+                                                    value: pipeline.webhookAuthParams && pipeline.webhookAuthParams.ApiKey?.value,
+                                                }}
+                                            />
+                                        </Col>
+                                    </>
+                                }
+                                {pipeline.webhookAuthType === 2 &&
+                                    <>
+                                        <Col span={10}>
+                                            <ProFormText label="Username"
+                                                fieldProps={{
+                                                    onChange: (e) => {
+                                                        const webhookAuthParams = { ...pipeline.webhookAuthParams };
+                                                        if(!webhookAuthParams.BasicAuth){
+                                                            webhookAuthParams.BasicAuth = {};
+                                                        }
+                                                        webhookAuthParams.BasicAuth.username = e.target.value;
+                                                        const updatePipeline = { ...pipeline, webhookAuthParams };
+                                                        setPipeline(updatePipeline);
+                                                    },
+                                                    value: pipeline.webhookAuthParams && pipeline.webhookAuthParams.BasicAuth?.username,
+                                                }}
+                                            />
+                                        </Col>
+                                        <Col span={10}>
+                                            <ProFormText label="Password"
+                                                fieldProps={{
+                                                    onChange: (e) => {
+                                                        const webhookAuthParams = { ...pipeline.webhookAuthParams };
+                                                        if(!webhookAuthParams.BasicAuth){
+                                                            webhookAuthParams.BasicAuth = {};
+                                                        }
+                                                        webhookAuthParams.BasicAuth.password = e.target.value;
+                                                        const updatePipeline = { ...pipeline, webhookAuthParams };
+                                                        setPipeline(updatePipeline);
+                                                    },
+                                                    value: pipeline.webhookAuthParams && pipeline.webhookAuthParams.BasicAuth?.password,
+                                                }}
+                                            />
+                                        </Col>
+                                    </>
+                                }
+                                {pipeline.webhookAuthType === 3 &&
+                                    <>
+                                        <Col span={20}>
+                                            <Row gutter={24}>
+                                                <Col span={12}>
+                                                    <ProFormText label="Algorithm" />
+                                                </Col>
+                                                <Col span={12}>
+                                                    <ProFormText label="Encoding" />
+                                                </Col>
+                                            </Row>
+                                            <Row gutter={24}>
+                                                <Col span={12}>
+                                                    <ProFormText label="Signature Header Key" />
+                                                </Col>
+                                                <Col span={12}>
+                                                    <ProFormText label="Password" />
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                    </>
+                                }
+                            </Row>
+                        </Col>
+                    </Row>
                 </>
             },);
     }
@@ -189,6 +335,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                     params.projectId = props.projectId;
                     params.groupId = props.groupId;
                     params.tasks = tasks;
+                    params.webhookAuthParams = pipeline.webhookAuthParams;
 
                     const response = await savePipeline(params);
                     hide();
