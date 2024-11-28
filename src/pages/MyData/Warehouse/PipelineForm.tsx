@@ -174,7 +174,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                 fieldProps={{
                                     addonAfter: (
                                         <CopyToClipboard
-                                            text={`https://api.mydata.work/webhook/${pipeline.id}/${pipeline.webhookCode}`}
+                                            text={`https://api.mydata.work/pipeline/${pipeline.id}/webhook/${pipeline.webhookCode}`}
                                             onCopy={() => {
                                                 message.success('拷贝成功');
                                             }}
@@ -182,7 +182,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                             <Button type="text" size="small" disabled={false} icon={<CopyOutlined />} />
                                         </CopyToClipboard>
                                     ),
-                                    value: `https://api.mydata.work/webhook/${pipeline.id}/${pipeline.webhookCode}`,
+                                    value: `https://api.mydata.work/pipeline/${pipeline.id}/webhook/${pipeline.webhookCode}`,
                                 }}
                             />
                             <ProFormRadio.Group
