@@ -12,7 +12,7 @@ export type PipelineProp = {
     project: API.ProjectVO;
 };
 
-const timeout = 2000;
+const timeout = 3000;
 
 const Pipeline: React.FC<PipelineProp> = (props) => {
     const { useToken } = theme;
