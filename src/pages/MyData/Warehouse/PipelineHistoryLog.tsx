@@ -25,6 +25,15 @@ const PipelineHistoryLog: React.FC = () => {
             if (response.success) {
                 const logs = response.data || [];
                 setLogs(logs);
+                if (logs.length > 0) {
+                    setLog(logs[0]);
+                    for (const l of logs) {
+                        if (l.executionStatus === 1) {
+                            setLog(l);
+                            break;
+                        }
+                    }
+                }
 
                 checkIsRefresh(logs);
             }
