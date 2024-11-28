@@ -6,6 +6,7 @@ import { Fragment, useEffect, useState } from "react";
 import PipelineForm from "./PipelineForm";
 import { deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
 import { timeAgo } from "@/util/DateUtil";
+import PipelineHistory from "./PipelineHistory";
 
 export type PipelineProp = {
     project: API.ProjectVO;
@@ -310,7 +311,8 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                         <PlayCircleOutlined title="执行" />
                                                                     </Popconfirm>
                                                             )
-                                                            , <HistoryOutlined />
+                                                            // 查看流水线历史记录
+                                                            , <PipelineHistory pipeline={pipeline}/>
                                                             , <StarOutlined />
                                                             , <Dropdown menu={{
                                                                 items: dropdownItems, onClick: (info) => {

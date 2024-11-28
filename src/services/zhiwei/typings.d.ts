@@ -745,6 +745,7 @@ declare namespace API {
     pageSize?: number;
     /** 记录总数 */
     total?: number;
+    pipelineId: number;
   };
 
   type PipelineHistoryVO = {
