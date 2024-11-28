@@ -26,6 +26,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
     const [group, setGroup] = useState<API.PipelineGroupVO>({});
     const [pipeline, setPipeline] = useState<API.PipelineVO>({});
     const [loading, setLoading] = useState<boolean>(false);
+    // 是否自动刷新
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
     // 加载分组
@@ -53,9 +54,9 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
 
             if (response && response.success) {
                 const groups = response.data || [];
-                setGroups(response.data || []);
+                setGroups(groups);
 
-                checkIsRefresh(response.data || []);
+                checkIsRefresh(groups);
             }
         }
     };
