@@ -89,7 +89,14 @@ const PipelineHistoryLog: React.FC = () => {
                                     boxShadow={l === log}
                                     type="inner"
                                 >
-                                    <Typography.Title level={5}>{statusIcons[l.executionStatus || 0]} {index + 1}. {l.taskName}</Typography.Title>
+                                    <Row>
+                                        <Col span={18}>
+                                            <Typography.Title level={5}>{statusIcons[l.executionStatus || 0]} {index + 1}. {l.taskName}</Typography.Title>
+                                        </Col>
+                                        <Col span={6} style={{ textAlign: "right" }}>
+                                            {l.executionTime ? l.executionTime + 's' : '--'}
+                                        </Col>
+                                    </Row>
                                 </ProCard>
                                 {/* 向下箭头连线 */}
                                 {index != (logs.length - 1) && DownwardArrowLine}
