@@ -1,7 +1,8 @@
 import { pipelineHistoryPage } from "@/services/zhiwei/pipelineHistory";
 import { CheckOutlined, HistoryOutlined, LoadingOutlined, StopOutlined } from "@ant-design/icons";
-import { DrawerForm, ProColumns, ProTable } from "@ant-design/pro-components";
+import { ActionType, DrawerForm, ProColumns, ProTable } from "@ant-design/pro-components";
 import { Badge, DatePicker, Form, theme } from "antd";
+import { useRef } from "react";
 
 export type PipelineHistoryProp = {
     /** 流水线 */
@@ -90,8 +91,9 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
                 return statusIcons[entity.executionStatus || 0];
             }
         },
-
     ];
+
+    const tableRef = useRef<ActionType>();
 
     return (
         <>
@@ -100,8 +102,14 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
                 trigger={<HistoryOutlined title="历史记录" />}
                 submitter={false}
                 width={'800'}
+                onOpenChange={(visible) => {
+                    if (visible && tableRef.current) {
+                        tableRef.current.reload();
+                    }
+                }}
             >
                 <ProTable
+                    actionRef={tableRef}
                     columns={columns}
                     request={(params: API.pipelineHistoryPageParams) => {
                         params.pipelineId = pipeline.id || 0;
