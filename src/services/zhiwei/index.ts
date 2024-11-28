@@ -9,6 +9,7 @@ import * as api from './api';
 import * as project from './project';
 import * as pipeline from './pipeline';
 import * as pipelineTask from './pipelineTask';
+import * as pipelineLog from './pipelineLog';
 import * as pipelineGroup from './pipelineGroup';
 import * as parameter from './parameter';
 import * as menu from './menu';
@@ -31,6 +32,7 @@ export default {
   project,
   pipeline,
   pipelineTask,
+  pipelineLog,
   pipelineGroup,
   parameter,
   menu,

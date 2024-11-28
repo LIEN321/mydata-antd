@@ -1,7 +1,7 @@
 import { pipelineHistoryPage } from "@/services/zhiwei/pipelineHistory";
 import { CheckOutlined, HistoryOutlined, LoadingOutlined, StopOutlined } from "@ant-design/icons";
 import { ActionType, DrawerForm, ProColumns, ProTable } from "@ant-design/pro-components";
-import { Badge, DatePicker, Form, theme } from "antd";
+import { Badge, Button, DatePicker, Form, theme } from "antd";
 import { useRef } from "react";
 
 export type PipelineHistoryProp = {
@@ -88,7 +88,17 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
             search: false,
             align: 'center',
             render(_, entity) {
-                return statusIcons[entity.executionStatus || 0];
+                return <Button type="text" onClick={() => {
+                    if (entity.id) {
+                        // 流水线执行记录id
+                        const historyId = entity.id.toString();
+                        // url参数
+                        const query = new URLSearchParams({ historyId }).toString();
+                        window.open(`/mydata/pipeline/history/log?${query}`, '_blank');
+                    }
+                }}>
+                    {statusIcons[entity.executionStatus || 0]}
+                </Button>;
             }
         },
     ];

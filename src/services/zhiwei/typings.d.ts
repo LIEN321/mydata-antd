@@ -303,6 +303,11 @@ declare namespace API {
     id: number;
   };
 
+  type deletePipelineLogParams = {
+    /** 记录id */
+    id: number;
+  };
+
   type deletePipelineParams = {
     /** 记录id */
     id: number;
@@ -767,6 +772,70 @@ declare namespace API {
     executionStatus?: number;
   };
 
+  type pipelineLogDetailParams = {
+    /** 记录id */
+    id: number;
+  };
+
+  type PipelineLogDTO = {
+    id?: number;
+    /** 所属流水线 */
+    pipelineId?: number;
+    /** 所属执行记录 */
+    historyId?: number;
+    /** 任务类型 */
+    taskType?: string;
+    /** 任务名称 */
+    taskName?: string;
+    /** 日志内容 */
+    taskLog?: string;
+    /** 开始时间 */
+    startTime?: string;
+    /** 结束时间 */
+    endTime?: string;
+    /** 耗时 */
+    executionTime?: number;
+    /** 执行状态 */
+    executionStatus?: number;
+  };
+
+  type pipelineLogListParams = {
+    historyId: number;
+  };
+
+  type pipelineLogPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    historyId: number;
+  };
+
+  type PipelineLogVO = {
+    /** id */
+    id?: number;
+    /** 所属流水线 */
+    pipelineId?: number;
+    /** 所属执行记录 */
+    historyId?: number;
+    /** 任务类型 */
+    taskType?: string;
+    /** 任务名称 */
+    taskName?: string;
+    /** 日志内容 */
+    taskLog?: string;
+    /** 开始时间 */
+    startTime?: string;
+    /** 结束时间 */
+    endTime?: string;
+    /** 耗时 */
+    executionTime?: number;
+    /** 执行状态 */
+    executionStatus?: number;
+  };
+
   type pipelinePageParams = {
     /** 当前页数 */
     current?: number;
@@ -990,6 +1059,23 @@ declare namespace API {
     message?: string;
     /** 响应数据 */
     data?: PipelineHistoryVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListPipelineLogVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: PipelineLogVO[];
     /** 当前页数 */
     current?: number;
     /** 每页记录数量 */
@@ -1361,6 +1447,17 @@ declare namespace API {
     data?: PipelineHistoryVO[];
   };
 
+  type RListPipelineLogVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: PipelineLogVO[];
+  };
+
   type RListPipelineTaskVO = {
     /** 响应状态码 */
     code?: number;
@@ -1538,6 +1635,16 @@ declare namespace API {
     /** 响应提示消息 */
     message?: string;
     data?: PipelineHistoryVO;
+  };
+
+  type RPipelineLogVO = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    data?: PipelineLogVO;
   };
 
   type RPipelineTaskVO = {
