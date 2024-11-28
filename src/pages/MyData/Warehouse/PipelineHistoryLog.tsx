@@ -2,7 +2,7 @@ import { pipelineLogList } from "@/services/zhiwei/pipelineLog";
 import { CheckOutlined, ClockCircleOutlined, LoadingOutlined, StopOutlined } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
 import { useLocation } from "@umijs/max";
-import { Card, Col, Row, Splitter, theme, Typography } from "antd";
+import { Card, Col, Input, Row, Splitter, theme, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { DownwardArrowLine } from "./components/task_components/DownwardArrowLine";
 
@@ -114,7 +114,20 @@ const PipelineHistoryLog: React.FC = () => {
                     </Card>
                 </Splitter.Panel>
                 <Splitter.Panel defaultSize={"70%"}>
-
+                    <Input.TextArea
+                        title="流水线日志"
+                        variant="borderless"
+                        style={{
+                            backgroundColor: 'black',
+                            color: token.colorBgBase,
+                            height: '100vh',
+                            overflow: 'auto',
+                            paddingTop: 24,
+                            paddingLeft: 24,
+                        }}
+                        readOnly
+                        value={log?.taskLog}
+                    />
                 </Splitter.Panel>
             </Splitter>
         </>
