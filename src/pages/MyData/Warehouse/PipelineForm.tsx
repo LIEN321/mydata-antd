@@ -105,7 +105,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                 children: <>
                     <Row gutter={24}>
                         <Col span={6}></Col>
-                        <Col span={4}>
+                        <Col span={2}>
                             <ProFormSwitch
                                 label="启用定时"
                                 name="isSchedule"
@@ -161,7 +161,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                     </Row>
                     <Row gutter={24}>
                         <Col span={6}></Col>
-                        <Col span={4}>
+                        <Col span={2}>
                             <ProFormSwitch
                                 label="Webhook"
                                 name="isWebhook"
