@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormItem, ProFormSelect, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table } from "antd";
-import { API_GET_DATA, API_SEND_DATA, SAVE_DATA } from "./task";
+import { API_GET_DATA, API_SEND_DATA, SAVE_DATA, WEBHOOK_GET_DATA } from "./task";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTasks";
@@ -125,8 +125,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             <Col span={12}></Col>
                         </Row>
                         {
-                            // 获取数据 或 发送数据
-                            (task.taskType === API_GET_DATA || task.taskType === API_SEND_DATA) && <>
+                            // ---------------------------------------- 获取数据 、 发送数据 、 解析webhook数据 ----------------------------------------
+                            (task.taskType === API_GET_DATA || task.taskType === API_SEND_DATA || task.taskType === WEBHOOK_GET_DATA) && <>
                                 <Row gutter={24}>
                                     {/* 选择应用 */}
                                     <Col span={12}>
@@ -159,40 +159,42 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             }}
                                         />
                                     </Col>
-                                    {/* 选择API */}
-                                    <Col span={12}>
-                                        <ProFormSelect
-                                            name="apiId"
-                                            label="选择API"
-                                            disabled={!task.appId || task.appId <= 0}
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: '请选择API！',
-                                                }
-                                            ]}
-                                            width={"sm"}
-                                            // 新建API
-                                            addonAfter={<AddApi
-                                                appId={task.appId || 0}
-                                                onSuccess={(newApiId) => {
-                                                    // 重新加载API列表
-                                                    form.resetFields(['apiId']);
-                                                    // 选择新增的API
-                                                    form.setFieldValue('apiId', newApiId);
-                                                    // 更新task的API id
-                                                    task.apiId = newApiId;
+                                    {/* 选择API（排除解析webhook） */}
+                                    {
+                                        task.taskType != WEBHOOK_GET_DATA && <Col span={12}>
+                                            <ProFormSelect
+                                                name="apiId"
+                                                label="选择API"
+                                                disabled={!task.appId || task.appId <= 0}
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message: '请选择API！',
+                                                    }
+                                                ]}
+                                                width={"sm"}
+                                                // 新建API
+                                                addonAfter={<AddApi
+                                                    appId={task.appId || 0}
+                                                    onSuccess={(newApiId) => {
+                                                        // 重新加载API列表
+                                                        form.resetFields(['apiId']);
+                                                        // 选择新增的API
+                                                        form.setFieldValue('apiId', newApiId);
+                                                        // 更新task的API id
+                                                        task.apiId = newApiId;
+                                                        updateTask();
+                                                    }} />}
+                                                // 基于应用Select联动
+                                                dependencies={['appId']}
+                                                request={apiSelect}
+                                                onChange={(apiId: number) => {
+                                                    task.apiId = apiId;
                                                     updateTask();
-                                                }} />}
-                                            // 基于应用Select联动
-                                            dependencies={['appId']}
-                                            request={apiSelect}
-                                            onChange={(apiId: number) => {
-                                                task.apiId = apiId;
-                                                updateTask();
-                                            }}
-                                        />
-                                    </Col>
+                                                }}
+                                            />
+                                        </Col>
+                                    }
                                 </Row>
                                 <Row gutter={24}>
                                     {/* 选择数据 */}
@@ -216,6 +218,32 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     </Col>
                                     <Col span={12}></Col>
                                 </Row>
+                                {
+                                    task.taskType === WEBHOOK_GET_DATA && <Row gutter={24}>
+                                        {/* 字段前缀 */}
+                                        <Col span={12}>
+                                            <ProFormText
+                                                rules={[
+                                                    {
+                                                        required: false,
+                                                        message: "请输入数据层级",
+                                                    }
+                                                ]}
+                                                name="fieldPrefix"
+                                                label="数据层级"
+                                                placeholder="请输入数据层级"
+                                                fieldProps={{
+                                                    onChange:(e) => {
+                                                        task.taskConfig.FIELD_PREFIX = e.target.value;
+                                                        updateTask();
+                                                    },
+                                                    value: task.taskConfig.FIELD_PREFIX,
+                                                }}
+                                            />
+                                        </Col>
+                                        <Col span={12}></Col>
+                                    </Row>
+                                }
                                 <Row gutter={24}>
                                     {/* 字段映射 */}
                                     <Col span={24}>
@@ -237,7 +265,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
-                            // 保存数据
+                            // ---------------------------------------- 保存数据 ----------------------------------------
                             (task.taskType === SAVE_DATA && <>
                                 {/* <Row gutter={24}>
                                     // 仓库名称
