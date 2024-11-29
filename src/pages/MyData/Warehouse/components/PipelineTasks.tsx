@@ -1,6 +1,6 @@
-import { DownCircleFilled, PlusCircleFilled, PlusOutlined, UpCircleFilled } from "@ant-design/icons";
+import { DeleteOutlined, DownCircleFilled, PlusCircleFilled, PlusOutlined, UpCircleFilled } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
-import { Button, Card, Col, Dropdown, MenuProps, Space, Splitter, Typography, theme } from "antd";
+import { Button, Card, Col, Dropdown, MenuProps, Popconfirm, Row, Space, Splitter, Typography, theme } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTaskForm from "./PipelineTaskForm";
 import { TASK_TEMPLATE, TaskKey } from "./task";
@@ -186,6 +186,13 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
         console.info('PipelineTasks.task', task);
     }
 
+    const deleteTask = (index: number) => {
+        const newTasks = [...tasks];
+        newTasks.splice(index, 1);
+        setTasks(newTasks);
+        props.setTasks(newTasks);
+    }
+
     const { token } = useToken();
 
     return (
@@ -234,6 +241,15 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
 
                                         {/* 任务卡片内容 */}
                                         <Typography.Title level={5}>{index + 1}. {t.taskName}</Typography.Title>
+                                        {hoveredCard === index &&
+                                            <div style={{ position: "absolute", right: 0, top: 12, width: 40, height: 50, paddingTop: 10, paddingLeft: 10 }}>
+                                                <Popconfirm title="确认删除吗？" onConfirm={() => {
+                                                    deleteTask(index);
+                                                }}>
+                                                    <Button type="primary" danger icon={<DeleteOutlined />} />
+                                                </Popconfirm>
+                                            </div>
+                                        }
                                         {
                                             Object.keys(t.taskConfig.OUTPUT).length > 0 &&
                                             <>输出：
