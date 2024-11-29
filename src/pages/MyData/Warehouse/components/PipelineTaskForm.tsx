@@ -198,7 +198,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     <Col span={24}>
                                         <ProFormItem label="输出设置" >
                                             <Row gutter={24}>
-                                            <Col span={2}></Col>
+                                                <Col span={2}></Col>
                                                 <Col span={11}>
                                                     <ProFormText
                                                         label="原始JSON的变量名"
@@ -463,28 +463,51 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         {
                             // ---------------------------------------- 保存数据 ----------------------------------------
                             (task.taskType === SAVE_DATA && <>
-                                {/* <Row gutter={24}>
-                                    // 仓库名称
+                                <Row gutter={24}>
+                                    {/* 业务数据的变量名 */}
                                     <Col span={12}>
                                         <ProFormText
-                                            name="warehouse"
-                                            label="仓库名称"
+                                            label="业务数据的变量名"
                                             rules={[
                                                 {
                                                     required: true,
-                                                    message: '请输入仓库名称！',
+                                                    message: '请输入业务数据的变量名！',
                                                 }
                                             ]}
                                             fieldProps={{
                                                 onChange: (e) => {
-                                                    task.warehouse = e.target.value;
+                                                    task.taskConfig.INPUT.BIZ_DATA = e.target.value;
                                                     updateTask();
-                                                }
+                                                },
+                                                value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
                                             }}
                                         />
                                     </Col>
                                     <Col span={12}></Col>
-                                </Row> */}
+                                </Row>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输出设置" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={11}>
+                                                    <ProFormText
+                                                        label="实际保存的数据"
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.OUTPUT.SAVED_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.OUTPUT.SAVED_DATA || "SAVED_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={11}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
                             </>)
                         }
                     </ProForm>
