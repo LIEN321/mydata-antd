@@ -1,6 +1,6 @@
 import { DownCircleFilled, PlusCircleFilled, PlusOutlined, UpCircleFilled } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
-import { Button, Card, Col, Dropdown, MenuProps, Splitter, Typography, theme } from "antd";
+import { Button, Card, Col, Dropdown, MenuProps, Space, Splitter, Typography, theme } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTaskForm from "./PipelineTaskForm";
 import { TASK_TEMPLATE, TaskKey } from "./task";
@@ -56,8 +56,8 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
             label: 'API',
             children: [
                 {
-                    key: TASK_TEMPLATE.API_GET_DATA.taskType,
-                    label: TASK_TEMPLATE.API_GET_DATA.taskName,
+                    key: TASK_TEMPLATE.API_GET_JSON.taskType,
+                    label: TASK_TEMPLATE.API_GET_JSON.taskName,
                 },
                 {
                     key: TASK_TEMPLATE.API_SEND_DATA.taskType,
@@ -148,7 +148,9 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
         const newTask = TASK_TEMPLATE[type as TaskKey] as TaskItem;
         newTasks.splice(index, 0, newTask as TaskItem);
         newTask.key = newTasks.length - 1;
-        newTask.taskConfig = {};
+        if (!newTask.taskConfig) {
+            newTask.taskConfig = { OUTPUT: {} };
+        }
         newTask.projectId = props.projectId;
         setTask(newTask)
         setTasks(newTasks);
@@ -224,6 +226,16 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
 
                                         {/* 任务卡片内容 */}
                                         <Typography.Title level={5}>{index + 1}. {t.taskName}</Typography.Title>
+                                        {
+                                            Object.keys(t.taskConfig.OUTPUT).length > 0 &&
+                                            <>输出：
+                                                <Space>
+                                                    {Object.keys(t.taskConfig.OUTPUT).map((key) => {
+                                                        return <>{t.taskConfig.OUTPUT[key]}</>
+                                                    })}
+                                                </Space>
+                                            </>
+                                        }
 
                                         {/* 卡片下方添加图标 */}
                                         {
