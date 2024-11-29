@@ -140,6 +140,13 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                 task.key = index;
                 if (!task.taskConfig) {
                     task.taskConfig = {};
+                } else {
+                    if (!task.taskConfig.INPUT) {
+                        task.taskConfig.INPUT = {};
+                    }
+                    if (!task.taskConfig.OUTPUT) {
+                        task.taskConfig.OUTPUT = {};
+                    }
                 }
             });
         }
@@ -149,12 +156,9 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
     // const handleDropdownClick: MenuProps['onClick'] = (info) => {
     const handleDropdownClick = (index: number, type: string) => {
         const newTasks = [...tasks];
-        const newTask = TASK_TEMPLATE[type as TaskKey] as TaskItem;
+        const newTask = TASK_TEMPLATE[type as TaskKey] as unknown as TaskItem;
         newTasks.splice(index, 0, newTask as TaskItem);
         newTask.key = newTasks.length - 1;
-        if (!newTask.taskConfig) {
-            newTask.taskConfig = { OUTPUT: {} };
-        }
         newTask.projectId = props.projectId;
         setTask(newTask)
         setTasks(newTasks);
