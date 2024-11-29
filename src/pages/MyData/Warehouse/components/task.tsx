@@ -1,4 +1,4 @@
-export const API_GET_DATA = "API_GET_DATA";
+export const API_GET_JSON = "API_GET_JSON";
 export const API_SEND_DATA = "API_SEND_DATA";
 export const WEBHOOK_GET_DATA = "WEBHOOK_GET_DATA";
 export const API_GET_VAR = "API_GET_VAR";
@@ -10,7 +10,7 @@ export const WRITE_EXCEL = "WRITE_EXCEL";
 export const SEND_EMAIL = "SEND_EMAIL";
 
 export const TASK_TEMPLATE = {
-    API_GET_DATA: { taskType: API_GET_DATA, taskName: "从API获取数据", },
+    API_GET_JSON: { taskType: API_GET_JSON, taskName: "从API获取JSON", taskConfig: { OUTPUT: { ORIGIN_JSON: "ORIGIN_JSON", DATA_JSON: "DATA_JSON" } } },
     API_SEND_DATA: { taskType: API_SEND_DATA, taskName: "向API发送数据", },
     WEBHOOK_GET_DATA: { taskType: WEBHOOK_GET_DATA, taskName: "接收webhook数据", },
     API_GET_VAR: { taskType: API_GET_VAR, taskName: "从API获取参数", },
