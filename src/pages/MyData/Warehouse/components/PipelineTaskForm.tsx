@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormItem, ProFormSelect, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table } from "antd";
-import { API_GET_JSON, API_SEND_DATA, SAVE_DATA, WEBHOOK_GET_DATA } from "./task";
+import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, WEBHOOK_GET_DATA } from "./task";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTasks";
@@ -125,7 +125,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             <Col span={12}></Col>
                         </Row>
                         {
-                            // ##### 调用API获取JSON #####
+                            // ---------------------------------------- API: 调用API获取JSON ----------------------------------------
                             (task.taskType === API_GET_JSON) && <>
                                 <Row gutter={24}>
                                     {/* 选择应用 */}
@@ -230,7 +230,97 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
-                            // ---------------------------------------- 获取数据 、 发送数据 、 解析webhook数据 ----------------------------------------
+                            // ---------------------------------------- DATA: JSON转业务数据 ----------------------------------------
+                            (task.taskType === JSON_TO_DATA) && <>
+                                <Row gutter={24}>
+                                    {/* JSON变量名 */}
+                                    <Col span={12}>
+                                        <ProFormText
+                                            label="JSON变量名"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请输入JSON变量名！',
+                                                }
+                                            ]}
+                                            fieldProps={{
+                                                onChange: (e) => {
+                                                    task.taskConfig.INPUT.DATA_JSON = e.target.value;
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col span={12}></Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    {/* 选择数据 */}
+                                    <Col span={12}>
+                                        <ProFormSelect
+                                            name="dataId"
+                                            label="选择数据"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请选择数据！',
+                                                }
+                                            ]}
+                                            request={() => { return dataSelect({ projectId: props.projectId }); }}
+                                            onChange={(dataId: number) => {
+                                                loadDataFields(dataId);
+                                                task.dataId = dataId;
+                                                updateTask();
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col span={12}></Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    {/* 字段映射 */}
+                                    <Col span={24}>
+                                        <ProFormItem
+                                            label="字段映射"
+                                        >
+                                            <Skeleton loading={loading} active>
+                                                {
+                                                    !loading && <FieldMappingTable
+                                                        fieldMappings={fieldMappings}
+                                                        handleUpdateFieldMappings={handleUpdateFieldMappings}
+                                                        loading={loading}
+                                                    />
+                                                }
+                                            </Skeleton>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输出设置" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={11}>
+                                                    <ProFormText
+                                                        label="业务数据的变量名"
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.OUTPUT.BIZ_DATA || "BIZ_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={11}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+                        {
+                            // ---------------------------------------- 发送数据 、 解析webhook数据 ----------------------------------------
                             (task.taskType === API_SEND_DATA || task.taskType === WEBHOOK_GET_DATA) && <>
                                 <Row gutter={24}>
                                     {/* 选择应用 */}
