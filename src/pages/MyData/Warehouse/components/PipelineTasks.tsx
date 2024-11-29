@@ -75,26 +75,14 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
             ],
         },
         {
-            key: 'group_warehouse',
-            type: 'group',
-            label: '数据仓库',
-            children: [
-                {
-                    key: TASK_TEMPLATE.SAVE_DATA.taskType,
-                    label: TASK_TEMPLATE.SAVE_DATA.taskName,
-                },
-                {
-                    key: TASK_TEMPLATE.QUERY_DATA.taskType,
-                    label: TASK_TEMPLATE.QUERY_DATA.taskName,
-                    disabled: true,
-                }
-            ],
-        },
-        {
             key: 'group_data',
             type: 'group',
             label: '数据处理',
             children: [
+                {
+                    key: TASK_TEMPLATE.JSON_TO_DATA.taskType,
+                    label: TASK_TEMPLATE.JSON_TO_DATA.taskName,
+                },
                 {
                     key: TASK_TEMPLATE.FILTER_DATA.taskType,
                     label: TASK_TEMPLATE.FILTER_DATA.taskName,
@@ -110,6 +98,22 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                     label: TASK_TEMPLATE.WRITE_EXCEL.taskName,
                     disabled: true,
                 },
+            ],
+        },
+        {
+            key: 'group_warehouse',
+            type: 'group',
+            label: '数据仓库',
+            children: [
+                {
+                    key: TASK_TEMPLATE.SAVE_DATA.taskType,
+                    label: TASK_TEMPLATE.SAVE_DATA.taskName,
+                },
+                {
+                    key: TASK_TEMPLATE.QUERY_DATA.taskType,
+                    label: TASK_TEMPLATE.QUERY_DATA.taskName,
+                    disabled: true,
+                }
             ],
         },
         {
