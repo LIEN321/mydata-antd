@@ -241,12 +241,13 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
 
                                         {/* 任务卡片内容 */}
                                         <Typography.Title level={5}>{index + 1}. {t.taskName}</Typography.Title>
+                                        {/* 删除任务 */}
                                         {hoveredCard === index &&
                                             <div style={{ position: "absolute", right: 0, top: 12, width: 40, height: 50, paddingTop: 10, paddingLeft: 10 }}>
                                                 <Popconfirm title="确认删除吗？" onConfirm={() => {
                                                     deleteTask(index);
                                                 }}>
-                                                    <Button type="primary" danger icon={<DeleteOutlined />} />
+                                                    <Button type="text" icon={<DeleteOutlined />} />
                                                 </Popconfirm>
                                             </div>
                                         }
