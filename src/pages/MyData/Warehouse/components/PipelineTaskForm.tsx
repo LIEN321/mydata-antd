@@ -199,7 +199,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                         <ProFormItem label="输出设置" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
-                                                <Col span={11}>
+                                                <Col span={10}>
                                                     <ProFormText
                                                         label="原始JSON的变量名"
                                                         fieldProps={{
@@ -211,7 +211,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         }}
                                                     />
                                                 </Col>
-                                                <Col span={11}>
+                                                <Col span={10}>
                                                     <ProFormText
                                                         label="数据JSON的变量名"
                                                         fieldProps={{
@@ -442,7 +442,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                         <ProFormItem label="输出设置" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
-                                                <Col span={11}>
+                                                <Col span={10}>
                                                     <ProFormText
                                                         label="业务数据的变量名"
                                                         fieldProps={{
@@ -454,7 +454,9 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         }}
                                                     />
                                                 </Col>
-                                                <Col span={11}>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
                                                 </Col>
                                             </Row>
                                         </ProFormItem>
@@ -464,7 +466,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         }
                         {
                             // ---------------------------------------- 发送数据 、 解析webhook数据 ----------------------------------------
-                            (task.taskType === API_SEND_DATA || task.taskType === WEBHOOK_GET_DATA) && <>
+                            (task.taskType === WEBHOOK_GET_DATA) && <>
                                 <Row gutter={24}>
                                     {/* 选择应用 */}
                                     <Col span={12}>
@@ -633,7 +635,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                         <ProFormItem label="输出设置" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
-                                                <Col span={11}>
+                                                <Col span={10}>
                                                     <ProFormText
                                                         label="实际保存的数据"
                                                         fieldProps={{
@@ -645,7 +647,9 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         }}
                                                     />
                                                 </Col>
-                                                <Col span={11}>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
                                                 </Col>
                                             </Row>
                                         </ProFormItem>
@@ -654,7 +658,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>)
                         }
                     </ProForm>
-                </ProCard>
+                </ProCard >
             }
         </>
     );
