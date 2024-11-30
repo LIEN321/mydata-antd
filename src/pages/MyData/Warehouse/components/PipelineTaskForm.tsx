@@ -230,6 +230,149 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
+                            // ---------------------------------------- API: 调用API发送数据 ----------------------------------------
+                            (task.taskType === API_SEND_DATA) && <>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输入设置" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    {/* 业务数据变量 */}
+                                                    <ProFormText
+                                                        label="业务数据变量名"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: '请输入业务数据变量名！',
+                                                            }
+                                                        ]}
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    {/* 选择应用 */}
+                                    <Col span={12}>
+                                        <ProFormSelect
+                                            name="appId"
+                                            label="选择应用"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请选择应用！',
+                                                }
+                                            ]}
+                                            width={"sm"}
+                                            // 新建应用
+                                            addonAfter={<AddApp onSuccess={(newAppId) => {
+                                                // 重新加载应用列表
+                                                form.resetFields(['appId']);
+                                                // 选择新增的应用
+                                                form.setFieldValue('appId', newAppId);
+                                                // 更新task的应用id
+                                                task.appId = newAppId;
+                                                updateTask();
+                                            }} />}
+                                            addonWarpStyle={{ width: "100%" }}
+                                            request={appSelect}
+                                            onChange={(appId: number) => {
+                                                task.appId = appId;
+                                                updateTask();
+                                                form.setFieldValue('apiId', undefined);
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col span={12}>
+                                        <ProFormSelect
+                                            name="apiId"
+                                            label="选择API"
+                                            disabled={!task.appId || task.appId <= 0}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请选择API！',
+                                                }
+                                            ]}
+                                            width={"sm"}
+                                            // 新建API
+                                            addonAfter={<AddApi
+                                                appId={task.appId || 0}
+                                                onSuccess={(newApiId) => {
+                                                    // 重新加载API列表
+                                                    form.resetFields(['apiId']);
+                                                    // 选择新增的API
+                                                    form.setFieldValue('apiId', newApiId);
+                                                    // 更新task的API id
+                                                    task.apiId = newApiId;
+                                                    updateTask();
+                                                }} />}
+                                            // 基于应用Select联动
+                                            dependencies={['appId']}
+                                            request={apiSelect}
+                                            onChange={(apiId: number) => {
+                                                task.apiId = apiId;
+                                                updateTask();
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    {/* 选择数据 */}
+                                    <Col span={12}>
+                                        <ProFormSelect
+                                            name="dataId"
+                                            label="选择数据"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请选择数据！',
+                                                }
+                                            ]}
+                                            request={() => { return dataSelect({ projectId: props.projectId }); }}
+                                            onChange={(dataId: number) => {
+                                                loadDataFields(dataId);
+                                                task.dataId = dataId;
+                                                updateTask();
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col span={12}></Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    {/* 字段映射 */}
+                                    <Col span={24}>
+                                        <ProFormItem
+                                            label="字段映射"
+                                        >
+                                            <Skeleton loading={loading} active>
+                                                {
+                                                    !loading && <FieldMappingTable
+                                                        fieldMappings={fieldMappings}
+                                                        handleUpdateFieldMappings={handleUpdateFieldMappings}
+                                                        loading={loading}
+                                                    />
+                                                }
+                                            </Skeleton>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+                        {
                             // ---------------------------------------- DATA: JSON转业务数据 ----------------------------------------
                             (task.taskType === JSON_TO_DATA) && <>
                                 <Row gutter={24}>
