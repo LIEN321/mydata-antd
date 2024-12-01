@@ -226,7 +226,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                                     >
                                         {
                                             hoveredCard === index &&
-                                            <div style={{ position: "absolute", right: 0, top: -18, width: 80, height: 50, paddingTop: 10, paddingLeft: 10 }}>
+                                            <div style={{ position: "absolute", right: 0, top: -18, width: 80, height: 50, paddingTop: 10, paddingLeft: 10, zIndex:999 }}>
                                                 <Dropdown menu={{
                                                     items: dropDownItems, onClick: ({ key }) => {
                                                         handleDropdownClick(index, key);
@@ -244,7 +244,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                                         <Typography.Title level={5}>{index + 1}. {t.taskName}</Typography.Title>
                                         {/* 删除任务 */}
                                         {hoveredCard === index &&
-                                            <div style={{ position: "absolute", right: 0, top: 12, width: 40, height: 50, paddingTop: 10, paddingLeft: 10 }}>
+                                            <div style={{ position: "absolute", right: -20, top: 0, width: 60, height: 50, paddingTop: 22, paddingLeft: 10 }}>
                                                 <Popconfirm title="确认删除吗？" onConfirm={() => {
                                                     deleteTask(index);
                                                 }}>
@@ -253,13 +253,17 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                                             </div>
                                         }
                                         {
-                                            Object.keys(t.taskConfig.OUTPUT).length > 0 &&
-                                            <>输出：
-                                                <Space>
-                                                    {Object.keys(t.taskConfig.OUTPUT).map((key) => {
-                                                        return <>{t.taskConfig.OUTPUT[key]}</>
-                                                    })}
-                                                </Space>
+                                            <>
+                                                输出：
+                                                {Object.keys(t.taskConfig.OUTPUT).length > 0
+                                                    ?
+                                                    <Space>
+                                                        {Object.keys(t.taskConfig.OUTPUT).map((key) => {
+                                                            return <>{t.taskConfig.OUTPUT[key]}</>
+                                                        })}
+                                                    </Space>
+                                                    : '--'
+                                                }
                                             </>
                                         }
 
