@@ -1,6 +1,6 @@
 export const API_GET_JSON = "API_GET_JSON";
 export const API_SEND_DATA = "API_SEND_DATA";
-export const WEBHOOK_GET_DATA = "WEBHOOK_GET_DATA";
+export const WEBHOOK_GET_JSON = "WEBHOOK_GET_JSON";
 export const API_GET_VAR = "API_GET_VAR";
 export const SAVE_DATA = "SAVE_DATA";
 export const QUERY_DATA = "QUERY_DATA";
@@ -13,10 +13,10 @@ export const SEND_EMAIL = "SEND_EMAIL";
 export const TASK_TEMPLATE = {
     API_GET_JSON: { taskType: API_GET_JSON, taskName: "从API获取JSON", taskConfig: { INPUT: {}, OUTPUT: { ORIGIN_JSON: "ORIGIN_JSON", DATA_JSON: "DATA_JSON" } }, },
     API_SEND_DATA: { taskType: API_SEND_DATA, taskName: "向API发送数据", taskConfig: { INPUT: {}, OUTPUT: {} }, },
-    WEBHOOK_GET_DATA: { taskType: WEBHOOK_GET_DATA, taskName: "接收webhook数据", taskConfig: { INPUT: {}, OUTPUT: {} }, },
+    WEBHOOK_GET_JSON: { taskType: WEBHOOK_GET_JSON, taskName: "从Webhook接收JSON", taskConfig: { INPUT: { WEBHOOK_JSON: "WEBHOOK_JSON" }, OUTPUT: { ORIGIN_JSON: "ORIGIN_JSON", DATA_JSON: "DATA_JSON" } }, },
     API_GET_VAR: { taskType: API_GET_VAR, taskName: "从API获取参数", taskConfig: { INPUT: {}, OUTPUT: {} }, },
 
-    JSON_TO_DATA: { taskType: JSON_TO_DATA, taskName: "JSON转数据", taskConfig: { INPUT: { DATA_JSON: "DATA_JSON" }, OUTPUT: { BIZ_DATA: "BIZ_DATA", DATA_ID: "DATA_ID", DATA_CODE: "DATA_CODE" } } },
+    JSON_TO_DATA: { taskType: JSON_TO_DATA, taskName: "JSON转数据", taskConfig: { INPUT: { DATA_JSON: "DATA_JSON" }, OUTPUT: { BIZ_DATA: "BIZ_DATA", DATA_CODE: "DATA_CODE" } } },
     FILTER_DATA: { taskType: FILTER_DATA, taskName: "过滤数据", taskConfig: { INPUT: {}, OUTPUT: {} }, },
     OPERATE_DATA: { taskType: OPERATE_DATA, taskName: "处理数据", taskConfig: { INPUT: {}, OUTPUT: {} }, },
     WRITE_EXCEL: { taskType: WRITE_EXCEL, taskName: "写入Excel文件", taskConfig: { INPUT: {}, OUTPUT: {} }, },
