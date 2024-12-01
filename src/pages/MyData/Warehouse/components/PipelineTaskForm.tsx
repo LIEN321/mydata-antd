@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormItem, ProFormSelect, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table } from "antd";
-import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, WEBHOOK_GET_DATA } from "./task";
+import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, WEBHOOK_GET_JSON } from "./task";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTasks";
@@ -373,6 +373,101 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
+                            // ---------------------------------------- API：从Webhook接收JSON ----------------------------------------
+                            (task.taskType === WEBHOOK_GET_JSON) && <>
+                                <Row gutter={24}>
+                                    {/* 选择应用 */}
+                                    <Col span={12}>
+                                        <ProFormSelect
+                                            name="appId"
+                                            label="选择应用"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请选择应用！',
+                                                }
+                                            ]}
+                                            width={"sm"}
+                                            // 新建应用
+                                            addonAfter={<AddApp onSuccess={(newAppId) => {
+                                                // 重新加载应用列表
+                                                form.resetFields(['appId']);
+                                                // 选择新增的应用
+                                                form.setFieldValue('appId', newAppId);
+                                                // 更新task的应用id
+                                                task.appId = newAppId;
+                                                updateTask();
+                                            }} />}
+                                            addonWarpStyle={{ width: "100%" }}
+                                            request={appSelect}
+                                            onChange={(appId: number) => {
+                                                task.appId = appId;
+                                                updateTask();
+                                                form.setFieldValue('apiId', undefined);
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    {/* 字段前缀 */}
+                                    <Col span={12}>
+                                        <ProFormText
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                    message: "请输入数据层级",
+                                                }
+                                            ]}
+                                            name="fieldPrefix"
+                                            label="数据在JSON中的前缀层级"
+                                            placeholder="请输入数据层级"
+                                            fieldProps={{
+                                                onChange: (e) => {
+                                                    task.taskConfig.FIELD_PREFIX = e.target.value;
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.FIELD_PREFIX,
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col span={12}></Col>
+                                </Row>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输出设置" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    <ProFormText
+                                                        label="原始JSON的变量名"
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.OUTPUT.ORIGIN_JSON = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.OUTPUT.ORIGIN_JSON || "ORIGIN_JSON",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={10}>
+                                                    <ProFormText
+                                                        label="数据JSON的变量名"
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.OUTPUT.DATA_JSON = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.OUTPUT.DATA_JSON || "DATA_JSON",
+                                                        }}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+                        {
                             // ---------------------------------------- DATA: JSON转业务数据 ----------------------------------------
                             (task.taskType === JSON_TO_DATA) && <>
                                 <Row>
@@ -467,149 +562,15 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}>
                                                 </Col>
                                                 <Col span={10}>
+                                                    <ProFormText
+                                                        label="业务数据编号的变量名"
+                                                        disabled
+                                                        fieldProps={{
+                                                            value: task.taskConfig.OUTPUT.DATA_CODE || "DATA_CODE",
+                                                        }}
+                                                    />
                                                 </Col>
                                             </Row>
-                                        </ProFormItem>
-                                    </Col>
-                                </Row>
-                            </>
-                        }
-                        {
-                            // ---------------------------------------- 发送数据 、 解析webhook数据 ----------------------------------------
-                            (task.taskType === WEBHOOK_GET_DATA) && <>
-                                <Row gutter={24}>
-                                    {/* 选择应用 */}
-                                    <Col span={12}>
-                                        <ProFormSelect
-                                            name="appId"
-                                            label="选择应用"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: '请选择应用！',
-                                                }
-                                            ]}
-                                            width={"sm"}
-                                            // 新建应用
-                                            addonAfter={<AddApp onSuccess={(newAppId) => {
-                                                // 重新加载应用列表
-                                                form.resetFields(['appId']);
-                                                // 选择新增的应用
-                                                form.setFieldValue('appId', newAppId);
-                                                // 更新task的应用id
-                                                task.appId = newAppId;
-                                                updateTask();
-                                            }} />}
-                                            addonWarpStyle={{ width: "100%" }}
-                                            request={appSelect}
-                                            onChange={(appId: number) => {
-                                                task.appId = appId;
-                                                updateTask();
-                                                form.setFieldValue('apiId', undefined);
-                                            }}
-                                        />
-                                    </Col>
-                                    {/* 选择API（排除解析webhook） */}
-                                    {
-                                        task.taskType != WEBHOOK_GET_DATA && <Col span={12}>
-                                            <ProFormSelect
-                                                name="apiId"
-                                                label="选择API"
-                                                disabled={!task.appId || task.appId <= 0}
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                        message: '请选择API！',
-                                                    }
-                                                ]}
-                                                width={"sm"}
-                                                // 新建API
-                                                addonAfter={<AddApi
-                                                    appId={task.appId || 0}
-                                                    onSuccess={(newApiId) => {
-                                                        // 重新加载API列表
-                                                        form.resetFields(['apiId']);
-                                                        // 选择新增的API
-                                                        form.setFieldValue('apiId', newApiId);
-                                                        // 更新task的API id
-                                                        task.apiId = newApiId;
-                                                        updateTask();
-                                                    }} />}
-                                                // 基于应用Select联动
-                                                dependencies={['appId']}
-                                                request={apiSelect}
-                                                onChange={(apiId: number) => {
-                                                    task.apiId = apiId;
-                                                    updateTask();
-                                                }}
-                                            />
-                                        </Col>
-                                    }
-                                </Row>
-                                <Row gutter={24}>
-                                    {/* 选择数据 */}
-                                    <Col span={12}>
-                                        <ProFormSelect
-                                            name="dataId"
-                                            label="选择数据"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: '请选择数据！',
-                                                }
-                                            ]}
-                                            request={() => { return dataSelect({ projectId: props.projectId }); }}
-                                            onChange={(dataId: number) => {
-                                                loadDataFields(dataId);
-                                                task.dataId = dataId;
-                                                updateTask();
-                                            }}
-                                        />
-                                    </Col>
-                                    <Col span={12}></Col>
-                                </Row>
-                                {
-                                    // webhook 的数据层级
-                                    task.taskType === WEBHOOK_GET_DATA && <Row gutter={24}>
-                                        {/* 字段前缀 */}
-                                        <Col span={12}>
-                                            <ProFormText
-                                                rules={[
-                                                    {
-                                                        required: false,
-                                                        message: "请输入数据层级",
-                                                    }
-                                                ]}
-                                                name="fieldPrefix"
-                                                label="数据层级"
-                                                placeholder="请输入数据层级"
-                                                fieldProps={{
-                                                    onChange: (e) => {
-                                                        task.taskConfig.FIELD_PREFIX = e.target.value;
-                                                        updateTask();
-                                                    },
-                                                    value: task.taskConfig.FIELD_PREFIX,
-                                                }}
-                                            />
-                                        </Col>
-                                        <Col span={12}></Col>
-                                    </Row>
-                                }
-                                <Row gutter={24}>
-                                    {/* 字段映射 */}
-                                    <Col span={24}>
-                                        <ProFormItem
-                                            label="字段映射"
-                                        >
-                                            <Skeleton loading={loading} active>
-                                                {
-                                                    !loading && <FieldMappingTable
-                                                        fieldMappings={fieldMappings}
-                                                        handleUpdateFieldMappings={handleUpdateFieldMappings}
-                                                        loading={loading}
-                                                    />
-                                                }
-                                            </Skeleton>
                                         </ProFormItem>
                                     </Col>
                                 </Row>
