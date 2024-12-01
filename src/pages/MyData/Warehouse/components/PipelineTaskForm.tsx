@@ -375,27 +375,37 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         {
                             // ---------------------------------------- DATA: JSON转业务数据 ----------------------------------------
                             (task.taskType === JSON_TO_DATA) && <>
-                                <Row gutter={24}>
-                                    {/* JSON变量名 */}
-                                    <Col span={12}>
-                                        <ProFormText
-                                            label="JSON变量名"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: '请输入JSON变量名！',
-                                                }
-                                            ]}
-                                            fieldProps={{
-                                                onChange: (e) => {
-                                                    task.taskConfig.INPUT.DATA_JSON = e.target.value;
-                                                    updateTask();
-                                                },
-                                                value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
-                                            }}
-                                        />
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输入设置" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    {/* JSON变量名 */}
+                                                    <ProFormText
+                                                        label="JSON变量名"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: '请输入JSON变量名！',
+                                                            }
+                                                        ]}
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.INPUT.DATA_JSON = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
                                     </Col>
-                                    <Col span={12}></Col>
                                 </Row>
                                 <Row gutter={24}>
                                     {/* 选择数据 */}
@@ -608,27 +618,37 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         {
                             // ---------------------------------------- 保存数据 ----------------------------------------
                             (task.taskType === SAVE_DATA && <>
-                                <Row gutter={24}>
-                                    {/* 业务数据的变量名 */}
-                                    <Col span={12}>
-                                        <ProFormText
-                                            label="业务数据的变量名"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: '请输入业务数据的变量名！',
-                                                }
-                                            ]}
-                                            fieldProps={{
-                                                onChange: (e) => {
-                                                    task.taskConfig.INPUT.BIZ_DATA = e.target.value;
-                                                    updateTask();
-                                                },
-                                                value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
-                                            }}
-                                        />
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输入设置" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    {/* 业务数据的变量名 */}
+                                                    <ProFormText
+                                                        label="业务数据的变量名"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: '请输入业务数据的变量名！',
+                                                            }
+                                                        ]}
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
                                     </Col>
-                                    <Col span={12}></Col>
                                 </Row>
                                 <Row>
                                     <Col span={24}>
