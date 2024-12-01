@@ -192,6 +192,10 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
         newTasks.splice(index, 1);
         setTasks(newTasks);
         props.setTasks(newTasks);
+
+        if (task && task.key === index) {
+            setTask(() => newTasks.length > 0 ? newTasks[0] : undefined);
+        }
     }
 
     const { token } = useToken();
@@ -226,7 +230,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                                     >
                                         {
                                             hoveredCard === index &&
-                                            <div style={{ position: "absolute", right: 0, top: -18, width: 80, height: 50, paddingTop: 10, paddingLeft: 10, zIndex:999 }}>
+                                            <div style={{ position: "absolute", right: 0, top: -18, width: 80, height: 50, paddingTop: 10, paddingLeft: 10, zIndex: 999 }}>
                                                 <Dropdown menu={{
                                                     items: dropDownItems, onClick: ({ key }) => {
                                                         handleDropdownClick(index, key);
@@ -245,7 +249,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                                         {/* 删除任务 */}
                                         {hoveredCard === index &&
                                             <div style={{ position: "absolute", right: -20, top: 0, width: 60, height: 50, paddingTop: 22, paddingLeft: 10 }}>
-                                                <Popconfirm title="确认删除吗？" onConfirm={() => {
+                                                <Popconfirm placement="topRight" title="确认删除吗？" onConfirm={() => {
                                                     deleteTask(index);
                                                 }}>
                                                     <Button type="text" icon={<DeleteOutlined />} />
