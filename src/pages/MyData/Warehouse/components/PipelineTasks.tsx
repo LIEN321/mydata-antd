@@ -138,6 +138,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
             // 初始化任务的taskConfig为空{}
             tasks.map(task => {
                 task.key = index;
+                index++;
                 if (!task.taskConfig) {
                     task.taskConfig = {};
                 } else {
@@ -156,7 +157,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
     // const handleDropdownClick: MenuProps['onClick'] = (info) => {
     const handleDropdownClick = (index: number, type: string) => {
         const newTasks = [...tasks];
-        const newTask = TASK_TEMPLATE[type as TaskKey] as unknown as TaskItem;
+        const newTask = { ...TASK_TEMPLATE[type as TaskKey] as unknown as TaskItem };
         newTasks.splice(index, 0, newTask as TaskItem);
         newTask.key = newTasks.length - 1;
         newTask.projectId = props.projectId;
@@ -221,7 +222,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                                         onMouseEnter={() => setHoveredCard(index)}
                                         onMouseLeave={() => setHoveredCard(null)}
                                         onClick={() => setTask(t)}
-                                        boxShadow={t === task}
+                                        boxShadow={t.key === task?.key}
                                     >
                                         {
                                             hoveredCard === index &&
