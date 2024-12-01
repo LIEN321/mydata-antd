@@ -198,7 +198,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
 
     return (
         <>
-            <Splitter>
+            <Splitter style={{ height: "100%" }}>
                 <Splitter.Panel defaultSize={"30%"} min={"20%"} max={"50%"}>
                     {/* 左侧任务列表外层Card */}
                     <Card bordered={false} style={{ maxHeight: "70vh" }}>
@@ -291,7 +291,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
                         }
                     </Card>
                 </Splitter.Panel>
-                <Splitter.Panel defaultSize={"70%"}>
+                <Splitter.Panel defaultSize={"70%"} style={{ overflowY: "auto" }}>
                     {task && <PipelineTaskForm task={task} updateTask={updateTask} projectId={props.projectId} />}
                 </Splitter.Panel>
             </Splitter >

@@ -95,7 +95,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
     return (
         <>
             {task &&
-                <ProCard>
+                <ProCard style={{ maxHeight: 730, overflowY: "scroll" }}>
                     <ProForm
                         form={form}
                         submitter={false}
