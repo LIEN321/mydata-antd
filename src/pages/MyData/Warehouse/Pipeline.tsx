@@ -1,5 +1,5 @@
 import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
-import { ApiOutlined, ApiTwoTone, CheckOutlined, ClockCircleOutlined, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HistoryOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined, UserOutlined } from "@ant-design/icons";
+import { ApiOutlined, ApiTwoTone, CheckOutlined, ClockCircleOutlined, CloseOutlined, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HistoryOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined, UserOutlined } from "@ant-design/icons";
 import { DrawerForm, ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space, theme } from "antd";
 import { Fragment, useEffect, useState } from "react";
@@ -184,7 +184,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         , <LoadingOutlined style={{ color: token.blue }} title="执行中" />
         , <StopOutlined style={{ color: token.colorWarning }} title="手动停止" />
         , <CheckOutlined style={{ color: token.colorSuccess }} title="执行成功" />
-        , <StopOutlined style={{ color: token.colorError }} title="执行失败" />
+        , <CloseOutlined style={{ color: token.colorError }} title="执行失败" />
     ];
 
     // 流水线触发类型图标

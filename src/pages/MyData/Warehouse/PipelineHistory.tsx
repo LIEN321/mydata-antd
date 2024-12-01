@@ -1,5 +1,5 @@
 import { pipelineHistoryPage } from "@/services/zhiwei/pipelineHistory";
-import { CheckOutlined, HistoryOutlined, LoadingOutlined, StopOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, HistoryOutlined, LoadingOutlined, StopOutlined } from "@ant-design/icons";
 import { ActionType, DrawerForm, ProColumns, ProTable } from "@ant-design/pro-components";
 import { Badge, Button, DatePicker, Form, theme } from "antd";
 import { useRef } from "react";
@@ -28,7 +28,7 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
         , <LoadingOutlined style={{ color: token.blue }} title="执行中" />
         , <StopOutlined style={{ color: token.colorWarning }} title="手动停止" />
         , <CheckOutlined style={{ color: token.colorSuccess }} title="执行成功" />
-        , <StopOutlined style={{ color: token.colorError }} title="执行失败" />
+        , <CloseOutlined style={{ color: token.colorError }} title="执行失败" />
     ];
 
     // 流水线触发类型图标
