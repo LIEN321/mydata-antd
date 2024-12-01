@@ -213,7 +213,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                                 fieldProps={{
                                                     onChange: (e) => {
                                                         const webhookAuthParams = { ...pipeline.webhookAuthParams };
-                                                        if(!webhookAuthParams.ApiKey){
+                                                        if (!webhookAuthParams.ApiKey) {
                                                             webhookAuthParams.ApiKey = {};
                                                         }
                                                         webhookAuthParams.ApiKey.key = e.target.value;
@@ -229,7 +229,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                                 fieldProps={{
                                                     onChange: (e) => {
                                                         const webhookAuthParams = { ...pipeline.webhookAuthParams };
-                                                        if(!webhookAuthParams.ApiKey){
+                                                        if (!webhookAuthParams.ApiKey) {
                                                             webhookAuthParams.ApiKey = {};
                                                         }
                                                         webhookAuthParams.ApiKey.value = e.target.value;
@@ -249,7 +249,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                                 fieldProps={{
                                                     onChange: (e) => {
                                                         const webhookAuthParams = { ...pipeline.webhookAuthParams };
-                                                        if(!webhookAuthParams.BasicAuth){
+                                                        if (!webhookAuthParams.BasicAuth) {
                                                             webhookAuthParams.BasicAuth = {};
                                                         }
                                                         webhookAuthParams.BasicAuth.username = e.target.value;
@@ -265,7 +265,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                                 fieldProps={{
                                                     onChange: (e) => {
                                                         const webhookAuthParams = { ...pipeline.webhookAuthParams };
-                                                        if(!webhookAuthParams.BasicAuth){
+                                                        if (!webhookAuthParams.BasicAuth) {
                                                             webhookAuthParams.BasicAuth = {};
                                                         }
                                                         webhookAuthParams.BasicAuth.password = e.target.value;
@@ -353,7 +353,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                 }}
                 initialValues={pipeline}
             >
-                <Tabs items={tabItems} centered activeKey={activeKey} onChange={(key) => setActiveKey(key)} />
+                <Tabs items={tabItems} centered activeKey={activeKey} onChange={(key) => setActiveKey(key)} style={{ maxHeight: 800 }} />
             </ModalForm>
             }
         </>
