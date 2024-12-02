@@ -159,8 +159,13 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
         const newTasks = [...tasks];
         const newTask = { ...TASK_TEMPLATE[type as TaskKey] as unknown as TaskItem };
         newTasks.splice(index, 0, newTask as TaskItem);
-        newTask.key = newTasks.length - 1;
         newTask.projectId = props.projectId;
+
+        // 重新更新 任务的key
+        newTasks.map((t, index) => {
+            t.key = index;
+        });
+
         setTask(newTask)
         setTasks(newTasks);
         props.setTasks(newTasks);
