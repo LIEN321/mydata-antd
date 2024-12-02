@@ -11,7 +11,15 @@ export const WRITE_EXCEL = "WRITE_EXCEL";
 export const SEND_EMAIL = "SEND_EMAIL";
 
 export const TASK_TEMPLATE = {
-    API_GET_JSON: { taskType: API_GET_JSON, taskName: "从API获取JSON", taskConfig: { INPUT: {}, OUTPUT: { ORIGIN_JSON: "ORIGIN_JSON", DATA_JSON: "DATA_JSON" } }, },
+    API_GET_JSON: {
+        taskType: API_GET_JSON,
+        taskName: "从API获取JSON",
+        taskConfig: {
+            INPUT: {},
+            OUTPUT: { ORIGIN_JSON: "ORIGIN_JSON", DATA_JSON: "DATA_JSON" },
+            BATCH: { ENABLE: false, INTERVAL: 5, END_TYPE: 0, PARAMS: [] },
+        },
+    },
     API_SEND_DATA: { taskType: API_SEND_DATA, taskName: "向API发送数据", taskConfig: { INPUT: {}, OUTPUT: {} }, },
     WEBHOOK_GET_JSON: { taskType: WEBHOOK_GET_JSON, taskName: "从Webhook接收JSON", taskConfig: { INPUT: { WEBHOOK_JSON: "WEBHOOK_JSON" }, OUTPUT: { ORIGIN_JSON: "ORIGIN_JSON", DATA_JSON: "DATA_JSON" } }, },
     API_GET_VAR: { taskType: API_GET_VAR, taskName: "从API获取参数", taskConfig: { INPUT: {}, OUTPUT: {} }, },

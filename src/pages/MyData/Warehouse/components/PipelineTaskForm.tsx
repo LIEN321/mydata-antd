@@ -1,4 +1,4 @@
-import { ProCard, ProForm, ProFormItem, ProFormSelect, ProFormText, ProTable } from "@ant-design/pro-components";
+import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table } from "antd";
 import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, WEBHOOK_GET_JSON } from "./task";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import { dataSelect, fieldList } from "@/services/zhiwei/data";
 import AddApp from "./AddApp";
 import AddApi from "./AddApi";
 import FieldMappingTable, { FieldMappingDataType } from "./task_components/FieldMappingTable";
+import BatchParamTable, { BatchParamDataType } from "./task_components/BatchParamTable";
 
 export type TaskFormProp = {
     /** 任务信息 */
@@ -89,13 +90,18 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
         updateTask();
     };
 
+    const handleUpdateBatchParams = (batchParams: BatchParamDataType[]) => {
+        task.taskConfig.BATCH.PARAMS = batchParams;
+        updateTask();
+    };
+
     /** 加载状态 */
     const [loading, setLoading] = useState<boolean>(false);
 
     return (
         <>
             {task &&
-                <ProCard style={{ maxHeight: 730, overflowY: "scroll" }}>
+                <ProCard style={{ height: 730, overflowY: "scroll" }}>
                     <ProForm
                         form={form}
                         submitter={false}
@@ -159,7 +165,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             }}
                                         />
                                     </Col>
-                                    {/* 选择API（排除解析webhook） */}
+                                    {/* 选择API */}
                                     <Col span={12}>
                                         <ProFormSelect
                                             name="apiId"
@@ -194,8 +200,64 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                         />
                                     </Col>
                                 </Row>
+                                <Row gutter={24}>
+                                    <Col span={4}>
+                                        <ProFormSwitch
+                                            label="启用分批"
+                                            fieldProps={{
+                                                onChange: (checked) => {
+                                                    task.taskConfig.BATCH.ENABLE = checked;
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.BATCH.ENABLE || false,
+                                            }}
+                                        />
+                                    </Col>
+                                    {
+                                        task.taskConfig.BATCH.ENABLE &&
+                                        <>
+                                            <Col span={6}>
+                                                <ProFormDigit label="分批间隔（秒）" min={2} fieldProps={{
+                                                    onChange: (value) => {
+                                                        task.taskConfig.BATCH.INTERVAL = value;
+                                                        updateTask();
+                                                    },
+                                                    value: task.taskConfig.BATCH.INTERVAL,
+                                                }} />
+                                            </Col>
+                                            <Col span={2}></Col>
+                                            <Col span={10}>
+                                                <ProFormRadio.Group label="结束方式" radioType="button"
+                                                    options={[
+                                                        { label: "接口无数据", value: 0 },
+                                                        { label: "数据重复", value: 1 },
+                                                    ]}
+                                                    fieldProps={{
+                                                        onChange: (e) => {
+                                                            task.taskConfig.BATCH.END_TYPE = e.target.value;
+                                                            updateTask();
+                                                        },
+                                                        value: task.taskConfig.BATCH.END_TYPE,
+                                                    }}
+                                                />
+                                            </Col>
+                                            <Col span={24}>
+                                                <Skeleton loading={loading} active>
+                                                    {
+                                                        !loading && <BatchParamTable
+                                                            batchParams={task.taskConfig.BATCH.PARAMS}
+                                                            handleUpdateBatchParams={handleUpdateBatchParams}
+                                                            loading={loading}
+                                                        />
+                                                    }
+                                                </Skeleton>
+                                            </Col>
+                                        </>
+                                    }
+                                </Row>
                                 <Row>
                                     <Col span={24}>
+                                        {/* 输出设置 */}
                                         <ProFormItem label="输出设置" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
