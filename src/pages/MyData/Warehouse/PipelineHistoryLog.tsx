@@ -71,7 +71,7 @@ const PipelineHistoryLog: React.FC = () => {
 
     // 是否自动刷新
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-    const timeout = 2000;
+    const timeout = 5000;
 
     useEffect(() => {
         if (!isRefreshing)
