@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table } from "antd";
-import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, WEBHOOK_GET_JSON } from "./task";
+import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON } from "./task";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTasks";
@@ -227,7 +227,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             </Col>
                                             <Col span={2}></Col>
                                             <Col span={10}>
-                                                <ProFormRadio.Group label="结束方式" radioType="button"
+                                                {/* <ProFormRadio.Group label="结束方式" radioType="button"
                                                     options={[
                                                         { label: "接口无数据", value: 0 },
                                                         { label: "数据重复", value: 1 },
@@ -239,7 +239,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         },
                                                         value: task.taskConfig.BATCH.END_TYPE,
                                                     }}
-                                                />
+                                                /> */}
                                             </Col>
                                             <Col span={24}>
                                                 <Skeleton loading={loading} active>
