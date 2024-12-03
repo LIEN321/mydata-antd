@@ -20,13 +20,13 @@ export type TaskItem = {
     /** id */
     id?: number;
     /** 所属项目 */
-    projectId?: number;
+    projectId: number;
     /** 所属流水线 */
-    pipelineId?: number;
+    pipelineId: number;
     /** 任务类型 */
-    taskType?: string;
+    taskType: string;
     /** 任务名称 */
-    taskName?: string;
+    taskName: string;
     /** 关联应用 */
     appId?: number;
     /** 关联API */
@@ -139,14 +139,18 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
             tasks.map(task => {
                 task.key = index;
                 index++;
+
+                const taskTemplate = { ...TASK_TEMPLATE[task.taskType as TaskKey] };
+                const taskTemplateConfig = taskTemplate.taskConfig;
+
                 if (!task.taskConfig) {
-                    task.taskConfig = {};
+                    task.taskConfig = { ...taskTemplateConfig };
                 } else {
-                    if (!task.taskConfig.INPUT) {
-                        task.taskConfig.INPUT = {};
-                    }
-                    if (!task.taskConfig.OUTPUT) {
-                        task.taskConfig.OUTPUT = {};
+                    for (const key in taskTemplateConfig) {
+                        const { taskConfig } = task;
+                        if (!taskConfig.hasOwnProperty(key)) {
+                            taskConfig[key] = taskTemplateConfig[key as keyof typeof taskTemplateConfig];
+                        }
                     }
                 }
             });
