@@ -7,6 +7,7 @@ import PipelineForm from "./PipelineForm";
 import { deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
 import { timeAgo } from "@/util/DateUtil";
 import PipelineHistory from "./PipelineHistory";
+import { STATUS_RUNNING } from "../mydata";
 
 export type PipelineProp = {
     project: API.ProjectVO;
@@ -69,7 +70,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                 const { pipelines } = group;
                 if (pipelines && pipelines.length > 0) {
                     for (const pipeline of pipelines) {
-                        if (pipeline.latestHistory?.executionStatus === 1) {
+                        if (pipeline.latestHistory?.executionStatus === STATUS_RUNNING) {
                             hasRunningPipeline = true;
                             break;
                         }

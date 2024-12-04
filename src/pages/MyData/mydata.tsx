@@ -1,3 +1,14 @@
+
+/**
+ * 执行状态：运行中
+*/
+export const STATUS_RUNNING = 1;
+
+export const OP_TYPE_PROVIDER = 1;
+
+/**
+ * 任务类型
+ */
 export const API_GET_JSON = "API_GET_JSON";
 export const API_SEND_DATA = "API_SEND_DATA";
 export const WEBHOOK_GET_JSON = "WEBHOOK_GET_JSON";
@@ -10,6 +21,9 @@ export const OPERATE_DATA = "OPERATE_DATA";
 export const WRITE_EXCEL = "WRITE_EXCEL";
 export const SEND_EMAIL = "SEND_EMAIL";
 
+/**
+ * 任务类型对应的配置模板
+ */
 export const TASK_TEMPLATE = {
     API_GET_JSON: {
         "taskType": API_GET_JSON,
@@ -17,14 +31,18 @@ export const TASK_TEMPLATE = {
         "taskConfig": {
             "INPUT": {},
             "OUTPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
-            "BATCH": { "ENABLE": false, "INTERVAL": 5, "END_TYPE": 0, "PARAMS": [] },
+            "BATCH": { "ENABLE": false, "INTERVAL": 5, "PARAMS": [] },
         },
     },
 
     API_SEND_DATA: {
         "taskType": API_SEND_DATA,
         "taskName": "向API发送数据",
-        "taskConfig": { "INPUT": {}, "OUTPUT": {} },
+        "taskConfig": {
+            "INPUT": {},
+            "OUTPUT": {},
+            "BATCH": { "ENABLE": false, "INTERVAL": 5, "PARAMS": [], "COUNT": 100 },
+        },
     },
 
     WEBHOOK_GET_JSON: {
@@ -32,7 +50,7 @@ export const TASK_TEMPLATE = {
         "taskName": "从Webhook接收JSON",
         "taskConfig": {
             "INPUT": { "WEBHOOK_JSON": "WEBHOOK_JSON" },
-            "OUTPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" }
+            "OUTPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
         },
     },
 
@@ -45,7 +63,10 @@ export const TASK_TEMPLATE = {
     JSON_TO_DATA: {
         "taskType": JSON_TO_DATA,
         "taskName": "JSON转数据",
-        "taskConfig": { "INPUT": { "DATA_JSON": "DATA_JSON" }, "OUTPUT": { "BIZ_DATA": "BIZ_DATA", "DATA_CODE": "DATA_CODE" } }
+        "taskConfig": {
+            "INPUT": { "DATA_JSON": "DATA_JSON" },
+            "OUTPUT": { "BIZ_DATA": "BIZ_DATA", "DATA_CODE": "DATA_CODE" },
+        }
     },
 
     FILTER_DATA: {
@@ -69,7 +90,10 @@ export const TASK_TEMPLATE = {
     SAVE_DATA: {
         "taskType": SAVE_DATA,
         "taskName": "保存数据到数仓",
-        "taskConfig": { "INPUT": { "BIZ_DATA": "BIZ_DATA" }, "OUTPUT": { "SAVED_DATA": "SAVED_DATA" } },
+        "taskConfig": {
+            "INPUT": { "BIZ_DATA": "BIZ_DATA" },
+            "OUTPUT": { "SAVED_DATA": "SAVED_DATA" },
+        },
     },
 
     QUERY_DATA: {

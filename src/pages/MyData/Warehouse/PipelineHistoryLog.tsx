@@ -5,6 +5,7 @@ import { useLocation } from "@umijs/max";
 import { Card, Col, Input, Row, Splitter, theme, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { DownwardArrowLine } from "./components/task_components/DownwardArrowLine";
+import { STATUS_RUNNING } from "../mydata";
 
 const PipelineHistoryLog: React.FC = () => {
 
@@ -28,7 +29,7 @@ const PipelineHistoryLog: React.FC = () => {
                 if (logs.length > 0) {
                     setLog(logs[0]);
                     for (const l of logs) {
-                        if (l.executionStatus === 1) {
+                        if (l.executionStatus === STATUS_RUNNING) {
                             setLog(l);
                             break;
                         }
@@ -45,7 +46,7 @@ const PipelineHistoryLog: React.FC = () => {
         if (logs.length > 0) {
             // 若有运行中的流水线，则自动刷新
             for (const log of logs) {
-                if (log.executionStatus === 0 || log.executionStatus === 1) {
+                if (log.executionStatus === 0 || log.executionStatus === STATUS_RUNNING) {
                     hasRunningPipeline = true;
                     break;
                 }

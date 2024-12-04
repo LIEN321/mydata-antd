@@ -3,7 +3,7 @@ import { ProCard } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, MenuProps, Popconfirm, Row, Space, Splitter, Typography, theme } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTaskForm from "./PipelineTaskForm";
-import { TASK_TEMPLATE, TaskKey } from "./task";
+import { TASK_TEMPLATE, TaskKey } from "../../mydata";
 import { DownwardArrowLine } from "./task_components/DownwardArrowLine";
 
 export type PipelineTasksProp = {
@@ -135,7 +135,7 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
         if (tasks.length > 0) {
             // 默认选中第一个任务
             setTask(tasks[0]);
-            // 初始化任务的taskConfig为空{}
+            // 使用任务模板 补全旧版任务的配置
             tasks.map(task => {
                 task.key = index;
                 index++;
