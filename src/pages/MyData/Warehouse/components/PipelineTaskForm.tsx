@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table } from "antd";
-import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON } from "./task";
+import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON } from "../../mydata";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTasks";
@@ -216,7 +216,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     {
                                         task.taskConfig.BATCH.ENABLE &&
                                         <>
-                                            <Col span={6}>
+                                            <Col span={5}>
                                                 <ProFormDigit label="分批间隔（秒）" min={2} fieldProps={{
                                                     onChange: (value) => {
                                                         task.taskConfig.BATCH.INTERVAL = value;
@@ -358,6 +358,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             }}
                                         />
                                     </Col>
+                                    {/* 选择API */}
                                     <Col span={12}>
                                         <ProFormSelect
                                             name="apiId"
@@ -431,6 +432,55 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             </Skeleton>
                                         </ProFormItem>
                                     </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    <Col span={4}>
+                                        <ProFormSwitch
+                                            label="启用分批"
+                                            fieldProps={{
+                                                onChange: (checked) => {
+                                                    task.taskConfig.BATCH.ENABLE = checked;
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.BATCH.ENABLE || false,
+                                            }}
+                                        />
+                                    </Col>
+                                    {
+                                        task.taskConfig.BATCH.ENABLE &&
+                                        <>
+                                            <Col span={5}>
+                                                <ProFormDigit label="分批间隔（秒）" min={2} fieldProps={{
+                                                    onChange: (value) => {
+                                                        task.taskConfig.BATCH.INTERVAL = value;
+                                                        updateTask();
+                                                    },
+                                                    value: task.taskConfig.BATCH.INTERVAL,
+                                                }} />
+                                            </Col>
+                                            <Col span={2}></Col>
+                                            <Col span={5}>
+                                                <ProFormDigit label="分批数量" min={1} fieldProps={{
+                                                    onChange: (value) => {
+                                                        task.taskConfig.BATCH.COUNT = value;
+                                                        updateTask();
+                                                    },
+                                                    value: task.taskConfig.BATCH.COUNT,
+                                                }} />
+                                            </Col>
+                                            {/* <Col span={24}>
+                                                <Skeleton loading={loading} active>
+                                                    {
+                                                        !loading && <BatchParamTable
+                                                            batchParams={task.taskConfig.BATCH.PARAMS}
+                                                            handleUpdateBatchParams={handleUpdateBatchParams}
+                                                            loading={loading}
+                                                        />
+                                                    }
+                                                </Skeleton>
+                                            </Col> */}
+                                        </>
+                                    }
                                 </Row>
                             </>
                         }
