@@ -4,8 +4,8 @@ import { ProCard } from "@ant-design/pro-components";
 import { useLocation } from "@umijs/max";
 import { Card, Col, Input, Row, Splitter, theme, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { DownwardArrowLine } from "./components/task_components/DownwardArrowLine";
-import { STATUS_RUNNING } from "../mydata";
+import { DownwardArrowLine } from "../Icons";
+import { STATUS_FAILED, STATUS_READY, STATUS_RUNNING, STATUS_STOPPED } from "../mydata";
 
 const PipelineHistoryLog: React.FC = () => {
 

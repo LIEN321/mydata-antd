@@ -6,6 +6,7 @@ import { Col, Input, Radio, Row, Tabs, TabsProps } from "antd";
 import { useRef, useState } from "react";
 import ApiParamsTable, { ApiParamDataType } from "./ApiParamsTable";
 import ApiForm from "./ApiForm";
+import { OP_TYPE_PROVIDER } from "../mydata";
 
 const AppApi: React.FC = () => {
 
@@ -50,7 +51,7 @@ const AppApi: React.FC = () => {
             search: false,
             render: (_, record) => {
                 const { opType } = record;
-                return opType === 1 ? "提供数据" : "消费数据";
+                return opType === OP_TYPE_PROVIDER ? "提供数据" : "消费数据";
             }
         },
         {

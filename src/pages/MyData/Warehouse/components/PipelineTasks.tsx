@@ -4,7 +4,7 @@ import { Button, Card, Col, Dropdown, MenuProps, Popconfirm, Row, Space, Splitte
 import { useEffect, useState } from "react";
 import PipelineTaskForm from "./PipelineTaskForm";
 import { TASK_TEMPLATE, TaskKey } from "../../mydata";
-import { DownwardArrowLine } from "./task_components/DownwardArrowLine";
+import { DownwardArrowLine } from "../../Icons";
 
 export type PipelineTasksProp = {
     tasks: API.PipelineTaskVO[],
