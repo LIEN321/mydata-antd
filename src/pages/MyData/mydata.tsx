@@ -1,9 +1,29 @@
 
 /**
+ * 执行状态：待执行
+*/
+export const STATUS_READY = 0;
+/**
  * 执行状态：运行中
 */
 export const STATUS_RUNNING = 1;
+/**
+ * 执行状态：中止
+*/
+export const STATUS_STOPPED = 2;
+/**
+ * 执行状态：成功
+*/
+export const STATUS_SUCCESS = 3;
+/**
+ * 执行状态：失败
+*/
+export const STATUS_FAILED = 4;
 
+
+/**
+ * 操作类型：数据提供者
+ */
 export const OP_TYPE_PROVIDER = 1;
 
 /**
@@ -110,3 +130,9 @@ export const TASK_TEMPLATE = {
 }
 
 export type TaskKey = keyof typeof TASK_TEMPLATE;
+
+export const openLogWindow = (historyId: string) => {
+    // url参数
+    const query = new URLSearchParams({ historyId }).toString();
+    window.open(`/mydata/pipeline/history/log?${query}`, '_blank');
+}
