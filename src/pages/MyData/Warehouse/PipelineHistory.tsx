@@ -3,7 +3,7 @@ import { CheckOutlined, CloseOutlined, HistoryOutlined, LoadingOutlined, StopOut
 import { ActionType, DrawerForm, ProColumns, ProTable } from "@ant-design/pro-components";
 import { Badge, Button, DatePicker, Form, theme } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { STATUS_RUNNING } from "../mydata";
+import { openLogWindow, STATUS_RUNNING } from "../mydata";
 
 export type PipelineHistoryProp = {
     /** 流水线 */
@@ -108,9 +108,7 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
                     if (entity.id) {
                         // 流水线执行记录id
                         const historyId = entity.id.toString();
-                        // url参数
-                        const query = new URLSearchParams({ historyId }).toString();
-                        window.open(`/mydata/pipeline/history/log?${query}`, '_blank');
+                        openLogWindow(historyId);
                     }
                 }}>
                     {statusIcons[entity.executionStatus || 0]}
