@@ -7,7 +7,7 @@ import PipelineForm from "./PipelineForm";
 import { deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
 import { timeAgo } from "@/util/DateUtil";
 import PipelineHistory from "./PipelineHistory";
-import { STATUS_RUNNING } from "../mydata";
+import { STATUS_RUNNING, openLogWindow } from "../mydata";
 
 export type PipelineProp = {
     project: API.ProjectVO;
@@ -188,6 +188,16 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         , <CloseOutlined style={{ color: token.colorError }} title="执行失败" />
     ];
 
+    const getPipelineStatusIcon = (historyId: string, executionStatus: number) => {
+        return [
+            <></>
+            , <LoadingOutlined style={{ color: token.blue }} title="执行中" onClick={() => openLogWindow(historyId)} />
+            , <StopOutlined style={{ color: token.colorWarning }} title="手动停止" />
+            , <CheckOutlined style={{ color: token.colorSuccess }} title="执行成功" />
+            , <CloseOutlined style={{ color: token.colorError }} title="执行失败" />
+        ][executionStatus];
+    }
+
     // 流水线触发类型图标
     const pipelineTriggerIcons = [
         <></>
@@ -314,7 +324,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                     </Popconfirm>
                                                             )
                                                             // 查看流水线历史记录
-                                                            , <PipelineHistory pipeline={pipeline}/>
+                                                            , <PipelineHistory pipeline={pipeline} />
                                                             , <StarOutlined />
                                                             , <Dropdown menu={{
                                                                 items: dropdownItems, onClick: (info) => {
@@ -355,7 +365,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                         {pipeline.latestHistory && pipelineTriggerIcons[pipeline.latestHistory.triggerType || 0]}
                                                                     </span>
                                                                     <span style={{ cursor: "help" }}>
-                                                                        {pipeline.latestHistory && pipelineStatusIcons[pipeline.latestHistory.executionStatus || 0]}
+                                                                        {pipeline.latestHistory && getPipelineStatusIcon(pipeline.latestHistory.id?.toString() || "", pipeline.latestHistory.executionStatus || 0)}
                                                                     </span>
                                                                 </Space>
                                                             </Col>
