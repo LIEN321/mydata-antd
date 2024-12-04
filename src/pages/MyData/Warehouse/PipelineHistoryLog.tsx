@@ -46,7 +46,14 @@ const PipelineHistoryLog: React.FC = () => {
         if (logs.length > 0) {
             // 若有运行中的流水线，则自动刷新
             for (const log of logs) {
-                if (log.executionStatus === 0 || log.executionStatus === STATUS_RUNNING) {
+                // 任务中止或失败，则不自动刷新
+                if (log.executionStatus === STATUS_STOPPED || log.executionStatus === STATUS_FAILED) {
+                    hasRunningPipeline = false;
+                    break;
+                }
+
+                // 任务还有待执行或执行中，则自动刷新
+                if (log.executionStatus === STATUS_READY || log.executionStatus === STATUS_RUNNING) {
                     hasRunningPipeline = true;
                     break;
                 }
@@ -120,11 +127,12 @@ const PipelineHistoryLog: React.FC = () => {
                         variant="borderless"
                         style={{
                             backgroundColor: 'black',
-                            color: token.colorBgBase,
+                            color: '#808080',
                             height: '100vh',
                             overflow: 'auto',
                             paddingTop: 24,
                             paddingLeft: 24,
+                            fontSize: 14,
                         }}
                         readOnly
                         value={log?.taskLog}
