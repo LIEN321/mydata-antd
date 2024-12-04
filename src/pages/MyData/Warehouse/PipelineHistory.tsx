@@ -2,7 +2,8 @@ import { pipelineHistoryPage } from "@/services/zhiwei/pipelineHistory";
 import { CheckOutlined, CloseOutlined, HistoryOutlined, LoadingOutlined, StopOutlined } from "@ant-design/icons";
 import { ActionType, DrawerForm, ProColumns, ProTable } from "@ant-design/pro-components";
 import { Badge, Button, DatePicker, Form, theme } from "antd";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { STATUS_RUNNING } from "../mydata";
 
 export type PipelineHistoryProp = {
     /** 流水线 */
@@ -13,6 +14,21 @@ export type PipelineHistoryProp = {
 const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
     const { useToken } = theme;
     const { token } = useToken();
+
+    // 是否自动刷新
+    const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+    const timeout = 5000;
+
+    useEffect(() => {
+        if (!isRefreshing)
+            return;
+
+        const interval = setInterval(() => {
+            tableRef.current?.reload();
+        }, timeout);
+
+        return () => clearInterval(interval);
+    }, [isRefreshing]);
 
     // 流水线状态徽标
     const statusBadges = [
@@ -121,9 +137,22 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
                 <ProTable
                     actionRef={tableRef}
                     columns={columns}
-                    request={(params: API.pipelineHistoryPageParams) => {
+                    request={async (params: API.pipelineHistoryPageParams) => {
                         params.pipelineId = pipeline.id || 0;
-                        return pipelineHistoryPage(params);
+                        const response = await pipelineHistoryPage(params);
+                        
+                        var hasRunningPipeline = false;
+                        if(response.success && response.data){
+                            for(const history of response.data){
+                                if(history.executionStatus === STATUS_RUNNING){
+                                    hasRunningPipeline = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        setIsRefreshing(hasRunningPipeline);
+                        return response;
                     }}
                     pagination={{ pageSize: 10 }}
                     options={false}
