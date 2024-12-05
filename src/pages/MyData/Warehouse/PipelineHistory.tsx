@@ -61,10 +61,10 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
         {
             title: '执行时间',
             dataIndex: 'startTime',
-            search: false,
+            search: true,
             align: 'center',
             renderFormItem() {
-                return <Form.Item style={{ marginBottom: 0 }}>
+                return <Form.Item name="startTime" style={{ marginBottom: 0 }}>
                     <DatePicker.RangePicker style={{ width: '100%' }} />
                 </Form.Item>
 
@@ -131,18 +131,20 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
                         tableRef.current.reload();
                     }
                 }}
+                layout="horizontal"
             >
                 <ProTable
                     actionRef={tableRef}
                     columns={columns}
                     request={async (params: API.pipelineHistoryPageParams) => {
+                        console.info('params: ', params);
                         params.pipelineId = pipeline.id || 0;
                         const response = await pipelineHistoryPage(params);
-                        
+
                         var hasRunningPipeline = false;
-                        if(response.success && response.data){
-                            for(const history of response.data){
-                                if(history.executionStatus === STATUS_RUNNING){
+                        if (response.success && response.data) {
+                            for (const history of response.data) {
+                                if (history.executionStatus === STATUS_RUNNING) {
                                     hasRunningPipeline = true;
                                     break;
                                 }
@@ -154,9 +156,7 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
                     }}
                     pagination={{ pageSize: 10 }}
                     options={false}
-                    // 因搜索框样式问题 暂不显示
-                    // search={{ layout: "horizontal", labelWidth: 'auto' }}
-                    search={false}
+                    search={{ span: 12 }}
                 />
             </DrawerForm>
         </>
