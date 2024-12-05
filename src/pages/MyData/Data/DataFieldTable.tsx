@@ -203,7 +203,7 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
             editable: true,
         },
         {
-            title: '显示模式',
+            title: '显示',
             dataIndex: 'displayMode',
             width: 80,
             align: 'center',
