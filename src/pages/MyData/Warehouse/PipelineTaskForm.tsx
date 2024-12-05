@@ -1,16 +1,16 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table } from "antd";
-import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON } from "../../mydata";
+import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON } from "../mydata";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { TaskItem } from "./PipelineTasks";
+import { TaskItem } from "./PipelineTask";
 import { appSelect } from "@/services/zhiwei/app";
 import { apiSelect } from "@/services/zhiwei/appApi";
 import { dataSelect, fieldList } from "@/services/zhiwei/data";
-import AddApp from "./AddApp";
-import AddApi from "./AddApi";
-import FieldMappingTable, { FieldMappingDataType } from "./task_components/FieldMappingTable";
-import BatchParamTable, { BatchParamDataType } from "./task_components/BatchParamTable";
+import AddApp from "./components/AddApp";
+import AddApi from "./components/AddApi";
+import FieldMappingTable, { FieldMappingDataType } from "./components/task_components/FieldMappingTable";
+import BatchParamTable, { BatchParamDataType } from "./components/task_components/BatchParamTable";
 
 export type TaskFormProp = {
     /** 任务信息 */

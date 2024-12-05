@@ -3,10 +3,10 @@ import { ProCard } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, MenuProps, Popconfirm, Row, Space, Splitter, Typography, theme } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTaskForm from "./PipelineTaskForm";
-import { TASK_TEMPLATE, TaskKey } from "../../mydata";
-import { DownwardArrowLine } from "../../Icons";
+import { TASK_TEMPLATE, TaskKey } from "../mydata";
+import { DownwardArrowLine } from "../Icons";
 
-export type PipelineTasksProp = {
+export type PipelineTaskProp = {
     tasks: API.PipelineTaskVO[],
     setTasks: (tasks: API.PipelineTaskVO[]) => void,
     /** 所属项目id */
@@ -39,7 +39,7 @@ export type TaskItem = {
     warehouse?: string;
 };
 
-const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
+const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
 
     // 任务列表
     const [tasks, setTasks] = useState<TaskItem[]>(props.tasks as TaskItem[]);
@@ -312,4 +312,4 @@ const PipelineTasks: React.FC<PipelineTasksProp> = (props) => {
     );
 };
 
-export default PipelineTasks;
+export default PipelineTask;
