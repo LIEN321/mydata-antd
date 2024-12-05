@@ -2,7 +2,7 @@ import { pipelineDetail, savePipeline } from "@/services/zhiwei/pipeline";
 import { ModalForm, ProFormCheckbox, ProFormItem, ProFormRadio, ProFormSwitch, ProFormText, ProFormTextArea, ProFormTimePicker } from "@ant-design/pro-components";
 import { Button, Col, message, Row, Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
-import PipelineTasks from "./components/PipelineTasks";
+import PipelineTask from "./PipelineTask";
 import { CopyOutlined } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
 
@@ -88,7 +88,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             {
                 key: '2',
                 label: '任务编排',
-                children: <PipelineTasks
+                children: <PipelineTask
                     tasks={tasks || []}
                     setTasks={setTasks}
                     projectId={props.projectId}
