@@ -9,6 +9,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { DataFieldDataType } from "../Data/DataFieldTable";
 import DataForm from "../Data/components/DataForm";
 import Pipeline from "./Pipeline";
+import BizData from "../Data/BizData";
 
 const Warehouse: React.FC = () => {
 
@@ -94,6 +95,8 @@ const Warehouse: React.FC = () => {
     );
 
     // -------------------- 数据Table相关 --------------------
+    const [data, setData] = useState<API.DataVO>({});
+    const [bizDataModalOpen, setBizDataModalOpen] = useState<boolean>(false);
 
     // 表格列
     const columns: ProColumns<API.DataVO>[] = [
@@ -111,6 +114,12 @@ const Warehouse: React.FC = () => {
             title: '业务数据',
             dataIndex: 'dataCount',
             search: false,
+            render(_, entity) {
+                return <><a onClick={() => {
+                    setData(() => entity);
+                    setBizDataModalOpen(true);
+                }}>{entity.dataCount}</a></>;
+            },
         },
         {
             title: '来源应用',
@@ -224,6 +233,10 @@ const Warehouse: React.FC = () => {
                         loadProjects(true);
                     }}
                 />
+            }
+
+            {
+                bizDataModalOpen && <BizData data={data} open={bizDataModalOpen} onOpenChange={setBizDataModalOpen} />
             }
         </>
     );

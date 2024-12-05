@@ -24,6 +24,7 @@ import * as appApi from './appApi';
 import * as portal from './portal';
 import * as pipelineHistory from './pipelineHistory';
 import * as devEntityProperty from './devEntityProperty';
+import * as bizData from './bizData';
 export default {
   role,
   user,
@@ -47,4 +48,5 @@ export default {
   portal,
   pipelineHistory,
   devEntityProperty,
+  bizData,
 };

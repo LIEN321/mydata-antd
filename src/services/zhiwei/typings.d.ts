@@ -161,6 +161,21 @@ declare namespace API {
     roleId?: number;
   };
 
+  type bizDataFieldListParams = {
+    dataId: number;
+  };
+
+  type bizDataPageParams = {
+    /** 当前页数 */
+    current?: number;
+    /** 每页数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+    dataId: number;
+    params: Record<string, any>;
+  };
+
   type ChangePasswordDTO = {
     /** 原密码 */
     oldPassword?: string;
@@ -183,8 +198,6 @@ declare namespace API {
     dataCode?: string;
     /** 数据名称 */
     dataName?: string;
-    /** 业务数据 */
-    dataCount?: number;
     /** 字段列表 */
     dataFields?: DataFieldDTO[];
   };
@@ -751,6 +764,7 @@ declare namespace API {
     /** 记录总数 */
     total?: number;
     pipelineId: number;
+    startTime?: string[];
   };
 
   type PipelineHistoryVO = {
@@ -1008,6 +1022,23 @@ declare namespace API {
     message?: string;
     /** 响应数据 */
     data?: DevEntityVO[];
+    /** 当前页数 */
+    current?: number;
+    /** 每页记录数量 */
+    pageSize?: number;
+    /** 记录总数 */
+    total?: number;
+  };
+
+  type PListMapStringObject = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: Record<string, any>[];
     /** 当前页数 */
     current?: number;
     /** 每页记录数量 */
