@@ -188,6 +188,16 @@ const BatchParamTable: React.FC<EditableTableProps> = (props) => {
             align: 'center',
             editable: true,
         },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            align: 'center',
+            width: 60,
+            render: (_, record) =>
+                <Popconfirm title="确认删除吗?" onConfirm={() => handleDelete(record.key)}>
+                    <a>删除</a>
+                </Popconfirm>
+        },
     ];
 
     useEffect(() => {
