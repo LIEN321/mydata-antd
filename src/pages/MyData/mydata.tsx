@@ -1,4 +1,3 @@
-
 /**
  * 执行状态：待执行
 */
@@ -45,6 +44,7 @@ export const SEND_EMAIL = "SEND_EMAIL";
  * 任务类型对应的配置模板
  */
 export const TASK_TEMPLATE = {
+    // 从API获取JSON
     API_GET_JSON: {
         "taskType": API_GET_JSON,
         "taskName": "从API获取JSON",
@@ -55,16 +55,18 @@ export const TASK_TEMPLATE = {
         },
     },
 
+    // 向API发送数据
     API_SEND_DATA: {
         "taskType": API_SEND_DATA,
         "taskName": "向API发送数据",
         "taskConfig": {
-            "INPUT": {},
+            "INPUT": { "BIZ_DATA": "BIZ_DATA" },
             "OUTPUT": {},
             "BATCH": { "ENABLE": false, "INTERVAL": 5, "PARAMS": [], "COUNT": 100 },
         },
     },
 
+    // 从Webhook接收JSON
     WEBHOOK_GET_JSON: {
         "taskType": WEBHOOK_GET_JSON,
         "taskName": "从Webhook接收JSON",
@@ -74,12 +76,14 @@ export const TASK_TEMPLATE = {
         },
     },
 
+    // 从API获取参数
     API_GET_VAR: {
         "taskType": API_GET_VAR,
         "taskName": "从API获取参数",
         "taskConfig": { "INPUT": {}, "OUTPUT": {} },
     },
 
+    // JSON转数据
     JSON_TO_DATA: {
         "taskType": JSON_TO_DATA,
         "taskName": "JSON转数据",
@@ -89,24 +93,28 @@ export const TASK_TEMPLATE = {
         }
     },
 
+    // 过滤数据
     FILTER_DATA: {
         "taskType": FILTER_DATA,
         "taskName": "过滤数据",
         "taskConfig": { "INPUT": {}, "OUTPUT": {} },
     },
 
+    // 处理数据
     OPERATE_DATA: {
         "taskType": OPERATE_DATA,
         "taskName": "处理数据",
         "taskConfig": { "INPUT": {}, "OUTPUT": {} },
     },
 
+    // 写入Excel文件
     WRITE_EXCEL: {
         "taskType": WRITE_EXCEL,
         "taskName": "写入Excel文件",
         "taskConfig": { "INPUT": {}, "OUTPUT": {} },
     },
 
+    // 保存数据到数仓
     SAVE_DATA: {
         "taskType": SAVE_DATA,
         "taskName": "保存数据到数仓",
@@ -116,12 +124,18 @@ export const TASK_TEMPLATE = {
         },
     },
 
+    // 从数仓查询数据
     QUERY_DATA: {
         "taskType": QUERY_DATA,
         "taskName": "从数仓查询数据",
-        "taskConfig": { "INPUT": {}, "OUTPUT": {} },
+        "taskConfig": {
+            "INPUT": {},
+            "OUTPUT": { "BIZ_DATA": "BIZ_DATA", "DATA_CODE": "DATA_CODE" },
+            "DATA_FILTER": [],
+        },
     },
 
+    // 发送邮件
     SEND_EMAIL: {
         "taskType": SEND_EMAIL,
         "taskName": "发送邮件",
@@ -136,3 +150,8 @@ export const openLogWindow = (historyId: string) => {
     const query = new URLSearchParams({ historyId }).toString();
     window.open(`/mydata/pipeline/history/log?${query}`, '_blank');
 }
+
+/** 任务过滤条件值类型 - 值类型    */
+export const TASK_FILTER_TYPE_VALUE = 1;
+/** 任务过滤条件值类型 - 字段名*/
+export const TASK_FILTER_TYPE_FIELD = 2;
