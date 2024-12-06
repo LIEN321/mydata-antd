@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProTable } from "@ant-design/pro-components";
-import { Button, Col, Form, Row, Skeleton, Table } from "antd";
-import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON } from "../mydata";
+import { Button, Col, Form, Row, Skeleton, Table, Typography } from "antd";
+import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, QUERY_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON } from "../mydata";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTask";
@@ -11,6 +11,7 @@ import AddApp from "./components/AddApp";
 import AddApi from "./components/AddApi";
 import FieldMappingTable, { FieldMappingDataType } from "./components/task_components/FieldMappingTable";
 import BatchParamTable, { BatchParamDataType } from "./components/task_components/BatchParamTable";
+import DataFilterTable, { DataFilterDataType } from "./components/task_components/DataFilterTable";
 
 export type TaskFormProp = {
     /** 任务信息 */
@@ -43,6 +44,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
         loadDataFields(task.dataId || null);
     }, [task]);
 
+    // 所选标准数据的字段
+    const [dataFields, setDataFields] = useState<API.DataFieldVO[]>([]);
     // 字段映射 相关对象
     const [fieldMappings, setFieldMappings] = useState<FieldMappingDataType[]>([]);
 
@@ -54,6 +57,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
             if (response.success) {
                 // 字段列表
                 const fieldList = response.data;
+                setDataFields(fieldList || []);
                 // 取字段的 code和name
                 const fieldMappings = fieldList as FieldMappingDataType[];
                 // 若任务中配置的字段映射，则并入fieldMappings 用于表格显示
@@ -92,6 +96,11 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
 
     const handleUpdateBatchParams = (batchParams: BatchParamDataType[]) => {
         task.taskConfig.BATCH.PARAMS = batchParams;
+        updateTask();
+    };
+
+    const handleUpdateDataFilters = (dataFilters: DataFilterDataType[]) => {
+        task.taskConfig.DATA_FILTER = dataFilters;
         updateTask();
     };
 
@@ -689,7 +698,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
-                            // ---------------------------------------- 保存数据 ----------------------------------------
+                            // ---------------------------------------- 数仓：保存数据 ----------------------------------------
                             (task.taskType === SAVE_DATA && <>
                                 <Row>
                                     <Col span={24}>
@@ -743,6 +752,87 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}>
                                                 </Col>
                                                 <Col span={10}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                            </>)
+                        }
+                        {
+                            // ---------------------------------------- 数仓：查询数据 ----------------------------------------
+                            (task.taskType === QUERY_DATA && <>
+                                <Row gutter={24}>
+                                    {/* 选择数据 */}
+                                    <Col span={12}>
+                                        <ProFormSelect
+                                            name="dataId"
+                                            label="选择数据"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请选择数据！',
+                                                }
+                                            ]}
+                                            request={() => { return dataSelect({ projectId: props.projectId }); }}
+                                            onChange={(dataId: number) => {
+                                                loadDataFields(dataId);
+                                                task.dataId = dataId;
+                                                updateTask();
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col span={12}></Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    {/* 字段映射 */}
+                                    <Col span={24}>
+                                        <ProFormItem
+                                            label="查询条件"
+                                        >
+                                            {(dataFields && dataFields.length > 0) ?
+                                                <Skeleton loading={loading} active>
+                                                    {
+                                                        !loading && <DataFilterTable
+                                                            dataFilters={task.taskConfig.DATA_FILTER}
+                                                            dataFields={dataFields}
+                                                            handleUpdateDataFilters={handleUpdateDataFilters}
+                                                            loading={loading}
+                                                        />
+                                                    }
+                                                </Skeleton>
+                                                : <Typography.Text type="secondary">请先选择数据</Typography.Text>
+                                            }
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输出设置" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    <ProFormText
+                                                        label="查询结果的变量名"
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.OUTPUT.BIZ_DATA || "BIZ_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
+                                                    <ProFormText
+                                                        label="业务数据编号的变量名"
+                                                        disabled
+                                                        fieldProps={{
+                                                            value: task.taskConfig.OUTPUT.DATA_CODE || "DATA_CODE",
+                                                        }}
+                                                    />
                                                 </Col>
                                             </Row>
                                         </ProFormItem>
