@@ -112,7 +112,6 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.QUERY_DATA.taskType,
                     label: TASK_TEMPLATE.QUERY_DATA.taskName,
-                    disabled: true,
                 }
             ],
         },
