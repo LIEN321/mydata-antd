@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, JSON_TO_DATA, QUERY_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, FILTER_DATA, JSON_TO_DATA, QUERY_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON } from "../mydata";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTask";
@@ -71,6 +71,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
             }
         }
         else {
+            setDataFields(() => []);
             setFieldMappings(() => []);
         }
         setLoading(false);
@@ -698,6 +699,98 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
+                            // ---------------------------------------- DATA: 过滤数据 ----------------------------------------
+                            (task.taskType === FILTER_DATA) && <>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输入设置" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    {/* JSON变量名 */}
+                                                    <ProFormText
+                                                        label="待过滤的数据变量名"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: '待过滤的数据变量名',
+                                                            }
+                                                        ]}
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    {/* 过滤条件 */}
+                                    <Col span={24}>
+                                        <ProFormItem
+                                            label="过滤条件"
+                                        >
+                                            <Skeleton loading={loading} active>
+                                                {
+                                                    !loading && <DataFilterTable
+                                                        dataFilters={task.taskConfig.DATA_FILTER}
+                                                        dataFields={dataFields}
+                                                        handleUpdateDataFilters={handleUpdateDataFilters}
+                                                        loading={loading}
+                                                    />
+                                                }
+                                            </Skeleton>
+
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输出设置" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    <ProFormText
+                                                        label="有效数据的变量名"
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.OUTPUT.BIZ_DATA || "BIZ_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
+                                                    <ProFormText
+                                                        label="被过滤拦截的数据"
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.OUTPUT.FILTER_BLOCKED_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.OUTPUT.FILTER_BLOCKED_DATA || "FILTER_BLOCKED_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+                        {
                             // ---------------------------------------- 数仓：保存数据 ----------------------------------------
                             (task.taskType === SAVE_DATA && <>
                                 <Row>
@@ -785,7 +878,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     <Col span={12}></Col>
                                 </Row>
                                 <Row gutter={24}>
-                                    {/* 字段映射 */}
+                                    {/* 查询条件 */}
                                     <Col span={24}>
                                         <ProFormItem
                                             label="查询条件"
