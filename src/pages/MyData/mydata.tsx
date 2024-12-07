@@ -80,7 +80,10 @@ export const TASK_TEMPLATE = {
     API_GET_VAR: {
         "taskType": API_GET_VAR,
         "taskName": "从API获取参数",
-        "taskConfig": { "INPUT": {}, "OUTPUT": {} },
+        "taskConfig": {
+            "INPUT": {},
+            "OUTPUT": {},
+        },
     },
 
     // JSON转数据
@@ -108,14 +111,20 @@ export const TASK_TEMPLATE = {
     OPERATE_DATA: {
         "taskType": OPERATE_DATA,
         "taskName": "处理数据",
-        "taskConfig": { "INPUT": {}, "OUTPUT": {} },
+        "taskConfig": {
+            "INPUT": {},
+            "OUTPUT": {},
+        },
     },
 
     // 写入Excel文件
     WRITE_EXCEL: {
         "taskType": WRITE_EXCEL,
         "taskName": "写入Excel文件",
-        "taskConfig": { "INPUT": {}, "OUTPUT": {} },
+        "taskConfig": {
+            "INPUT": {},
+            "OUTPUT": {},
+        },
     },
 
     // 保存数据到数仓
@@ -143,7 +152,10 @@ export const TASK_TEMPLATE = {
     SEND_EMAIL: {
         "taskType": SEND_EMAIL,
         "taskName": "发送邮件",
-        "taskConfig": { "INPUT": {}, "OUTPUT": {} },
+        "taskConfig": {
+            "INPUT": {},
+            "OUTPUT": {},
+        },
     },
 }
 
