@@ -86,7 +86,6 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.FILTER_DATA.taskType,
                     label: TASK_TEMPLATE.FILTER_DATA.taskName,
-                    disabled: true,
                 },
                 {
                     key: TASK_TEMPLATE.OPERATE_DATA.taskType,
