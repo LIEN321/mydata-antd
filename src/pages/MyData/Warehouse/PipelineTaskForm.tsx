@@ -268,12 +268,12 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 <Row>
                                     <Col span={24}>
                                         {/* 输出设置 */}
-                                        <ProFormItem label="输出设置" >
+                                        <ProFormItem label="输出到流水线变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="原始JSON的变量名"
+                                                        label="原始的JSON"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.ORIGIN_JSON = e.target.value;
@@ -285,7 +285,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 </Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="数据JSON的变量名"
+                                                        label="业务数据的JSON"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.DATA_JSON = e.target.value;
@@ -306,13 +306,13 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             (task.taskType === API_SEND_DATA) && <>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输入设置" >
+                                        <ProFormItem label="前置任务的输入变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     {/* 业务数据变量 */}
                                                     <ProFormText
-                                                        label="业务数据变量名"
+                                                        label="业务数据"
                                                         rules={[
                                                             {
                                                                 required: true,
@@ -556,12 +556,12 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输出设置" >
+                                        <ProFormItem label="输出到流水线变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="原始JSON的变量名"
+                                                        label="原始的JSON"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.ORIGIN_JSON = e.target.value;
@@ -573,7 +573,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 </Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="数据JSON的变量名"
+                                                        label="业务数据的JSON"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.DATA_JSON = e.target.value;
@@ -594,17 +594,17 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             (task.taskType === JSON_TO_DATA) && <>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输入设置" >
+                                        <ProFormItem label="前置任务的输入变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     {/* JSON变量名 */}
                                                     <ProFormText
-                                                        label="JSON变量名"
+                                                        label="JSON"
                                                         rules={[
                                                             {
                                                                 required: true,
-                                                                message: '请输入JSON变量名！',
+                                                                message: '请输入JSON的变量名！',
                                                             }
                                                         ]}
                                                         fieldProps={{
@@ -666,12 +666,12 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输出设置" >
+                                        <ProFormItem label="输出到流水线变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="业务数据的变量名"
+                                                        label="业务数据"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
@@ -685,7 +685,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 </Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="业务数据编号的变量名"
+                                                        label="业务数据编号"
                                                         disabled
                                                         fieldProps={{
                                                             value: task.taskConfig.OUTPUT.DATA_CODE || "DATA_CODE",
@@ -703,17 +703,17 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             (task.taskType === FILTER_DATA) && <>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输入设置" >
+                                        <ProFormItem label="前置任务的输入变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
-                                                    {/* JSON变量名 */}
+                                                    {/* 待过滤的数据 */}
                                                     <ProFormText
-                                                        label="待过滤的数据变量名"
+                                                        label="待过滤的数据"
                                                         rules={[
                                                             {
                                                                 required: true,
-                                                                message: '待过滤的数据变量名',
+                                                                message: '请输入待过滤的数据变量名',
                                                             }
                                                         ]}
                                                         fieldProps={{
@@ -755,12 +755,12 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输出设置" >
+                                        <ProFormItem label="输出到流水线变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="有效数据的变量名"
+                                                        label="有效业务数据"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
@@ -774,7 +774,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 </Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="被过滤拦截的数据"
+                                                        label="被过滤的无效数据"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.FILTER_BLOCKED_DATA = e.target.value;
@@ -795,13 +795,13 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             (task.taskType === SAVE_DATA && <>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输入设置" >
+                                        <ProFormItem label="前置任务的输入变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     {/* 业务数据的变量名 */}
                                                     <ProFormText
-                                                        label="业务数据的变量名"
+                                                        label="业务数据"
                                                         rules={[
                                                             {
                                                                 required: true,
@@ -827,7 +827,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输出设置" >
+                                        <ProFormItem label="输出到流水线变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
@@ -901,12 +901,12 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输出设置" >
+                                        <ProFormItem label="输出到流水线变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="查询结果的变量名"
+                                                        label="查询的业务数据"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
@@ -920,7 +920,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 </Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="业务数据编号的变量名"
+                                                        label="业务数据编号"
                                                         disabled
                                                         fieldProps={{
                                                             value: task.taskConfig.OUTPUT.DATA_CODE || "DATA_CODE",
