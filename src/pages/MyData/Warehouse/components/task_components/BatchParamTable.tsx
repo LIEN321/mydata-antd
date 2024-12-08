@@ -201,7 +201,7 @@ const BatchParamTable: React.FC<EditableTableProps> = (props) => {
     ];
 
     useEffect(() => {
-        var index = 0;
+        let index = 0;
         if (batchParams && batchParams.length > 0) {
             batchParams.map(f => {
                 f.key = index;

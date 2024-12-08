@@ -221,7 +221,7 @@ const DataFilterTable: React.FC<EditableTableProps> = (props) => {
     ];
 
     useEffect(() => {
-        var index = 0;
+        let index = 0;
         if (dataFilters && dataFilters.length > 0) {
             dataFilters.map(f => {
                 f.key = index;

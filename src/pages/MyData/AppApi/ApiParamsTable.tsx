@@ -188,7 +188,7 @@ const ApiParamsTable: React.FC<EditableTableProps> = (props) => {
     ];
 
     useEffect(() => {
-        var index = 0;
+        let index = 0;
         if (params && params.length > 0) {
             params.map(f => {
                 f.key = index;

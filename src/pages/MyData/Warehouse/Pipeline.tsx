@@ -63,7 +63,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
     };
 
     const checkIsRefresh = (groups: API.PipelineGroupVO[]) => {
-        var hasRunningPipeline = false;
+        let hasRunningPipeline = false;
         if (groups.length > 0) {
             // 若有运行中的流水线，则自动刷新
             for (const group of groups) {

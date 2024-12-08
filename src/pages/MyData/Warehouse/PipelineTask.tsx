@@ -129,7 +129,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
     ];
 
     useEffect(() => {
-        var index = 0;
+        let index = 0;
         if (tasks.length > 0) {
             // 默认选中第一个任务
             setTask(tasks[0]);

@@ -42,7 +42,7 @@ const PipelineHistoryLog: React.FC = () => {
     };
 
     const checkIsRefresh = (logs: API.PipelineLogVO[]) => {
-        var hasRunningPipeline = false;
+        let hasRunningPipeline = false;
         if (logs.length > 0) {
             // 若有运行中的流水线，则自动刷新
             for (const log of logs) {

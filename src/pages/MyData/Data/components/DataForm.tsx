@@ -1,5 +1,5 @@
 import { projectSelect } from "@/services/zhiwei/project";
-import { ProFormSelect, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
+import { ProFormSelect, ProFormText } from "@ant-design/pro-components";
 import { Col, Row } from "antd";
 import DataFieldTable from "../DataFieldTable";
 

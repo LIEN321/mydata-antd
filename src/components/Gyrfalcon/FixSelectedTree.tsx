@@ -16,7 +16,7 @@ const FixSelectedTree: React.FC<FixSelectedTreeProps> = (props) => {
     const [selectedKeys, setSelectedKeys] = useState<any>(['']);// 初始选中根节点
 
     // 数据
-    var treeData: any = [];
+    let treeData: any = [];
     const { appendRoot } = props;
     if (appendRoot === true) {
         treeData = [{ title: '全部', key: '', value: '', children: props.treeData }];

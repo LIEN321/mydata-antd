@@ -141,7 +141,7 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
                         params.pipelineId = pipeline.id || 0;
                         const response = await pipelineHistoryPage(params);
 
-                        var hasRunningPipeline = false;
+                        let hasRunningPipeline = false;
                         if (response.success && response.data) {
                             for (const history of response.data) {
                                 if (history.executionStatus === STATUS_RUNNING) {

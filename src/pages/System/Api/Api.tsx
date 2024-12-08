@@ -2,8 +2,8 @@ import CRUD from "@/components/Gyrfalcon/CRUD";
 import FixSelectedTree from "@/components/Gyrfalcon/FixSelectedTree";
 import { deleteSysApi, sysApiPage, saveSysApi, deleteSysApis } from "@/services/zhiwei/api";
 import { menuTree } from "@/services/zhiwei/menu";
-import { ActionType, ProColumns, ProFormRadio, ProFormSelect, ProFormText, ProFormTextArea, ProFormTreeSelect } from "@ant-design/pro-components";
-import { Card, Col, Row, Tree } from "antd";
+import { ActionType, ProColumns, ProFormRadio, ProFormText, ProFormTextArea, ProFormTreeSelect } from "@ant-design/pro-components";
+import { Card, Col, Row } from "antd";
 import { useEffect, useRef, useState } from "react";
 
 const Api: React.FC = () => {

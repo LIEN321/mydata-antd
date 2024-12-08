@@ -165,7 +165,7 @@ const FieldMappingTable: React.FC<EditableTableProps> = (props) => {
     ];
 
     useEffect(() => {
-        var index = 0;
+        let index = 0;
         if (fieldMappings && fieldMappings.length > 0) {
             fieldMappings.map(f => {
                 f.key = index;

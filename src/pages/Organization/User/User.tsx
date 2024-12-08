@@ -6,7 +6,7 @@ import { roleSelect } from "@/services/zhiwei/role";
 import { deleteUsers, resetPassword, saveUser, userPage } from "@/services/zhiwei/user";
 import { CopyOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns, ProFormText, ProFormTreeSelect } from "@ant-design/pro-components";
-import { Card, Col, Divider, Popconfirm, Row, Tree, message, notification } from "antd";
+import { Card, Col, Divider, Popconfirm, Row, message, notification } from "antd";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 

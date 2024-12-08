@@ -224,7 +224,7 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
     ];
 
     useEffect(() => {
-        var index = 0;
+        let index = 0;
         if (dataFields && dataFields.length > 0) {
             dataFields.map(f => {
                 f.key = index;
