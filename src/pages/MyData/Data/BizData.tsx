@@ -33,6 +33,9 @@ const BizData: React.FC<BizDataProp> = (props) => {
                         title: field.fieldName,
                         dataIndex: field.fieldCode,
                         search: field.isId === 1,
+                        renderText(text) {
+                            return text.toString();
+                        },
                     });
                 }
                 columnsUpdate.push(
