@@ -598,6 +598,20 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
+                                                    <ProFormText
+                                                        label="原始的JSON"
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.INPUT.ORIGIN_JSON = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.INPUT.ORIGIN_JSON || "ORIGIN_JSON",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
                                                     {/* JSON变量名 */}
                                                     <ProFormText
                                                         label="JSON"
@@ -615,10 +629,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                             value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
                                                         }}
                                                     />
-                                                </Col>
-                                                <Col span={2}>
-                                                </Col>
-                                                <Col span={10}>
                                                 </Col>
                                             </Row>
                                         </ProFormItem>

@@ -91,7 +91,7 @@ export const TASK_TEMPLATE = {
         "taskType": JSON_TO_DATA,
         "taskName": "JSON转数据",
         "taskConfig": {
-            "INPUT": { "DATA_JSON": "DATA_JSON" },
+            "INPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
             "OUTPUT": { "BIZ_DATA": "BIZ_DATA", "DATA_CODE": "DATA_CODE" },
         }
     },
