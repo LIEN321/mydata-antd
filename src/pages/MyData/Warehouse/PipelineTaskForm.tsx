@@ -268,7 +268,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 <Row>
                                     <Col span={24}>
                                         {/* 输出设置 */}
-                                        <ProFormItem label="输出到流水线变量" >
+                                        <ProFormItem label="输出变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
@@ -306,7 +306,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             (task.taskType === API_SEND_DATA) && <>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="前置任务的输入变量" >
+                                        <ProFormItem label="输入变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
@@ -556,7 +556,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输出到流水线变量" >
+                                        <ProFormItem label="输出变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
@@ -594,7 +594,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             (task.taskType === JSON_TO_DATA) && <>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="前置任务的输入变量" >
+                                        <ProFormItem label="输入变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
@@ -676,7 +676,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输出到流水线变量" >
+                                        <ProFormItem label="输出变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
@@ -713,7 +713,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             (task.taskType === FILTER_DATA) && <>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="前置任务的输入变量" >
+                                        <ProFormItem label="输入变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
@@ -765,7 +765,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输出到流水线变量" >
+                                        <ProFormItem label="输出变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
@@ -805,7 +805,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             (task.taskType === SAVE_DATA && <>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="前置任务的输入变量" >
+                                        <ProFormItem label="输入变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
@@ -830,6 +830,13 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}>
                                                 </Col>
                                                 <Col span={10}>
+                                                    <ProFormText
+                                                        label="业务数据编号"
+                                                        disabled
+                                                        fieldProps={{
+                                                            value: task.taskConfig.INPUT.DATA_CODE || "DATA_CODE",
+                                                        }}
+                                                    />
                                                 </Col>
                                             </Row>
                                         </ProFormItem>
@@ -837,7 +844,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输出到流水线变量" >
+                                        <ProFormItem label="输出变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
@@ -911,7 +918,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <ProFormItem label="输出到流水线变量" >
+                                        <ProFormItem label="输出变量" >
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>

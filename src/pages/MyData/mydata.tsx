@@ -132,7 +132,7 @@ export const TASK_TEMPLATE = {
         "taskType": SAVE_DATA,
         "taskName": "保存数据到数仓",
         "taskConfig": {
-            "INPUT": { "BIZ_DATA": "BIZ_DATA" },
+            "INPUT": { "BIZ_DATA": "BIZ_DATA", "DATA_CODE": "DATA_CODE" },
             "OUTPUT": { "SAVED_DATA": "SAVED_DATA" },
         },
     },
