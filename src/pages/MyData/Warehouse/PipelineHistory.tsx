@@ -137,7 +137,6 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
                     actionRef={tableRef}
                     columns={columns}
                     request={async (params: API.pipelineHistoryPageParams) => {
-                        console.info('params: ', params);
                         params.pipelineId = pipeline.id || 0;
                         const response = await pipelineHistoryPage(params);
 

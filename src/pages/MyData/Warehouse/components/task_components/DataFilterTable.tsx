@@ -122,7 +122,6 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     };
 
     if (editable) {
-        console.info(dataIndex, record.op);
         childNode = editing ? (
             (dataIndex == 'k' || dataIndex == 'op' || (dataIndex == 'v' && record.op != '' && record.op != 'nn' && record.op != 'ne') || record.t === TASK_FILTER_TYPE_FIELD) ?
                 <Form.Item

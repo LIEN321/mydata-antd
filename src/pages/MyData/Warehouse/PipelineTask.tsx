@@ -209,7 +209,6 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
         newTasks[index] = task;
         setTask(task);
         props.setTasks(newTasks);
-        console.info('PipelineTasks.task', task);
     }
 
     const deleteTask = (index: number) => {

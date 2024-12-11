@@ -36,7 +36,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
     const [form] = Form.useForm();
     // 当 task 变化时，更新表单内容
     useEffect(() => {
-        console.info("task", task);
         form.resetFields();
         if (task) {
             form.setFieldsValue(task);

@@ -136,7 +136,6 @@ export type EditableTableProps = {
 const FieldMappingTable: React.FC<EditableTableProps> = (props) => {
 
     const [fieldMappings, setFieldMappings] = useState<FieldMappingDataType[]>(props.fieldMappings || []);
-    console.info('FieldMappingTable', fieldMappings);
 
     const [count, setCount] = useState(fieldMappings.length);
 

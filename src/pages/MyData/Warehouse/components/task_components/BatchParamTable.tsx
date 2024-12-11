@@ -98,7 +98,6 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     };
 
     if (editable) {
-        console.info(dataIndex, record.op);
         childNode = editing ? (
             (dataIndex !== "step" || record.op === "inc") ?
                 <Form.Item
