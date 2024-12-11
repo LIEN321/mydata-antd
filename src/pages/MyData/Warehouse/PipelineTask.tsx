@@ -137,7 +137,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 index++;
 
                 const taskTemplate = { ...TASK_TEMPLATE[task.taskType as TaskKey] };
-                const taskTemplateConfig = taskTemplate.taskConfig;
+                const taskTemplateConfig = {...taskTemplate.taskConfig};
 
                 if (!task.taskConfig) {
                     task.taskConfig = { ...taskTemplateConfig };
@@ -146,13 +146,13 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                     const { taskConfig } = task;
                     for (const key in taskTemplateConfig) {
                         if (!taskConfig.hasOwnProperty(key)) {
-                            taskConfig[key] = taskTemplateConfig[key as keyof typeof taskTemplateConfig];
+                            taskConfig[key] = {...taskTemplateConfig[key as keyof typeof taskTemplateConfig]};
                         }
                     }
                     // 补全taskConfig.INPUT 和 taskConfig.OUTPUT 的属性
                     if (taskTemplateConfig["INPUT"] && task.taskConfig["INPUT"]) {
-                        const templateInput = taskTemplateConfig["INPUT"];
-                        const taskInput = task.taskConfig["INPUT"];
+                        const templateInput = {...taskTemplateConfig["INPUT"]};
+                        const taskInput = {...task.taskConfig["INPUT"]};
                         for (const key in templateInput) {
                             if (!taskInput.hasOwnProperty(key)) {
                                 taskInput[key] = templateInput[key as keyof typeof templateInput];
@@ -160,8 +160,8 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                         }
                     }
                     if (taskTemplateConfig["OUTPUT"] && task.taskConfig["OUTPUT"]) {
-                        const templateOutput = taskTemplateConfig["OUTPUT"];
-                        const taskOutput = task.taskConfig["OUTPUT"];
+                        const templateOutput = {...taskTemplateConfig["OUTPUT"]};
+                        const taskOutput = {...task.taskConfig["OUTPUT"]};
                         for (const key in templateOutput) {
                             if (!taskOutput.hasOwnProperty(key)) {
                                 taskOutput[key] = templateOutput[key as keyof typeof templateOutput];
