@@ -174,8 +174,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
     }, []);
 
     // 下拉菜单点击事件
-    // const handleDropdownClick: MenuProps['onClick'] = (info) => {
-    const handleDropdownClick = (index: number, type: string) => {
+    const handleAddTask = (index: number, type: string) => {
         const newTasks = [...tasks];
         const newTask = { ...TASK_TEMPLATE[type as TaskKey] as unknown as TaskItem };
         newTasks.splice(index, 0, newTask as TaskItem);
@@ -192,7 +191,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
     }
 
     // 移动任务的位置
-    const moveTask = (fromIndex: number, toIndex: number) => {
+    const handleMoveTask = (fromIndex: number, toIndex: number) => {
         const newTasks = [...tasks];
         if (fromIndex < 0 || toIndex < 0 || fromIndex >= newTasks.length || toIndex >= newTasks.length) {
             throw new Error("位置无效，操作失败！");
@@ -234,7 +233,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                             tasks.length == 0 &&
                             <Dropdown menu={{
                                 items: dropDownItems, onClick: ({ key }) => {
-                                    handleDropdownClick(0, key);
+                                    handleAddTask(0, key);
                                 }
                             }} trigger={["click"]}>
                                 <Button icon={<PlusOutlined />} type="dashed" block>添加步骤</Button>
@@ -257,14 +256,14 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                             <div style={{ position: "absolute", right: 0, top: -18, width: 80, height: 50, paddingTop: 10, paddingLeft: 10, zIndex: 999 }}>
                                                 <Dropdown menu={{
                                                     items: dropDownItems, onClick: ({ key }) => {
-                                                        handleDropdownClick(index, key);
+                                                        handleAddTask(index, key);
                                                     }
                                                 }} trigger={["click"]}>
                                                     {/* 上方添加图标 */}
                                                     <PlusCircleFilled style={{ fontSize: 20, color: token.blue }} />
                                                 </Dropdown>
                                                 {/* 上移位置图标 */}
-                                                {index != 0 && <UpCircleFilled style={{ fontSize: 20, color: token.blue, marginLeft: 20 }} onClick={() => { moveTask(index, index - 1) }} />}
+                                                {index != 0 && <UpCircleFilled style={{ fontSize: 20, color: token.blue, marginLeft: 20 }} onClick={() => { handleMoveTask(index, index - 1) }} />}
                                             </div>
                                         }
 
@@ -301,14 +300,14 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                             <div style={{ position: "absolute", right: 0, bottom: -18, width: 80, height: 50, paddingTop: 20, paddingLeft: 10 }}>
                                                 <Dropdown menu={{
                                                     items: dropDownItems, onClick: ({ key }) => {
-                                                        handleDropdownClick(index + 1, key);
+                                                        handleAddTask(index + 1, key);
                                                     }
                                                 }} trigger={["click"]}>
                                                     {/* 下方添加图标 */}
                                                     <PlusCircleFilled style={{ fontSize: 20, color: token.blue }} />
                                                 </Dropdown>
                                                 {/* 下移位置图标 */}
-                                                {index != (tasks.length - 1) && <DownCircleFilled style={{ fontSize: 20, color: token.blue, marginLeft: 20 }} onClick={(e) => { moveTask(index, index + 1); }} />}
+                                                {index != (tasks.length - 1) && <DownCircleFilled style={{ fontSize: 20, color: token.blue, marginLeft: 20 }} onClick={(e) => { handleMoveTask(index, index + 1); }} />}
                                             </div>
                                         }
                                     </ProCard >
