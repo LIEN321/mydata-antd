@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, FILTER_DATA, JSON_TO_DATA, QUERY_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, FILTER_DATA, JSON_TO_DATA, QUERY_DATA, SAVE_DATA, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTask";
@@ -140,8 +140,9 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </Col>
                             <Col span={12}></Col>
                         </Row>
+                        {/* ######################################## API接口 ######################################## */}
                         {
-                            // ---------------------------------------- API: 调用API获取JSON ----------------------------------------
+                            // ---------------------------------------- 调用API获取JSON ----------------------------------------
                             (task.taskType === API_GET_JSON) && <>
                                 <Row gutter={24}>
                                     {/* 选择应用 */}
@@ -302,7 +303,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
-                            // ---------------------------------------- API: 调用API发送数据 ----------------------------------------
+                            // ---------------------------------------- 调用API发送数据 ----------------------------------------
                             (task.taskType === API_SEND_DATA) && <>
                                 <Row>
                                     <Col span={24}>
@@ -495,7 +496,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
-                            // ---------------------------------------- API：从Webhook接收JSON ----------------------------------------
+                            // ---------------------------------------- 从Webhook接收JSON ----------------------------------------
                             (task.taskType === WEBHOOK_GET_JSON) && <>
                                 <Row gutter={24}>
                                     {/* 选择应用 */}
@@ -589,8 +590,9 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                             </>
                         }
+                        {/* ######################################## 数据处理 ######################################## */}
                         {
-                            // ---------------------------------------- DATA: JSON转业务数据 ----------------------------------------
+                            // ---------------------------------------- JSON转业务数据 ----------------------------------------
                             (task.taskType === JSON_TO_DATA) && <>
                                 <Row>
                                     <Col span={24}>
@@ -702,7 +704,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
-                            // ---------------------------------------- DATA: 过滤数据 ----------------------------------------
+                            // ---------------------------------------- 过滤数据 ----------------------------------------
                             (task.taskType === FILTER_DATA) && <>
                                 <Row>
                                     <Col span={24}>
@@ -794,7 +796,70 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
-                            // ---------------------------------------- 数仓：保存数据 ----------------------------------------
+                            // ---------------------------------------- 过滤数据 ----------------------------------------
+                            (task.taskType === WRITE_EXCEL) && <>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输入变量" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    {/* 业务数据 */}
+                                                    <ProFormText
+                                                        label="业务数据"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: '请输入业务数据的变量名！',
+                                                            }
+                                                        ]}
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输出变量" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    <ProFormText
+                                                        label="Excel文件"
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.OUTPUT.EXCEL_FILE = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.OUTPUT.EXCEL_FILE || "EXCEL_FILE",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+                        {/* ######################################## 数据仓库 ######################################## */}
+                        {
+                            // ---------------------------------------- 保存数据 ----------------------------------------
                             (task.taskType === SAVE_DATA && <>
                                 <Row>
                                     <Col span={24}>
@@ -856,7 +921,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>)
                         }
                         {
-                            // ---------------------------------------- 数仓：查询数据 ----------------------------------------
+                            // ---------------------------------------- 查询数据 ----------------------------------------
                             (task.taskType === QUERY_DATA && <>
                                 <Row gutter={24}>
                                     {/* 选择数据 */}

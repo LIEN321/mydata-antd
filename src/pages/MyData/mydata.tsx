@@ -117,13 +117,13 @@ export const TASK_TEMPLATE = {
         },
     },
 
-    // 写入Excel文件
+    // 数据写入Excel
     WRITE_EXCEL: {
         "taskType": WRITE_EXCEL,
-        "taskName": "写入Excel文件",
+        "taskName": "数据写入Excel",
         "taskConfig": {
-            "INPUT": {},
-            "OUTPUT": {},
+            "INPUT": { "BIZ_DATA": "BIZ_DATA" },
+            "OUTPUT": { "EXCEL_FILE": "EXCEL_FILE" },
         },
     },
 

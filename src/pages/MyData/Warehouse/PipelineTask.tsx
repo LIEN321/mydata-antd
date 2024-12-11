@@ -95,7 +95,6 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.WRITE_EXCEL.taskType,
                     label: TASK_TEMPLATE.WRITE_EXCEL.taskName,
-                    disabled: true,
                 },
             ],
         },
@@ -152,20 +151,20 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                         }
                     }
                     // 补全taskConfig.INPUT 和 taskConfig.OUTPUT 的属性
-                    if(taskTemplateConfig["INPUT"] && task.taskConfig["INPUT"]){
+                    if (taskTemplateConfig["INPUT"] && task.taskConfig["INPUT"]) {
                         const templateInput = taskTemplateConfig["INPUT"];
                         const taskInput = task.taskConfig["INPUT"];
-                        for(const key in templateInput){
-                            if(!taskInput.hasOwnProperty(key)){
+                        for (const key in templateInput) {
+                            if (!taskInput.hasOwnProperty(key)) {
                                 taskInput[key] = templateInput[key as keyof typeof templateInput];
                             }
                         }
                     }
-                    if(taskTemplateConfig["OUTPUT"] && task.taskConfig["OUTPUT"]){
+                    if (taskTemplateConfig["OUTPUT"] && task.taskConfig["OUTPUT"]) {
                         const templateOutput = taskTemplateConfig["OUTPUT"];
                         const taskOutput = task.taskConfig["OUTPUT"];
-                        for(const key in templateOutput){
-                            if(!taskOutput.hasOwnProperty(key)){
+                        for (const key in templateOutput) {
+                            if (!taskOutput.hasOwnProperty(key)) {
                                 taskOutput[key] = templateOutput[key as keyof typeof templateOutput];
                             }
                         }
