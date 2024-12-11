@@ -694,13 +694,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}>
                                                 </Col>
                                                 <Col span={10}>
-                                                    <ProFormText
-                                                        label="业务数据编号"
-                                                        disabled
-                                                        fieldProps={{
-                                                            value: task.taskConfig.OUTPUT.DATA_CODE || "DATA_CODE",
-                                                        }}
-                                                    />
                                                 </Col>
                                             </Row>
                                         </ProFormItem>
@@ -830,13 +823,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}>
                                                 </Col>
                                                 <Col span={10}>
-                                                    <ProFormText
-                                                        label="业务数据编号"
-                                                        disabled
-                                                        fieldProps={{
-                                                            value: task.taskConfig.INPUT.DATA_CODE || "DATA_CODE",
-                                                        }}
-                                                    />
                                                 </Col>
                                             </Row>
                                         </ProFormItem>
@@ -936,13 +922,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}>
                                                 </Col>
                                                 <Col span={10}>
-                                                    <ProFormText
-                                                        label="业务数据编号"
-                                                        disabled
-                                                        fieldProps={{
-                                                            value: task.taskConfig.OUTPUT.DATA_CODE || "DATA_CODE",
-                                                        }}
-                                                    />
                                                 </Col>
                                             </Row>
                                         </ProFormItem>

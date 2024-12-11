@@ -92,7 +92,7 @@ export const TASK_TEMPLATE = {
         "taskName": "JSON转数据",
         "taskConfig": {
             "INPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
-            "OUTPUT": { "BIZ_DATA": "BIZ_DATA", "DATA_CODE": "DATA_CODE" },
+            "OUTPUT": { "BIZ_DATA": "BIZ_DATA" },
         }
     },
 
@@ -132,7 +132,7 @@ export const TASK_TEMPLATE = {
         "taskType": SAVE_DATA,
         "taskName": "保存数据到数仓",
         "taskConfig": {
-            "INPUT": { "BIZ_DATA": "BIZ_DATA", "DATA_CODE": "DATA_CODE" },
+            "INPUT": { "BIZ_DATA": "BIZ_DATA" },
             "OUTPUT": { "SAVED_DATA": "SAVED_DATA" },
         },
     },
@@ -143,7 +143,7 @@ export const TASK_TEMPLATE = {
         "taskName": "从数仓查询数据",
         "taskConfig": {
             "INPUT": {},
-            "OUTPUT": { "BIZ_DATA": "BIZ_DATA", "DATA_CODE": "DATA_CODE" },
+            "OUTPUT": { "BIZ_DATA": "BIZ_DATA" },
             "DATA_FILTER": [],
         },
     },
