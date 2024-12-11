@@ -121,7 +121,6 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.SEND_EMAIL.taskType,
                     label: TASK_TEMPLATE.SEND_EMAIL.taskName,
-                    disabled: true,
                 }
             ],
         },

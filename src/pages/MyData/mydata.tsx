@@ -155,6 +155,12 @@ export const TASK_TEMPLATE = {
         "taskConfig": {
             "INPUT": {},
             "OUTPUT": {},
+            "EMAIL": {
+                "ADDRESS": "",
+                "SUBJECT": "",
+                "CONTENT": "",
+                "FILE": "",
+            }
         },
     },
 }
