@@ -76,12 +76,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
         setLoading(false);
     };
 
-    useEffect(() => {
-        if (task && task.dataId) {
-            loadDataFields(task.dataId);
-        }
-    }, []);
-
     const handleUpdateFieldMappings = (fieldMappings: FieldMappingDataType[]) => {
         setFieldMappings(fieldMappings);
         const fieldMapping = {} as any;
@@ -795,7 +789,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {
-                            // ---------------------------------------- 过滤数据 ----------------------------------------
+                            // ---------------------------------------- 写入Excel ----------------------------------------
                             (task.taskType === WRITE_EXCEL) && <>
                                 <Row>
                                     <Col span={24}>
