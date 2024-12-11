@@ -153,7 +153,17 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                 label="时间间隔"
                                 name="intervalTime"
                                 allowClear={false}
-                                fieldProps={{ needConfirm: false, showNow: false }}
+                                fieldProps={{
+                                    needConfirm: false,
+                                    showNow: false,
+                                    disabledTime: (current) => {
+                                        // 禁用0小时的 0~14分钟
+                                        if (current && current.hour() === 0) {
+                                            return { disabledMinutes: () => Array.from({ length: 15 }, (_, i) => i) };
+                                        }
+                                        return {};
+                                    }
+                                }}
                                 rules={[{ required: true, message: "请选择时间间隔" }]}
                                 initialValue={"00:15:00"}
                             />
@@ -325,7 +335,6 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                     props.onOpenChange(open);
                 }}
                 onFinish={async (value) => {
-                    console.info(tasks);
                     const hide = message.loading("正在提交...");
 
                     const params: API.PipelineDTO = { ...value };
