@@ -3,7 +3,7 @@ import { ProCard } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, MenuProps, Popconfirm, Row, Space, Splitter, Typography, theme } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTaskForm from "./PipelineTaskForm";
-import { FILTER_DATA, OPERATE_DATA, TASK_TEMPLATE, TaskKey } from "../mydata";
+import { FILTER_DATA, PROCESS_DATA, TASK_TEMPLATE, TaskKey } from "../mydata";
 import { DownwardArrowLine } from "../Icons";
 
 export type PipelineTaskProp = {
@@ -88,9 +88,8 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                     label: TASK_TEMPLATE.FILTER_DATA.taskName,
                 },
                 {
-                    key: TASK_TEMPLATE.OPERATE_DATA.taskType,
-                    label: TASK_TEMPLATE.OPERATE_DATA.taskName,
-                    disabled: true,
+                    key: TASK_TEMPLATE.PROCESS_DATA.taskType,
+                    label: TASK_TEMPLATE.PROCESS_DATA.taskName,
                 },
                 {
                     key: TASK_TEMPLATE.WRITE_EXCEL.taskType,
@@ -186,7 +185,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
         });
 
         // 若新任务是 过滤数据 或 处理数据，则从当前新任务前面最近的任务 复制数据id
-        if (type === FILTER_DATA || type === OPERATE_DATA) {
+        if (type === FILTER_DATA || type === PROCESS_DATA) {
             for (let i = index - 1; i >= 0; i--) {
                 const tmpTask = newTasks[i];
                 if (tmpTask.dataId) {

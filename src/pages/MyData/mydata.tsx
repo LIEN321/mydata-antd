@@ -36,7 +36,7 @@ export const SAVE_DATA = "SAVE_DATA";
 export const QUERY_DATA = "QUERY_DATA";
 export const JSON_TO_DATA = "JSON_TO_DATA";
 export const FILTER_DATA = "FILTER_DATA";
-export const OPERATE_DATA = "OPERATE_DATA";
+export const PROCESS_DATA = "PROCESS_DATA";
 export const WRITE_EXCEL = "WRITE_EXCEL";
 export const SEND_EMAIL = "SEND_EMAIL";
 
@@ -108,12 +108,13 @@ export const TASK_TEMPLATE = {
     },
 
     // 处理数据
-    OPERATE_DATA: {
-        "taskType": OPERATE_DATA,
+    PROCESS_DATA: {
+        "taskType": PROCESS_DATA,
         "taskName": "处理数据",
         "taskConfig": {
-            "INPUT": {},
-            "OUTPUT": {},
+            "INPUT": { "BIZ_DATA": "BIZ_DATA" },
+            "OUTPUT": { "BIZ_DATA": "BIZ_DATA" },
+            "DATA_PROCESS": [],
         },
     },
 

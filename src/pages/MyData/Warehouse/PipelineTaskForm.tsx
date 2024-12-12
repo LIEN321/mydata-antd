@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, FILTER_DATA, JSON_TO_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, FILTER_DATA, JSON_TO_DATA, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTask";
@@ -12,6 +12,7 @@ import AddApi from "./components/AddApi";
 import FieldMappingTable, { FieldMappingDataType } from "./components/task_components/FieldMappingTable";
 import BatchParamTable, { BatchParamDataType } from "./components/task_components/BatchParamTable";
 import DataFilterTable, { DataFilterDataType } from "./components/task_components/DataFilterTable";
+import DataProcessTable, { DataProcessDataType } from "./components/task_components/DataProcessTable";
 
 export type TaskFormProp = {
     /** 任务信息 */
@@ -97,6 +98,13 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
         task.taskConfig.DATA_FILTER = dataFilters;
         updateTask();
     };
+
+    const handleUpdateDataProcesses = (dataProcesses: DataProcessDataType[]) => {
+        task.taskConfig.DATA_PROCESS = dataProcesses;
+        updateTask();
+    };
+
+    
 
     /** 加载状态 */
     const [loading, setLoading] = useState<boolean>(false);
@@ -781,6 +789,88 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                             value: task.taskConfig.OUTPUT.FILTER_BLOCKED_DATA || "FILTER_BLOCKED_DATA",
                                                         }}
                                                     />
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+                        {
+                            // ---------------------------------------- 处理数据 ----------------------------------------
+                            (task.taskType === PROCESS_DATA) && <>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输入变量" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    {/* 待处理的数据 */}
+                                                    <ProFormText
+                                                        label="待处理的数据"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: '请输入待处理的数据变量名',
+                                                            }
+                                                        ]}
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    {/* 处理数据 */}
+                                    <Col span={24}>
+                                        <ProFormItem
+                                            label="处理数据"
+                                        >
+                                            <Skeleton loading={loading} active>
+                                                {
+                                                    !loading && <DataProcessTable
+                                                        dataProcesses={task.taskConfig.DATA_PROCESS}
+                                                        dataFields={dataFields}
+                                                        handleUpdateDataProcesses={handleUpdateDataProcesses}
+                                                        loading={loading}
+                                                    />
+                                                }
+                                            </Skeleton>
+
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输出变量" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    <ProFormText
+                                                        label="有效业务数据"
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.OUTPUT.BIZ_DATA || "BIZ_DATA",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
                                                 </Col>
                                             </Row>
                                         </ProFormItem>
