@@ -104,8 +104,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
         updateTask();
     };
 
-    
-
     /** 加载状态 */
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -407,7 +405,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row gutter={24}>
                                     {/* 选择数据 */}
-                                    <Col span={12}>
+                                    {/* <Col span={12}>
                                         <ProFormSelect
                                             name="dataId"
                                             label="选择数据"
@@ -424,8 +422,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 updateTask();
                                             }}
                                         />
-                                    </Col>
-                                    <Col span={12}></Col>
+                                    </Col> */}
+                                    {/* <Col span={12}></Col> */}
                                 </Row>
                                 <Row gutter={24}>
                                     {/* 字段映射 */}

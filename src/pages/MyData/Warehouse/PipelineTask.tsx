@@ -3,7 +3,7 @@ import { ProCard } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, MenuProps, Popconfirm, Row, Space, Splitter, Typography, theme } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTaskForm from "./PipelineTaskForm";
-import { FILTER_DATA, PROCESS_DATA, TASK_TEMPLATE, TaskKey } from "../mydata";
+import { API_SEND_DATA, FILTER_DATA, PROCESS_DATA, TASK_TEMPLATE, TaskKey } from "../mydata";
 import { DownwardArrowLine } from "../Icons";
 
 export type PipelineTaskProp = {
@@ -184,8 +184,8 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
             t.key = index;
         });
 
-        // 若新任务是 过滤数据 或 处理数据，则从当前新任务前面最近的任务 复制数据id
-        if (type === FILTER_DATA || type === PROCESS_DATA) {
+        // 若新任务是 发送数据、过滤数据 或 处理数据，则从当前新任务前面最近的任务 复制数据id
+        if (type === API_SEND_DATA || type === FILTER_DATA || type === PROCESS_DATA) {
             for (let i = index - 1; i >= 0; i--) {
                 const tmpTask = newTasks[i];
                 if (tmpTask.dataId) {
