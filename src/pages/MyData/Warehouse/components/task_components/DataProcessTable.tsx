@@ -16,6 +16,8 @@ interface Item {
     op: string;
     /** 处理值 */
     v: string;
+    /** 类型 */
+    t: number;
 }
 
 interface EditableRowProps {
@@ -127,6 +129,9 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 onSelect={save}
             />
         }
+        if (dataIndex == "v" && record.t === TASK_FILTER_TYPE_FIELD) {
+            return <Select options={dataFieldSelectOptions} onSelect={save} />
+        }
         return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
     };
 
@@ -168,6 +173,8 @@ export interface DataProcessDataType {
     op: string;
     /** 处理值 */
     v: string;
+    /** 类型 */
+    t: number;
 }
 
 type ColumnTypes = Exclude<TableProps<DataProcessDataType>['columns'], undefined>;
@@ -237,12 +244,13 @@ const DataProcessTable: React.FC<EditableTableProps> = (props) => {
     }, []);
 
     // 新增行
-    const handleAdd = () => {
+    const handleAdd = (type: number) => {
         const newData: DataProcessDataType = {
             key: count
             , k: ''
             , op: ''
             , v: ''
+            , t: type
         };
 
         setDataProcesses([...dataProcesses, newData]);
@@ -295,8 +303,11 @@ const DataProcessTable: React.FC<EditableTableProps> = (props) => {
     return (
         <div>
             <Space>
-                <Button icon={<PlusOutlined />} onClick={() => { handleAdd() }} type="primary" style={{ marginBottom: 16 }}>
-                    添加
+                <Button icon={<PlusOutlined />} onClick={() => { handleAdd(TASK_FILTER_TYPE_VALUE) }} type="primary" style={{ marginBottom: 16 }}>
+                    数值运算
+                </Button>
+                <Button icon={<PlusOutlined />} onClick={() => { handleAdd(TASK_FILTER_TYPE_FIELD) }} type="primary" style={{ marginBottom: 16 }}>
+                    字段之间运算
                 </Button>
             </Space>
             <Table<DataProcessDataType>
