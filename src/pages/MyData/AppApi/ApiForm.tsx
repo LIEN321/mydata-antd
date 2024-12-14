@@ -98,9 +98,9 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                     <Divider type="vertical" />
                     {opType == 2 && props.reqBodyType == "json" &&
                         <Button type="link" title="插入业务数据占位符" onClick={() => {
-                            insertTextAtCursor('${BIZ_DATA}');
+                            insertTextAtCursor('${DATA_JSON}');
                         }}>
-                            {'${BIZ_DATA}'}
+                            {'${DATA_JSON}'}
                         </Button>}
                     <br />
                     <br />
