@@ -35,6 +35,7 @@ export const API_GET_VAR = "API_GET_VAR";
 export const SAVE_DATA = "SAVE_DATA";
 export const QUERY_DATA = "QUERY_DATA";
 export const JSON_TO_DATA = "JSON_TO_DATA";
+export const DATA_TO_JSON = "DATA_TO_JSON";
 export const FILTER_DATA = "FILTER_DATA";
 export const PROCESS_DATA = "PROCESS_DATA";
 export const WRITE_EXCEL = "WRITE_EXCEL";
@@ -93,6 +94,17 @@ export const TASK_TEMPLATE = {
         "taskConfig": {
             "INPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
             "OUTPUT": { "BIZ_DATA": "BIZ_DATA" },
+        }
+    },
+
+    // 数据转JSON
+    DATA_TO_JSON: {
+        "taskType": DATA_TO_JSON,
+        "taskName": "数据转JSON",
+        "taskConfig": {
+            "INPUT": { "BIZ_DATA": "BIZ_DATA" },
+            "OUTPUT": { "DATA_JSON": "DATA_JSON" },
+            "JSON_TEMPLATE": "${DATA_JSON}",
         }
     },
 

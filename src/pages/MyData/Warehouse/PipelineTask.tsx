@@ -84,6 +84,10 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                     label: TASK_TEMPLATE.JSON_TO_DATA.taskName,
                 },
                 {
+                    key: TASK_TEMPLATE.DATA_TO_JSON.taskType,
+                    label: TASK_TEMPLATE.DATA_TO_JSON.taskName,
+                },
+                {
                     key: TASK_TEMPLATE.FILTER_DATA.taskType,
                     label: TASK_TEMPLATE.FILTER_DATA.taskName,
                 },
