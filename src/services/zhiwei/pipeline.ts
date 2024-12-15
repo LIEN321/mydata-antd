@@ -91,6 +91,21 @@ export async function pipelinePage(
   });
 }
 
+/** 查询流水线 GET /pipeline/select */
+export async function pipelineSelect(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.pipelineSelectParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.SelectVO[]>(`/api/pipeline/select`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** 停止流水线 GET /pipeline/stop/${param0} */
 export async function stopPipeline(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

@@ -68,6 +68,10 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                     label: TASK_TEMPLATE.WEBHOOK_GET_JSON.taskName,
                 },
                 {
+                    key: TASK_TEMPLATE.WEBHOOK_CALL_PIPELINE.taskType,
+                    label: TASK_TEMPLATE.WEBHOOK_CALL_PIPELINE.taskName,
+                },
+                {
                     key: TASK_TEMPLATE.API_GET_VAR.taskType,
                     label: TASK_TEMPLATE.API_GET_VAR.taskName,
                     disabled: true,

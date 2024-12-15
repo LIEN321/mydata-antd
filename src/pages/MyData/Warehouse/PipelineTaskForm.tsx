@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Form, Row, Skeleton, Table, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, TASK_TEMPLATE, TaskKey, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, TASK_TEMPLATE, TaskKey, WEBHOOK_CALL_PIPELINE, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTask";
@@ -13,6 +13,7 @@ import FieldMappingTable, { FieldMappingDataType } from "./components/task_compo
 import BatchParamTable, { BatchParamDataType } from "./components/task_components/BatchParamTable";
 import DataFilterTable, { DataFilterDataType } from "./components/task_components/DataFilterTable";
 import DataProcessTable, { DataProcessDataType } from "./components/task_components/DataProcessTable";
+import { pipelineSelect } from "@/services/zhiwei/pipeline";
 
 export type TaskFormProp = {
     /** 任务信息 */
@@ -586,6 +587,59 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             </Row>
                                         </ProFormItem>
                                     </Col>
+                                </Row>
+                            </>
+                        }
+                        {
+                            // ---------------------------------------- 用Webhook触发流水线 ----------------------------------------
+                            (task.taskType === WEBHOOK_CALL_PIPELINE) && <>
+                                <Row gutter={24}>
+                                    {/* 选择应用 */}
+                                    <Col span={12}>
+                                        <ProFormText
+                                            label="JSON"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请输入JSON的变量名！',
+                                                }
+                                            ]}
+                                            fieldProps={{
+                                                onChange: (e) => {
+                                                    task.taskConfig.INPUT.DATA_JSON = e.target.value;
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    <Col span={12}>
+                                        <ProFormSelect
+                                            label="选择流水线"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请选择流水线！',
+                                                }
+                                            ]}
+                                            width={"sm"}
+                                            request={(params) => {
+                                                params.projectId = props.projectId;
+                                                return pipelineSelect(params);
+                                            }}
+                                            onChange={(pipelineId: number) => {
+                                                task.taskConfig.PIPELINE_ID = pipelineId;
+                                                updateTask();
+                                            }}
+                                            fieldProps={{
+                                                value:task.taskConfig.PIPELINE_ID,
+                                            }}
+                                        />
+
+                                    </Col>
+                                    <Col span={12}></Col>
                                 </Row>
                             </>
                         }

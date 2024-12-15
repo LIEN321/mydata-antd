@@ -31,6 +31,7 @@ export const OP_TYPE_PROVIDER = 1;
 export const API_GET_JSON = "API_GET_JSON";
 export const API_SEND_DATA = "API_SEND_DATA";
 export const WEBHOOK_GET_JSON = "WEBHOOK_GET_JSON";
+export const WEBHOOK_CALL_PIPELINE = "WEBHOOK_CALL_PIPELINE";
 export const API_GET_VAR = "API_GET_VAR";
 export const SAVE_DATA = "SAVE_DATA";
 export const QUERY_DATA = "QUERY_DATA";
@@ -74,6 +75,17 @@ export const TASK_TEMPLATE = {
         "taskConfig": {
             "INPUT": { "WEBHOOK_JSON": "WEBHOOK_JSON" },
             "OUTPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
+        },
+    },
+
+    // 用Webhook触发流水线
+    WEBHOOK_CALL_PIPELINE: {
+        "taskType": WEBHOOK_CALL_PIPELINE,
+        "taskName": "用Webhook触发流水线",
+        "taskConfig": {
+            "INPUT": { "DATA_JSON": "DATA_JSON" },
+            "OUTPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
+            "PIPELINE_ID": null,
         },
     },
 
