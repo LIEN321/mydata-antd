@@ -2,10 +2,13 @@ import CRUD from "@/components/Gyrfalcon/CRUD";
 import { deleteApp, deleteApps, appPage, saveApp } from "@/services/zhiwei/app";
 import { ActionType, ProColumns, ProFormText, ProFormTextArea, } from "@ant-design/pro-components";
 import { Button } from "antd";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import AppForm from "./AppForm";
+import { ApiParamDataType } from "../AppApi/ApiParamsTable";
 
 const App: React.FC = () => {
+    // 请求Header
+    const [reqHeaders, setReqHeaders] = useState<ApiParamDataType[]>([]);
 
     // 表格列
     const columns: ProColumns<API.AppVO>[] = [
@@ -43,9 +46,24 @@ const App: React.FC = () => {
         },
     ];
 
-    const appForm = <AppForm />;
+    const appForm = <AppForm
+        reqHeaders={reqHeaders}
+        setReqHeaders={setReqHeaders}
+    />;
 
     const tableRef = useRef<ActionType>();
+
+    const handleOnClickEditBtn = (record: any) => {
+        setReqHeaders(record.reqHeaders);
+    }
+
+    const handleSaveAppApi = async (formData: any) => {
+        const body = {
+            ...formData
+            , reqHeaders: reqHeaders
+        };
+        await saveApp(body);
+    }
 
     return (
         <>
@@ -54,15 +72,17 @@ const App: React.FC = () => {
                 title="应用"
                 columns={columns}
 
-                formWidth={400}
+                formWidth={800}
                 createForm={appForm}
                 updateForm={appForm}
 
                 handlePage={appPage}
-                handleCreate={saveApp}
-                handleUpdate={saveApp}
+                handleCreate={handleSaveAppApi}
+                handleUpdate={handleSaveAppApi}
                 handleDelete={deleteApp}
                 handleBatchDelete={deleteApps}
+
+                onClickEditBtn={handleOnClickEditBtn}
             />
         </>
     );

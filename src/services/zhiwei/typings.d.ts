@@ -105,6 +105,8 @@ declare namespace API {
     appDesc?: string;
     /** 接口数量 */
     apiCount?: number;
+    /** 请求Header */
+    reqHeaders?: Record<string, any>[];
   };
 
   type appPageParams = {
@@ -134,6 +136,8 @@ declare namespace API {
     appDesc?: string;
     /** 接口数量 */
     apiCount?: number;
+    /** 请求Header */
+    reqHeaders?: Record<string, any>[];
   };
 
   type AuthUser = {

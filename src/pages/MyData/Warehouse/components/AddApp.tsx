@@ -3,6 +3,8 @@ import AppForm from "../../App/AppForm";
 import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { saveApp } from "@/services/zhiwei/app";
+import { useState } from "react";
+import { ApiParamDataType } from "../../AppApi/ApiParamsTable";
 
 export type AddAppProp = {
     /** 新建应用完成后的操作 */
@@ -10,11 +12,14 @@ export type AddAppProp = {
 };
 
 const AddApp: React.FC<AddAppProp> = (props) => {
+    // 请求Header
+    const [reqHeaders, setReqHeaders] = useState<ApiParamDataType[]>([]);
+
     return (
         <>
             <ModalForm
                 title={'新建应用'}
-                width={400}
+                width={800}
                 trigger={<Button icon={<PlusOutlined />} title="新建应用" />}
                 onFinish={async (value) => {
                     const response = await saveApp(value);
@@ -27,7 +32,10 @@ const AddApp: React.FC<AddAppProp> = (props) => {
                     return false;
                 }}
             >
-                <AppForm />
+                <AppForm
+                    reqHeaders={reqHeaders}
+                    setReqHeaders={setReqHeaders}
+                />
             </ModalForm>
         </>
     );
