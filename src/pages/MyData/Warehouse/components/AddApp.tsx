@@ -22,7 +22,11 @@ const AddApp: React.FC<AddAppProp> = (props) => {
                 width={800}
                 trigger={<Button icon={<PlusOutlined />} title="新建应用" />}
                 onFinish={async (value) => {
-                    const response = await saveApp(value);
+                    const body = {
+                        ...value
+                        , reqHeaders: reqHeaders
+                    };
+                    const response = await saveApp(body);
                     if (response.success) {
                         if (props.onSuccess && response.data) {
                             await props.onSuccess(response.data);
