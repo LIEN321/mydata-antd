@@ -106,6 +106,7 @@ export const TASK_TEMPLATE = {
         "taskConfig": {
             "INPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
             "OUTPUT": { "BIZ_DATA": "BIZ_DATA" },
+            "FIELD_MAPPING":[],
         }
     },
 
