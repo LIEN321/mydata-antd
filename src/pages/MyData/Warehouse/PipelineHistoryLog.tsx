@@ -95,7 +95,7 @@ const PipelineHistoryLog: React.FC = () => {
     return (
         <>
             <Splitter>
-                <Splitter.Panel defaultSize={300}>
+                <Splitter.Panel defaultSize={350}>
                     <Card bordered={false}>
                         {logs.map((l, index) => {
                             return <>
