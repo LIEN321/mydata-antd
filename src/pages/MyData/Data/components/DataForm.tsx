@@ -1,6 +1,6 @@
 import { projectSelect } from "@/services/zhiwei/project";
 import { ProFormSelect, ProFormText } from "@ant-design/pro-components";
-import { Col, Row } from "antd";
+import { Col, Row, Skeleton } from "antd";
 import DataFieldTable from "../DataFieldTable";
 
 export type DataFormProp = {
@@ -58,14 +58,16 @@ const DataForm: React.FC<DataFormProp> = (props) => {
             </Row>
             <Row>
                 <Col span={24}>
-                    {props.loading && <p>加载中...</p>}
-                    {/* 加载完成后再显示字段列表 */}
-                    {!props.loading && <DataFieldTable
-                        dataFields={props.dataFields}
-                        handleUpdateDataFields={props.setDataFields}
-                        loading={props.loading}
-                    />
-                    }
+                    <Skeleton active loading={props.loading}>
+                        {/* 字段列表 */}
+                        {!props.loading &&
+                            <DataFieldTable
+                                dataFields={props.dataFields}
+                                handleUpdateDataFields={props.setDataFields}
+                                loading={props.loading}
+                            />
+                        }
+                    </Skeleton>
                 </Col>
             </Row>
         </>
