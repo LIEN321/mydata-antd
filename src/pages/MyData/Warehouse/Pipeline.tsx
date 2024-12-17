@@ -8,6 +8,7 @@ import { deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei
 import { timeAgo } from "@/util/DateUtil";
 import PipelineHistory from "./PipelineHistory";
 import { STATUS_RUNNING, openLogWindow } from "../mydata";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 export type PipelineProp = {
     project: API.ProjectVO;
@@ -344,11 +345,17 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                     twoToneColor={pipeline.isSchedule ? token.green : token.colorBorder}
                                                                     style={{ cursor: "help" }}
                                                                 />
-                                                                <ApiTwoTone
-                                                                    title={`Webhook：${pipeline.isWebhook ? '已启用' : '未启用'}`}
-                                                                    twoToneColor={pipeline.isWebhook ? token.green : token.colorBorder}
-                                                                    style={{ cursor: 'help' }}
-                                                                />
+                                                                <CopyToClipboard
+                                                                    text={`https://api.mydata.work/pipeline/${pipeline.id}/webhook/${pipeline.webhookCode}`}
+                                                                    onCopy={() => {
+                                                                        message.success('拷贝成功');
+                                                                    }}
+                                                                >
+                                                                    <ApiTwoTone
+                                                                        title={`Webhook${pipeline.isWebhook ? '已启用，点击复制' : '未启用'}`}
+                                                                        twoToneColor={pipeline.isWebhook ? token.green : token.colorBorder}
+                                                                    />
+                                                                </CopyToClipboard>
                                                             </Space>
                                                         }
                                                     >
