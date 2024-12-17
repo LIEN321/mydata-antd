@@ -337,7 +337,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                     </Card>
                 </Splitter.Panel>
                 <Splitter.Panel defaultSize={"70%"} style={{ overflowY: "auto" }}>
-                    {task && <PipelineTaskForm task={task} updateTask={updateTask} projectId={props.projectId} />}
+                    {task && <PipelineTaskForm key={task.key} task={task} updateTask={updateTask} projectId={props.projectId} />}
                 </Splitter.Panel>
             </Splitter >
         </>
