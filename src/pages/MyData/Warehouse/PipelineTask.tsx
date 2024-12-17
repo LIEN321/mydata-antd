@@ -143,23 +143,23 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 task.key = index;
                 index++;
 
-                const taskTemplate = { ...TASK_TEMPLATE[task.taskType as TaskKey] };
-                const taskTemplateConfig = {...taskTemplate.taskConfig};
+                const taskTemplate = structuredClone(TASK_TEMPLATE[task.taskType as TaskKey]);
+                const taskTemplateConfig = structuredClone(taskTemplate.taskConfig);
 
                 if (!task.taskConfig) {
-                    task.taskConfig = { ...taskTemplateConfig };
+                    task.taskConfig = structuredClone(taskTemplateConfig);
                 } else {
                     // 补全taskConfig下的第一层属性
                     const { taskConfig } = task;
                     for (const key in taskTemplateConfig) {
                         if (!taskConfig.hasOwnProperty(key)) {
-                            taskConfig[key] = {...taskTemplateConfig[key as keyof typeof taskTemplateConfig]};
+                            taskConfig[key] = structuredClone(taskTemplateConfig[key as keyof typeof taskTemplateConfig]);
                         }
                     }
                     // 补全taskConfig.INPUT 和 taskConfig.OUTPUT 的属性
                     if (taskTemplateConfig["INPUT"] && task.taskConfig["INPUT"]) {
-                        const templateInput = {...taskTemplateConfig["INPUT"]};
-                        const taskInput = {...task.taskConfig["INPUT"]};
+                        const templateInput = structuredClone(taskTemplateConfig["INPUT"]);
+                        const taskInput = structuredClone(task.taskConfig["INPUT"]);
                         for (const key in templateInput) {
                             if (!taskInput.hasOwnProperty(key)) {
                                 taskInput[key] = templateInput[key as keyof typeof templateInput];
@@ -167,8 +167,8 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                         }
                     }
                     if (taskTemplateConfig["OUTPUT"] && task.taskConfig["OUTPUT"]) {
-                        const templateOutput = {...taskTemplateConfig["OUTPUT"]};
-                        const taskOutput = {...task.taskConfig["OUTPUT"]};
+                        const templateOutput = structuredClone(taskTemplateConfig["OUTPUT"]);
+                        const taskOutput = structuredClone(task.taskConfig["OUTPUT"]);
                         for (const key in templateOutput) {
                             if (!taskOutput.hasOwnProperty(key)) {
                                 taskOutput[key] = templateOutput[key as keyof typeof templateOutput];
@@ -183,7 +183,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
     // 下拉菜单点击事件
     const handleAddTask = (index: number, type: string) => {
         const newTasks = [...tasks];
-        const newTask = { ...TASK_TEMPLATE[type as TaskKey] as unknown as TaskItem };
+        const newTask = structuredClone(TASK_TEMPLATE[type as TaskKey] as unknown as TaskItem);
         newTasks.splice(index, 0, newTask as TaskItem);
         newTask.projectId = props.projectId;
 
@@ -266,7 +266,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                         hoverable
                                         onMouseEnter={() => setHoveredCard(index)}
                                         onMouseLeave={() => setHoveredCard(null)}
-                                        onClick={() => setTask(t)}
+                                        onClick={() => setTask(() => t)}
                                         boxShadow={t.key === task?.key}
                                     >
                                         {
