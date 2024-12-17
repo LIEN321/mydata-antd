@@ -638,7 +638,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 updateTask();
                                             }}
                                             fieldProps={{
-                                                value:task.taskConfig.PIPELINE_ID,
+                                                value: task.taskConfig.PIPELINE_ID,
                                             }}
                                         />
 
@@ -785,6 +785,24 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                 </Col>
                                             </Row>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    {/* 字段映射 */}
+                                    <Col span={24}>
+                                        <ProFormItem
+                                            label="字段映射"
+                                        >
+                                            <Skeleton loading={loading} active>
+                                                {
+                                                    !loading && <FieldMappingTable
+                                                        fieldMappings={fieldMappings}
+                                                        handleUpdateFieldMappings={handleUpdateFieldMappings}
+                                                        loading={loading}
+                                                    />
+                                                }
+                                            </Skeleton>
                                         </ProFormItem>
                                     </Col>
                                 </Row>
