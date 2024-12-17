@@ -67,9 +67,14 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                 const fieldMappings = fieldList as FieldMappingDataType[];
                 // 若任务中配置的字段映射，则并入fieldMappings 用于表格显示
                 const fieldMapping = task.taskConfig.FIELD_MAPPING;
+                // 用户配置的标识字段
+                const idFields = task.taskConfig.ID_FIELD || [];
                 if (fieldMapping) {
                     fieldMappings.map(m => {
                         m.apiField = fieldMapping[m.fieldCode] || "";
+                        if (idFields.length > 0) {
+                            m.isId = idFields.indexOf(m.fieldCode) >= 0;
+                        }
                     });
                 }
                 setFieldMappings(() => fieldMappings);
@@ -85,12 +90,21 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
     const handleUpdateFieldMappings = (fieldMappings: FieldMappingDataType[]) => {
         setFieldMappings(fieldMappings);
         const fieldMapping = {} as any;
-        // 提取 数据字段-接口字段 的映射关系
+        const idFileds: any[] = [];
+
         fieldMappings.map(m => {
+            // 提取 数据字段-接口字段 的映射关系
             fieldMapping[m.fieldCode] = m.apiField;
+            // 设置标识字段
+            if (m.isId === true) {
+                idFileds.push(m.fieldCode);
+            }
         });
         // 映射关系写入taskConfig.FIELD_MAPPING
         task.taskConfig.FIELD_MAPPING = fieldMapping;
+        // 更新标识字段列表
+        task.taskConfig.ID_FIELD = idFileds;
+
         updateTask();
     };
 
@@ -727,6 +741,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         fieldMappings={fieldMappings}
                                                         handleUpdateFieldMappings={handleUpdateFieldMappings}
                                                         loading={loading}
+                                                        enableSwtichIdField={true}
                                                     />
                                                 }
                                             </Skeleton>

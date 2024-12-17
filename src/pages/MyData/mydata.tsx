@@ -120,6 +120,7 @@ export const TASK_TEMPLATE = {
             "OUTPUT": { "DATA_JSON": "DATA_JSON" },
             "JSON_TEMPLATE": "${DATA_JSON}",
             "FIELD_MAPPING": {},
+            "ID_FIELD": [],
         }
     },
 

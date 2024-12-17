@@ -14,6 +14,8 @@ interface Item {
     fieldName: string;
     /** 接口字段 */
     apiField: string;
+    /** 是否标识 */
+    isId?: boolean;
 }
 
 interface EditableRowProps {
@@ -38,6 +40,7 @@ interface EditableCellProps {
     dataIndex: keyof Item;
     record: Item;
     handleSave: (record: Item) => void;
+    enableSwtichIdField: boolean,
 }
 
 // -------------------- 单元格 --------------------
@@ -48,6 +51,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     dataIndex,
     record,
     handleSave,
+    enableSwtichIdField,
     ...restProps
 }) => {
     // 默认可编辑
@@ -78,9 +82,10 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
-        if (dataIndex == "apiField") {
-            return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+        if (dataIndex == "isId") {
+            return <Switch onChange={save} />
         }
+        return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
     };
 
     if (editable) {
@@ -118,6 +123,8 @@ export interface FieldMappingDataType {
     fieldName: string;
     /** 接口字段 */
     apiField: string;
+    /** 是否标识 */
+    isId?: boolean;
 }
 
 type ColumnTypes = Exclude<TableProps<FieldMappingDataType>['columns'], undefined>;
@@ -128,6 +135,8 @@ export type EditableTableProps = {
     fieldMappings: FieldMappingDataType[];
     /** 更新属性列表 */
     handleUpdateFieldMappings: (fieldMappings: FieldMappingDataType[]) => any;
+    /** 是否启用切换id字段 */
+    enableSwtichIdField?: boolean;
     /** 加载状态 */
     loading: boolean;
 };
@@ -138,6 +147,8 @@ const FieldMappingTable: React.FC<EditableTableProps> = (props) => {
     const [fieldMappings, setFieldMappings] = useState<FieldMappingDataType[]>(props.fieldMappings || []);
 
     const [count, setCount] = useState(fieldMappings.length);
+
+    const { enableSwtichIdField } = props;
 
     const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
         {
@@ -163,6 +174,16 @@ const FieldMappingTable: React.FC<EditableTableProps> = (props) => {
         },
     ];
 
+    if (enableSwtichIdField === true) {
+        defaultColumns.push({
+            title: '是否标识',
+            dataIndex: 'isId',
+            width: 80,
+            align: 'center',
+            editable: true,
+        });
+    }
+
     useEffect(() => {
         let index = 0;
         if (fieldMappings && fieldMappings.length > 0) {
@@ -180,6 +201,7 @@ const FieldMappingTable: React.FC<EditableTableProps> = (props) => {
             , fieldCode: ''
             , fieldName: ''
             , apiField: ''
+            , isId: false
         };
 
         setFieldMappings([...fieldMappings, newData]);
@@ -224,6 +246,7 @@ const FieldMappingTable: React.FC<EditableTableProps> = (props) => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave,
+                enableSwtichIdField: enableSwtichIdField,
             }),
         };
     });
