@@ -36,19 +36,23 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
 
     // 创建 form 实例
     const [form] = Form.useForm();
-    // 当 task 变化时，更新表单内容
-    useEffect(() => {
-        form.resetFields();
-        if (task) {
-            form.setFieldsValue(task);
-        }
-        loadDataFields(task.dataId || null);
-    }, [task]);
 
     // 所选标准数据的字段
     const [dataFields, setDataFields] = useState<API.DataFieldVO[]>([]);
     // 字段映射 相关对象
     const [fieldMappings, setFieldMappings] = useState<FieldMappingDataType[]>([]);
+
+    // 当 task 变化时，更新表单内容
+    useEffect(() => {
+        form.resetFields();
+        setDataFields(() => []);
+        setFieldMappings(() => []);
+
+        if (task) {
+            form.setFieldsValue(task);
+        }
+        loadDataFields(task.dataId || null);
+    }, [task]);
 
     // 加载标准数据的字段列表
     const loadDataFields = async (dataId: number | null) => {
