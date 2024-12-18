@@ -1,8 +1,8 @@
 import CRUD from "@/components/Gyrfalcon/CRUD";
 import { dataDetail, dataPage, deleteData, deleteDatas, saveData } from "@/services/zhiwei/data";
-import { projectList } from "@/services/zhiwei/project";
-import { ActionType, DrawerForm, ProColumns } from "@ant-design/pro-components";
-import { Button, Divider, Drawer, Skeleton, Tabs, TabsProps } from "antd";
+import { projectList, projectSelect } from "@/services/zhiwei/project";
+import { ActionType, DrawerForm, ProCard, ProColumns, ProFormSelect } from "@ant-design/pro-components";
+import { Button, Card, Col, Divider, Drawer, Row, Select, Skeleton, Tabs, TabsProps } from "antd";
 import { Fragment, useEffect, useRef, useState } from "react";
 import AddProject from "./components/AddProject";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -10,6 +10,8 @@ import { DataFieldDataType } from "../Data/DataFieldTable";
 import DataForm from "../Data/components/DataForm";
 import Pipeline from "./Pipeline";
 import BizData from "../Data/BizData";
+import TabPane from "antd/es/tabs/TabPane";
+import CRUD_Simple from "@/components/Gyrfalcon/CRUD_Simple";
 
 const Warehouse: React.FC = () => {
 
@@ -73,26 +75,6 @@ const Warehouse: React.FC = () => {
             setAddProjectOpen(true);
         }
     };
-    // 项目 Tab
-    const projectTabs = (
-        <>
-            {tabLoading && <Skeleton.Button active block />}
-            {
-                !tabLoading && <Tabs
-                    defaultActiveKey="1"
-                    activeKey={activeKey}
-                    items={tabItems}
-                    type="editable-card"
-                    onChange={(key) => {
-                        setActiveKey(key);
-                        setCurrentProject(projects[Number.parseInt(key)]);
-                        tableRef.current?.reload();
-                    }}
-                    onEdit={onEditTab}
-                />
-            }
-        </>
-    );
 
     // -------------------- 数据Table相关 --------------------
     const [data, setData] = useState<API.DataVO>({});
@@ -190,39 +172,72 @@ const Warehouse: React.FC = () => {
         await saveData(body);
     }
 
-    // -------------------- 流水线相关 --------------------
-    const toolBarButton = [
-        <Pipeline
-            project={currentProject || {}}
-        />
-    ];
-
     // -------------------- return --------------------
     return (
         <>
-            <CRUD
-                tableRef={tableRef}
-                title="数据标准"
-                columns={columns}
+            <Card>
+                <Row>
+                    <Col span={4}>
+                        <ProFormSelect
+                            request={projectSelect}
+                            label="当前项目"
+                            allowClear={false}
+                            fieldProps={{
+                                value: currentProject?.id,
+                                onChange: (projectId) => {
+                                    // TODO 发送请求 记录用户所选项目，下次自动打开所选项目
+                                    const selectedProject = projects.find(project => project.id === projectId);
+                                    if (selectedProject) {
+                                        setCurrentProject(selectedProject);
+                                        tableRef.current?.reload();
+                                    }
+                                }
+                            }}
+                        />
+                    </Col>
+                </Row>
+                <Tabs
+                    defaultActiveKey="dataManage"
+                    type="card"
+                    items={[
+                        {
+                            label: "数据管理",
+                            key: "dataManage",
+                            children: <>
+                                <CRUD_Simple
+                                    tableRef={tableRef}
+                                    title={null}
+                                    columns={columns}
 
-                formWidth={1300}
+                                    formWidth={1300}
 
-                upContent={projectTabs}
+                                    createForm={dataForm}
+                                    updateForm={dataForm}
 
-                createForm={dataForm}
-                updateForm={dataForm}
+                                    handlePage={handleDataPage}
+                                    handleCreate={handleSaveOrUpdate}
+                                    handleUpdate={handleSaveOrUpdate}
+                                    handleDelete={deleteData}
+                                    handleBatchDelete={deleteDatas}
 
-                handlePage={handleDataPage}
-                handleCreate={handleSaveOrUpdate}
-                handleUpdate={handleSaveOrUpdate}
-                handleDelete={deleteData}
-                handleBatchDelete={deleteDatas}
-
-                onClickCreateBtn={handleOnClickCreateBtn}
-                onClickEditBtn={handleOnClickEditBtn}
-
-                toolBarButton={toolBarButton}
-            />
+                                    onClickCreateBtn={handleOnClickCreateBtn}
+                                    onClickEditBtn={handleOnClickEditBtn}
+                                />
+                            </>
+                        },
+                        {
+                            label: "流水线管理",
+                            key: "pipelineManage",
+                            children: <>
+                                {currentProject && <Pipeline
+                                    project={currentProject || {}}
+                                />}
+                            </>,
+                            // destroyInactiveTabPane: true,
+                        },
+                    ]}
+                />
+            </Card>
 
             {
                 // 新建项目 Modal

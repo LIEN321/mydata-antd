@@ -44,7 +44,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                 checkIsRefresh(response.data || []);
             }
         } else {
-            message.warning("项目参数无效，请重试...");
+            // message.warning("项目参数无效，请重试...");
         }
     };
 
@@ -84,6 +84,10 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         }
         setIsRefreshing(hasRunningPipeline);
     };
+
+    useEffect(()=>{
+        loadPipelineGroups();
+    },[]);
 
     useEffect(() => {
         if (!isRefreshing)
@@ -210,7 +214,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
     return (
         <>
             {contextHolder}
-            <DrawerForm
+            {/* <DrawerForm
                 trigger={
                     <Button onClick={() => { loadPipelineGroups(); }} disabled={!project.id}>
                         流水线管理
@@ -220,7 +224,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                 title={`流水线管理 - ${project.projectName}`}
                 submitter={false}
                 drawerProps={{ extra: <Button onClick={loadPipelineGroups}>刷新</Button> }}
-            >
+            > */}
                 <Skeleton loading={loading} active>
                     <Row
                         gutter={12}
@@ -443,7 +447,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                     />
                     }
                 </Skeleton>
-            </DrawerForm >
+            {/* </DrawerForm > */}
         </>
     );
 };
