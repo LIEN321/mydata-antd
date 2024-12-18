@@ -2,11 +2,8 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { ActionType, ModalForm, PageContainer, ProColumns, ProFormInstance, ProTable } from "@ant-design/pro-components";
 import { Button, Col, Divider, message, Popconfirm, Row } from "antd";
 import React, { Fragment, useRef, useState } from "react";
-import CRUD_Simple from "./CRUD_Simple";
 
-export type CRUDProps = {
-    /** 是否显示面包屑 */
-    showBreadcrumb?: boolean;
+export type CRUD_SimpleProps = {
     /** 标题 */
     title: string | null;
     /** 表格工具栏 */
@@ -55,21 +52,10 @@ export type CRUDProps = {
      */
     onClickDeleteBtn?: (record: any) => any;
 
-    /** 左侧布局内容 */
-    leftContent?: any;
-    /** 左侧布局col span */
-    leftColSpan?: number;
-    /** 右侧布局内容 */
-    rightContent?: any;
-    /** 右侧布局col span */
-    rightColSpan?: number;
-    /** 表格上方内容 */
-    upContent?: any;
-
     tableRef?: any;
 };
 
-const CRUD: React.FC<CRUDProps> = (props) => {
+const CRUD_Simple: React.FC<CRUD_SimpleProps> = (props) => {
 
     const handleCreate = async (fields: any) => {
         const hide = message.loading("正在提交...");
@@ -264,52 +250,76 @@ const CRUD: React.FC<CRUDProps> = (props) => {
         onChange: onSelectChange,
     };
 
-    let leftColSpan = props.leftColSpan || 0;
-    let rightColSpan = props.rightColSpan || 0;
-    const mainColSpan = [leftColSpan, 24 - leftColSpan - rightColSpan, rightColSpan];
-
     return (
-        <PageContainer
-            header={{
-                breadcrumbRender: () => { return props.showBreadcrumb },
-                title: props.title,
-            }}
-        >
-            {props.upContent && props.upContent}
-            <Row gutter={12}>
-                <Col span={mainColSpan[0]}>
-                    {props.leftContent && props.leftContent}
-                </Col>
-                <Col span={mainColSpan[1]}>
-                    <CRUD_Simple
-                        title={props.title}
-                        toolBarButton={props.toolBarButton}
-                        rowSelectionCallBack={props.rowSelectionCallBack}
-                        pagination={props.pagination}
-                        columns={props.columns}
-                        formWidth={props.formWidth}
-                        optionWidth={props.optionWidth}
-                        renderOptionButton={props.renderOptionButton}
-                        createForm={props.createForm}
-                        updateForm={props.updateForm}
-                        formRef={props.formRef}
-                        handlePage={props.handlePage}
-                        handleCreate={props.handleCreate}
-                        handleUpdate={props.handleUpdate}
-                        handleDelete={props.handleDelete}
-                        handleBatchDelete={props.handleBatchDelete}
-                        onClickCreateBtn={props.onClickCreateBtn}
-                        onClickEditBtn={props.onClickEditBtn}
-                        onClickDeleteBtn={props.onClickDeleteBtn}
-                        tableRef={props.tableRef} />
-                </Col>
-                <Col span={mainColSpan[2]}>
-                    {props.rightContent && props.rightContent}
-                </Col>
-            </Row>
+        <>
+            {/* 表格 */}
+            <ProTable<any, API.PageParams>
+                actionRef={tableRef}
+                headerTitle={props.title}
+                rowKey="id"
+                columns={props.columns}
+                request={props.handlePage}
+                pagination={props.pagination ? props.pagination : { pageSize: 10 }}
+                toolBarRender={toolBarRender}
+                rowSelection={props.rowSelectionType === 'none' ? undefined : rowSelection}
+                options={false}
+            />
 
-        </PageContainer>
+            {/* 新建窗口 */}
+            {createModalOpen && <ModalForm
+                formRef={props.formRef}
+                title={`新建${props.title}`}
+                width={props.formWidth ? props.formWidth : '80%'}
+                open={createModalOpen}
+                onOpenChange={handleCreateModalOpen}
+                onFinish={async (value) => {
+                    // 提交数据
+                    const success = await handleCreate(value);
+                    // 提交成功
+                    if (success) {
+                        // 关闭新建窗口
+                        handleCreateModalOpen(false);
+                        // 刷新表格
+                        if (tableRef.current) {
+                            tableRef.current.reload();
+                        }
+                    }
+                }}
+            >
+                {props.createForm}
+            </ModalForm>
+            }
+
+            {/* 编辑窗口 */}
+            {updateModalOpen && <ModalForm
+                formRef={props.formRef}
+                title={`编辑${props.title}`}
+                width={props.formWidth}
+                open={updateModalOpen}
+                onOpenChange={(visible) => {
+                    if (visible == false) {
+                        handleUpdateModalOpen(visible);
+                        setCurrentRow(undefined);
+                    }
+                }}
+                initialValues={currentRow || {}}
+                onFinish={async (value) => {
+                    value.id = currentRow?.id;
+                    const success = await handleUpdate(value);
+                    if (success) {
+                        handleUpdateModalOpen(false);
+                        setCurrentRow(undefined);
+                        if (tableRef.current) {
+                            tableRef.current.reload();
+                        }
+                    }
+                }}
+            >
+                {props.updateForm}
+            </ModalForm>
+            }
+        </>
     );
 }
 
-export default CRUD;
+export default CRUD_Simple;
