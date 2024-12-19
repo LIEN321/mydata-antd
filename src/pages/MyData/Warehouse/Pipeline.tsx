@@ -85,9 +85,9 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         setIsRefreshing(hasRunningPipeline);
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         loadPipelineGroups();
-    },[]);
+    }, []);
 
     useEffect(() => {
         if (!isRefreshing)
@@ -225,228 +225,228 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                 submitter={false}
                 drawerProps={{ extra: <Button onClick={loadPipelineGroups}>刷新</Button> }}
             > */}
-                <Skeleton loading={loading} active>
-                    <Row
-                        gutter={12}
-                        wrap={false}
-                    >
-                        {/* 分组列 */}
-                        {groups.map((group) => {
-                            return (
-                                <Col>
-                                    {/* 流水线分组 Card */}
-                                    <Card
-                                        // bordered={false}
-                                        styles={{ body: { padding: 6 } }}
-                                        title={group.groupName}
-                                        extra={
-                                            <Fragment>
-                                                {/* 新建流水线 */}
-                                                <Button
-                                                    icon={<PlusOutlined title="新建流水线" />}
-                                                    type="text"
-                                                    onClick={() => {
-                                                        setPipeline({});
-                                                        setGroup(() => group);
-                                                        setPipelineFormOpen(true);
-                                                    }} />
-                                                {/* 编辑分组 */}
-                                                <ModalForm
-                                                    trigger={
-                                                        <Button icon={<EditOutlined title="编辑分组" />} type="text" />
-                                                    }
-                                                    title='编辑分组'
-                                                    width={400}
-                                                    onFinish={async (value) => {
-                                                        const hide = message.loading("正在提交...");
-                                                        const params = { ...value, id: group.id, projectId: project.id };
-                                                        const response = await savePipelineGroup(params);
-                                                        if (response && response.success === true) {
-                                                            hide();
-                                                            message.success("编辑成功");
-                                                            loadPipelineGroups();
-                                                            return true;
-                                                        }
-                                                    }}
-                                                    initialValues={group}
-                                                >
-                                                    {pipelineGroupForm}
-                                                </ModalForm>
-                                                {/* 删除分组 */}
-                                                <Popconfirm title={'是否确认删除?'} onConfirm={async () => {
-                                                    if (group.id) {
-                                                        const hide = message.loading("正在删除...");
-                                                        const response = await deletePipelineGroup({ id: group.id });
-                                                        if (response.success) {
-                                                            hide();
-                                                            message.success("删除成功");
-                                                            loadPipelineGroups();
-                                                        }
+            <Skeleton loading={loading} active>
+                <Row
+                    gutter={12}
+                    wrap={false}
+                >
+                    {/* 分组列 */}
+                    {groups.map((group) => {
+                        return (
+                            <Col>
+                                {/* 流水线分组 Card */}
+                                <Card
+                                    // bordered={false}
+                                    styles={{ body: { padding: 6 } }}
+                                    title={group.groupName}
+                                    extra={
+                                        <Fragment>
+                                            {/* 新建流水线 */}
+                                            <Button
+                                                icon={<PlusOutlined title="新建流水线" />}
+                                                type="text"
+                                                onClick={() => {
+                                                    setPipeline({});
+                                                    setGroup(() => group);
+                                                    setPipelineFormOpen(true);
+                                                }} />
+                                            {/* 编辑分组 */}
+                                            <ModalForm
+                                                trigger={
+                                                    <Button icon={<EditOutlined title="编辑分组" />} type="text" />
+                                                }
+                                                title='编辑分组'
+                                                width={400}
+                                                onFinish={async (value) => {
+                                                    const hide = message.loading("正在提交...");
+                                                    const params = { ...value, id: group.id, projectId: project.id };
+                                                    const response = await savePipelineGroup(params);
+                                                    if (response && response.success === true) {
+                                                        hide();
+                                                        message.success("编辑成功");
+                                                        loadPipelineGroups();
+                                                        return true;
                                                     }
                                                 }}
-                                                >
-                                                    <Button icon={<DeleteOutlined title="删除分组" />} type="text" />
-                                                </Popconfirm>
-                                            </Fragment>
-                                        }
-                                    >
-                                        {/* 流水线列表 */}
-                                        <Space direction="vertical" style={{ width: cardWidth }}>
-                                            {
-                                                group.pipelines && group.pipelines.length > 0 && group.pipelines.map(pipeline => (
-                                                    <Card
-                                                        title={pipeline.pipelineName}
-                                                        type="inner"
-                                                        size="small"
-                                                        actions={[
-                                                            (
-                                                                (pipeline.latestHistory && pipeline.latestHistory.executionStatus == 1) ?
-                                                                    <Popconfirm title="确认停止吗？" onConfirm={async () => {
-                                                                        if (pipeline.id) {
-                                                                            // 暂停执行
-                                                                            const response = await stopPipeline({ id: pipeline.id });
-                                                                            if (response.success) {
-                                                                                loadPipelineGroups();
-                                                                            }
-                                                                        }
-                                                                    }}>
-                                                                        <PauseOutlined title="停止" />
-                                                                    </Popconfirm>
-                                                                    :
-                                                                    <Popconfirm title="确认执行吗？" onConfirm={async () => {
-                                                                        if (pipeline.id) {
-                                                                            // 手动执行
-                                                                            const response = await executePipeline({ id: pipeline.id });
-                                                                            if (response.success) {
-                                                                                loadPipelineGroups();
-                                                                                setTimeout(() => {
-                                                                                    setIsRefreshing(true);
-                                                                                }, timeout);
-                                                                            }
-                                                                        }
-                                                                    }}>
-                                                                        <PlayCircleOutlined title="执行" />
-                                                                    </Popconfirm>
-                                                            )
-                                                            // 查看流水线历史记录
-                                                            , <PipelineHistory pipeline={pipeline} />
-                                                            , <StarOutlined />
-                                                            , <Dropdown menu={{
-                                                                items: dropdownItems, onClick: (info) => {
-                                                                    setGroup(() => group);
-                                                                    setPipeline(() => pipeline);
-                                                                    handleDropdownClick(info.key, pipeline);
-                                                                }
-                                                            }}
-                                                            >
-                                                                <EllipsisOutlined />
-                                                            </Dropdown>
-                                                        ]}
-                                                        extra={
-                                                            <Space>
-                                                                <HourglassTwoTone
-                                                                    title={`定时周期：${pipeline.isSchedule ? pipeline.intervalTime : '未启用'}`}
-                                                                    twoToneColor={pipeline.isSchedule ? token.green : token.colorBorder}
-                                                                    style={{ cursor: "help" }}
-                                                                />
-                                                                <CopyToClipboard
-                                                                    text={`https://api.mydata.work/pipeline/${pipeline.id}/webhook/${pipeline.webhookCode}`}
-                                                                    onCopy={() => {
-                                                                        message.success('拷贝成功');
-                                                                    }}
-                                                                >
-                                                                    <ApiTwoTone
-                                                                        title={`Webhook${pipeline.isWebhook ? '已启用，点击复制' : '未启用'}`}
-                                                                        twoToneColor={pipeline.isWebhook ? token.green : token.colorBorder}
-                                                                    />
-                                                                </CopyToClipboard>
-                                                            </Space>
-                                                        }
-                                                    >
-                                                        <Row>
-                                                            <Col span={12}>
-                                                                最近执行：{pipeline.latestHistory ? <span title={pipeline.latestHistory.startTime}>{timeAgo(pipeline.latestHistory.startTime || '')}</span> : '--'}
-                                                            </Col>
-                                                            <Col span={8} style={{ textAlign: "center" }}>
-                                                                耗时：{pipeline.latestHistory && pipeline.latestHistory.executionTime ? pipeline.latestHistory.executionTime + 's' : '--'}
-                                                            </Col>
-                                                            <Col span={4} style={{ textAlign: "right" }}>
-                                                                <Space>
-                                                                    <span style={{ cursor: "help" }}>
-                                                                        {pipeline.latestHistory && pipelineTriggerIcons[pipeline.latestHistory.triggerType || 0]}
-                                                                    </span>
-                                                                    <span style={{ cursor: "help" }}>
-                                                                        {pipeline.latestHistory && getPipelineStatusIcon(pipeline.latestHistory.id?.toString() || "", pipeline.latestHistory.executionStatus || 0)}
-                                                                    </span>
-                                                                </Space>
-                                                            </Col>
-                                                        </Row>
-                                                        <Row>
-                                                            <Col span={20}>
-                                                                下次执行：{pipeline.nextFireTime || '--'}
-                                                            </Col>
-                                                            <Col span={4} style={{ textAlign: "right" }}>
-
-                                                            </Col>
-                                                        </Row>
-                                                    </Card>
-                                                ))
-                                            }
-                                            {/* 当没有流水线时，可撑起Space的宽度 */}
-                                            <></>
-                                        </Space>
-                                    </Card>
-                                </Col>
-                            )
-                        })}
-                        <Col>
-                            {/* 新建流水线分组 */}
-                            <Card style={{ width: cardWidth }}>
-                                <ModalForm
-                                    form={form}
-                                    trigger={
-                                        <Button type="dashed" block>
-                                            <PlusOutlined />
-                                            新建流水线分组
-                                        </Button>
+                                                initialValues={group}
+                                            >
+                                                {pipelineGroupForm}
+                                            </ModalForm>
+                                            {/* 删除分组 */}
+                                            <Popconfirm title={'是否确认删除?'} onConfirm={async () => {
+                                                if (group.id) {
+                                                    const hide = message.loading("正在删除...");
+                                                    const response = await deletePipelineGroup({ id: group.id });
+                                                    if (response.success) {
+                                                        hide();
+                                                        message.success("删除成功");
+                                                        loadPipelineGroups();
+                                                    }
+                                                }
+                                            }}
+                                            >
+                                                <Button icon={<DeleteOutlined title="删除分组" />} type="text" />
+                                            </Popconfirm>
+                                        </Fragment>
                                     }
-                                    title='新建分组'
-                                    width={400}
-                                    onFinish={async (value) => {
-                                        const hide = message.loading("正在提交...");
-                                        const params = { ...value, projectId: project.id };
-                                        const response = await savePipelineGroup(params);
-                                        try {
-                                            if (response && response.success === true) {
-                                                hide();
-                                                message.success("新建成功");
-                                                loadPipelineGroups();
-                                                return true;
-                                            }
-                                        } finally {
-                                            // 提交后重置表单
-                                            form.resetFields();
-                                        }
-                                    }}
                                 >
-                                    {pipelineGroupForm}
-                                </ModalForm>
-                            </Card>
-                        </Col>
-                    </Row>
+                                    {/* 流水线列表 */}
+                                    <Space direction="vertical" style={{ width: cardWidth }}>
+                                        {
+                                            group.pipelines && group.pipelines.length > 0 && group.pipelines.map(pipeline => (
+                                                <Card
+                                                    title={pipeline.pipelineName}
+                                                    type="inner"
+                                                    size="small"
+                                                    actions={[
+                                                        (
+                                                            (pipeline.latestHistory && pipeline.latestHistory.executionStatus == 1) ?
+                                                                <Popconfirm title="确认停止吗？" onConfirm={async () => {
+                                                                    if (pipeline.id) {
+                                                                        // 暂停执行
+                                                                        const response = await stopPipeline({ id: pipeline.id });
+                                                                        if (response.success) {
+                                                                            loadPipelineGroups();
+                                                                        }
+                                                                    }
+                                                                }}>
+                                                                    <PauseOutlined title="停止" />
+                                                                </Popconfirm>
+                                                                :
+                                                                <Popconfirm title="确认执行吗？" onConfirm={async () => {
+                                                                    if (pipeline.id) {
+                                                                        // 手动执行
+                                                                        const response = await executePipeline({ id: pipeline.id });
+                                                                        if (response.success) {
+                                                                            loadPipelineGroups();
+                                                                            setTimeout(() => {
+                                                                                setIsRefreshing(true);
+                                                                            }, timeout);
+                                                                        }
+                                                                    }
+                                                                }}>
+                                                                    <PlayCircleOutlined title="执行" />
+                                                                </Popconfirm>
+                                                        )
+                                                        // 查看流水线历史记录
+                                                        , <PipelineHistory pipeline={pipeline} />
+                                                        , <StarOutlined />
+                                                        , <Dropdown menu={{
+                                                            items: dropdownItems, onClick: (info) => {
+                                                                setGroup(() => group);
+                                                                setPipeline(() => pipeline);
+                                                                handleDropdownClick(info.key, pipeline);
+                                                            }
+                                                        }}
+                                                        >
+                                                            <EllipsisOutlined />
+                                                        </Dropdown>
+                                                    ]}
+                                                    extra={
+                                                        <Space>
+                                                            <HourglassTwoTone
+                                                                title={`定时周期：${pipeline.isSchedule ? pipeline.intervalTime : '未启用'}`}
+                                                                twoToneColor={pipeline.isSchedule ? token.green : token.colorBorder}
+                                                                style={{ cursor: "help" }}
+                                                            />
+                                                            <CopyToClipboard
+                                                                text={`https://api.mydata.work/pipeline/${pipeline.id}/webhook/${pipeline.webhookCode}`}
+                                                                onCopy={() => {
+                                                                    message.success('拷贝成功');
+                                                                }}
+                                                            >
+                                                                <ApiTwoTone
+                                                                    title={`Webhook${pipeline.isWebhook ? '已启用，点击复制' : '未启用'}`}
+                                                                    twoToneColor={pipeline.isWebhook ? token.green : token.colorBorder}
+                                                                />
+                                                            </CopyToClipboard>
+                                                        </Space>
+                                                    }
+                                                >
+                                                    <Row>
+                                                        <Col span={12}>
+                                                            最近执行：{pipeline.latestHistory ? <span title={pipeline.latestHistory.startTime}>{timeAgo(pipeline.latestHistory.startTime || '')}</span> : '--'}
+                                                        </Col>
+                                                        <Col span={8} style={{ textAlign: "center" }}>
+                                                            耗时：{pipeline.latestHistory && pipeline.latestHistory.executionTime ? pipeline.latestHistory.executionTime + 's' : '--'}
+                                                        </Col>
+                                                        <Col span={4} style={{ textAlign: "right" }}>
+                                                            <Space>
+                                                                <span style={{ cursor: "help" }}>
+                                                                    {pipeline.latestHistory && pipelineTriggerIcons[pipeline.latestHistory.triggerType || 0]}
+                                                                </span>
+                                                                <span style={{ cursor: "help" }}>
+                                                                    {pipeline.latestHistory && getPipelineStatusIcon(pipeline.latestHistory.id?.toString() || "", pipeline.latestHistory.executionStatus || 0)}
+                                                                </span>
+                                                            </Space>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row>
+                                                        <Col span={20}>
+                                                            下次执行：{pipeline.nextFireTime || '--'}
+                                                        </Col>
+                                                        <Col span={4} style={{ textAlign: "right" }}>
 
-                    {pipelineFormOpen && <PipelineForm
-                        open={pipelineFormOpen}
-                        onOpenChange={setPipelineFormOpen}
-                        projectId={project.id}
-                        groupId={group.id}
-                        id={pipeline.id}
-                        onSuccess={() => {
-                            loadPipelineGroups();
-                        }}
-                    />
-                    }
-                </Skeleton>
+                                                        </Col>
+                                                    </Row>
+                                                </Card>
+                                            ))
+                                        }
+                                        {/* 当没有流水线时，可撑起Space的宽度 */}
+                                        <></>
+                                    </Space>
+                                </Card>
+                            </Col>
+                        )
+                    })}
+                    <Col>
+                        {/* 新建流水线分组 */}
+                        <Card style={{ width: cardWidth }}>
+                            <ModalForm
+                                form={form}
+                                trigger={
+                                    <Button type="dashed" block>
+                                        <PlusOutlined />
+                                        新建流水线分组
+                                    </Button>
+                                }
+                                title='新建分组'
+                                width={400}
+                                onFinish={async (value) => {
+                                    const hide = message.loading("正在提交...");
+                                    const params = { ...value, projectId: project.id };
+                                    const response = await savePipelineGroup(params);
+                                    try {
+                                        if (response && response.success === true) {
+                                            hide();
+                                            message.success("新建成功");
+                                            loadPipelineGroups();
+                                            return true;
+                                        }
+                                    } finally {
+                                        // 提交后重置表单
+                                        form.resetFields();
+                                    }
+                                }}
+                            >
+                                {pipelineGroupForm}
+                            </ModalForm>
+                        </Card>
+                    </Col>
+                </Row>
+
+                {pipelineFormOpen && <PipelineForm
+                    open={pipelineFormOpen}
+                    onOpenChange={setPipelineFormOpen}
+                    projectId={project.id}
+                    groupId={group.id}
+                    id={pipeline.id}
+                    onSuccess={() => {
+                        loadPipelineGroups();
+                    }}
+                />
+                }
+            </Skeleton>
             {/* </DrawerForm > */}
         </>
     );
