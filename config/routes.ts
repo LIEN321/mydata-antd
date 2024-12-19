@@ -140,7 +140,7 @@ export default [
   // -------------------- 默认地址 --------------------
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/mydata/warehouse',
   },
   {
     path: '*',
