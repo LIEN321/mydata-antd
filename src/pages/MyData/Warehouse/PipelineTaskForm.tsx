@@ -326,22 +326,10 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         label="原始的JSON"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.ORIGIN_JSON = e.target.value;
+                                                                task.taskConfig.OUTPUT.PIPELINE_JSON = e.target.value;
                                                                 updateTask();
                                                             },
-                                                            value: task.taskConfig.OUTPUT.ORIGIN_JSON || "ORIGIN_JSON",
-                                                        }}
-                                                    />
-                                                </Col>
-                                                <Col span={10}>
-                                                    <ProFormText
-                                                        label="业务数据的JSON"
-                                                        fieldProps={{
-                                                            onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.DATA_JSON = e.target.value;
-                                                                updateTask();
-                                                            },
-                                                            value: task.taskConfig.OUTPUT.DATA_JSON || "DATA_JSON",
+                                                            value: task.taskConfig.OUTPUT.PIPELINE_JSON || "PIPELINE_JSON",
                                                         }}
                                                     />
                                                 </Col>
@@ -614,24 +602,14 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         label="原始的JSON"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.ORIGIN_JSON = e.target.value;
+                                                                task.taskConfig.OUTPUT.PIPELINE_JSON = e.target.value;
                                                                 updateTask();
                                                             },
-                                                            value: task.taskConfig.OUTPUT.ORIGIN_JSON || "ORIGIN_JSON",
+                                                            value: task.taskConfig.OUTPUT.PIPELINE_JSON || "PIPELINE_JSON",
                                                         }}
                                                     />
                                                 </Col>
                                                 <Col span={10}>
-                                                    <ProFormText
-                                                        label="业务数据的JSON"
-                                                        fieldProps={{
-                                                            onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.DATA_JSON = e.target.value;
-                                                                updateTask();
-                                                            },
-                                                            value: task.taskConfig.OUTPUT.DATA_JSON || "DATA_JSON",
-                                                        }}
-                                                    />
                                                 </Col>
                                             </Row>
                                         </ProFormItem>
@@ -706,33 +684,16 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         label="原始的JSON"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.ORIGIN_JSON = e.target.value;
+                                                                task.taskConfig.INPUT.PIPELINE_JSON = e.target.value;
                                                                 updateTask();
                                                             },
-                                                            value: task.taskConfig.INPUT.ORIGIN_JSON || "ORIGIN_JSON",
+                                                            value: task.taskConfig.INPUT.PIPELINE_JSON || "PIPELINE_JSON",
                                                         }}
                                                     />
                                                 </Col>
                                                 <Col span={2}>
                                                 </Col>
                                                 <Col span={10}>
-                                                    {/* JSON变量名 */}
-                                                    <ProFormText
-                                                        label="JSON"
-                                                        rules={[
-                                                            {
-                                                                required: true,
-                                                                message: '请输入JSON的变量名！',
-                                                            }
-                                                        ]}
-                                                        fieldProps={{
-                                                            onChange: (e) => {
-                                                                task.taskConfig.INPUT.DATA_JSON = e.target.value;
-                                                                updateTask();
-                                                            },
-                                                            value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
-                                                        }}
-                                                    />
                                                 </Col>
                                             </Row>
                                         </ProFormItem>
