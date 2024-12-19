@@ -290,6 +290,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                             </Popconfirm>
                                         </Fragment>
                                     }
+                                    size="small"
                                 >
                                     {/* 流水线列表 */}
                                     <Space direction="vertical" style={{ width: cardWidth }}>
