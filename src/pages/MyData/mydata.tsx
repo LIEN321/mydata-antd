@@ -51,8 +51,8 @@ export const TASK_TEMPLATE = {
         "taskType": API_GET_JSON,
         "taskName": "从API获取JSON",
         "taskConfig": {
-            "INPUT": {},
-            "OUTPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
+            "INPUT": { "BIZ_DATA": "" },
+            "OUTPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
             "BATCH": { "ENABLE": false, "INTERVAL": 5, "PARAMS": [] },
             "FIELD_MAPPING": {},
         },
@@ -105,7 +105,7 @@ export const TASK_TEMPLATE = {
         "taskType": JSON_TO_DATA,
         "taskName": "JSON转数据",
         "taskConfig": {
-            "INPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
+            "INPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
             "OUTPUT": { "BIZ_DATA": "BIZ_DATA" },
             "FIELD_MAPPING": {},
         }
