@@ -229,6 +229,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                 <Row
                     gutter={12}
                     wrap={false}
+                    style={{ overflow: "auto", height: "71vh" }}
                 >
                     {/* 分组列 */}
                     {groups.map((group) => {
