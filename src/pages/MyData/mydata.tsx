@@ -75,7 +75,7 @@ export const TASK_TEMPLATE = {
         "taskName": "从Webhook接收JSON",
         "taskConfig": {
             "INPUT": { "WEBHOOK_JSON": "WEBHOOK_JSON" },
-            "OUTPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
+            "OUTPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
         },
     },
 
