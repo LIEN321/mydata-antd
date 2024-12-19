@@ -156,24 +156,41 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                             taskConfig[key] = structuredClone(taskTemplateConfig[key as keyof typeof taskTemplateConfig]);
                         }
                     }
-                    // 补全taskConfig.INPUT 和 taskConfig.OUTPUT 的属性
+                    // 同步 taskConfig 和 tempate的 Input 的属性
                     if (taskTemplateConfig["INPUT"] && task.taskConfig["INPUT"]) {
                         const templateInput = structuredClone(taskTemplateConfig["INPUT"]);
                         const taskInput = structuredClone(task.taskConfig["INPUT"]);
+                        // 删除task Input无效属性
+                        for (const key in taskInput) {
+                            if (!templateInput.hasOwnProperty(key)) {
+                                delete taskInput[key];
+                            }
+                        }
+                        // 补全task Input缺少属性
                         for (const key in templateInput) {
                             if (!taskInput.hasOwnProperty(key)) {
                                 taskInput[key] = templateInput[key as keyof typeof templateInput];
                             }
                         }
+                        task.taskConfig["INPUT"] = taskInput;
                     }
+                    // 同步 taskConfig 和 tempate的 Output 的属性
                     if (taskTemplateConfig["OUTPUT"] && task.taskConfig["OUTPUT"]) {
                         const templateOutput = structuredClone(taskTemplateConfig["OUTPUT"]);
                         const taskOutput = structuredClone(task.taskConfig["OUTPUT"]);
+                        // 删除task Output无效属性
+                        for (const key in taskOutput) {
+                            if (!templateOutput.hasOwnProperty(key)) {
+                                delete taskOutput[key];
+                            }
+                        }
+                        // 补全task Output缺少属性
                         for (const key in templateOutput) {
                             if (!taskOutput.hasOwnProperty(key)) {
                                 taskOutput[key] = templateOutput[key as keyof typeof templateOutput];
                             }
                         }
+                        task.taskConfig["OUTPUT"] = taskOutput;
                     }
                 }
             });
