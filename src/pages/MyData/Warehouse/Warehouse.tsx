@@ -2,10 +2,10 @@ import CRUD from "@/components/Gyrfalcon/CRUD";
 import { dataDetail, dataPage, deleteData, deleteDatas, saveData } from "@/services/zhiwei/data";
 import { projectList, projectSelect } from "@/services/zhiwei/project";
 import { ActionType, DrawerForm, ProCard, ProColumns, ProFormSelect } from "@ant-design/pro-components";
-import { Button, Card, Col, Divider, Drawer, Row, Select, Skeleton, Tabs, TabsProps } from "antd";
+import { Button, Card, Col, Divider, Drawer, Row, Select, Skeleton, Space, Tabs, TabsProps } from "antd";
 import { Fragment, useEffect, useRef, useState } from "react";
 import AddProject from "./components/AddProject";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
 import { DataFieldDataType } from "../Data/DataFieldTable";
 import DataForm from "../Data/components/DataForm";
 import Pipeline from "./Pipeline";
@@ -26,6 +26,12 @@ const Warehouse: React.FC = () => {
     const [projects, setProjects] = useState<API.ProjectVO[]>([]);
     // 当前项目
     const [currentProject, setCurrentProject] = useState<API.ProjectVO>();
+    // 流水线tab的key
+    const [pipelineKey, setPipelineKey] = useState(Date.now());
+    // 刷新 Pipeline 组件
+    const refreshPipelineKey = () => {
+        setPipelineKey(Date.now()); // 更新 key 值
+    };
 
     /**
      * 加载项目列表，作为Tab项
@@ -190,6 +196,7 @@ const Warehouse: React.FC = () => {
                                     if (selectedProject) {
                                         setCurrentProject(selectedProject);
                                         tableRef.current?.reload();
+                                        refreshPipelineKey();
                                     }
                                 }
                             }}
@@ -226,10 +233,16 @@ const Warehouse: React.FC = () => {
                             </>
                         },
                         {
-                            label: "流水线管理",
+                            label: <Space>
+                                流水线管理
+                                <ReloadOutlined onClick={(e) => {
+                                    e.stopPropagation();
+                                    refreshPipelineKey();
+                                }} />
+                            </Space>,
                             key: "pipelineManage",
                             children: <>
-                                {currentProject && <Pipeline
+                                {currentProject && <Pipeline key={pipelineKey}
                                     project={currentProject || {}}
                                 />}
                             </>,
