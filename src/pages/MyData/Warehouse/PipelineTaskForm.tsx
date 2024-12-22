@@ -900,6 +900,22 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}>
                                                 </Col>
                                                 <Col span={10}>
+                                                    <ProFormText
+                                                        label="作为参数的业务数据"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: '请输入业务数据变量名',
+                                                            }
+                                                        ]}
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.INPUT.PARAM_DATA = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.INPUT.PARAM_DATA || "",
+                                                        }}
+                                                    />
                                                 </Col>
                                             </Row>
                                         </ProFormItem>

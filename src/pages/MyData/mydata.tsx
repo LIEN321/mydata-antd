@@ -129,7 +129,7 @@ export const TASK_TEMPLATE = {
         "taskType": FILTER_DATA,
         "taskName": "过滤数据",
         "taskConfig": {
-            "INPUT": { "BIZ_DATA": "BIZ_DATA" },
+            "INPUT": { "BIZ_DATA": "BIZ_DATA", "PARAM_DATA": "" },
             "OUTPUT": { "BIZ_DATA": "BIZ_DATA", "FILTER_BLOCKED_DATA": "FILTER_BLOCKED_DATA" },
             "DATA_FILTER": [],
         },
