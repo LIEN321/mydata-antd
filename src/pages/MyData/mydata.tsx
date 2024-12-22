@@ -51,7 +51,7 @@ export const TASK_TEMPLATE = {
         "taskType": API_GET_JSON,
         "taskName": "从API获取JSON",
         "taskConfig": {
-            "INPUT": { "BIZ_DATA": "" },
+            "INPUT": { "PARAM_DATA": "" },
             "OUTPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
             "BATCH": { "ENABLE": false, "INTERVAL": 5, "PARAMS": [] },
             "FIELD_MAPPING": {},
@@ -171,7 +171,7 @@ export const TASK_TEMPLATE = {
         "taskType": QUERY_DATA,
         "taskName": "从数仓查询数据",
         "taskConfig": {
-            "INPUT": { "BIZ_DATA": "" },
+            "INPUT": { "PARAM_DATA": "" },
             "OUTPUT": { "BIZ_DATA": "BIZ_DATA" },
             "DATA_FILTER": [],
         },

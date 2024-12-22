@@ -178,10 +178,10 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         ]}
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.PARAM_DATA = e.target.value;
                                                                 updateTask();
                                                             },
-                                                            value: task.taskConfig.INPUT.BIZ_DATA || "",
+                                                            value: task.taskConfig.INPUT.PARAM_DATA || "",
                                                         }}
                                                     />
                                                 </Col>
@@ -1188,10 +1188,10 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         ]}
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.PARAM_DATA = e.target.value;
                                                                 updateTask();
                                                             },
-                                                            value: task.taskConfig.INPUT.BIZ_DATA || "",
+                                                            value: task.taskConfig.INPUT.PARAM_DATA || "",
                                                         }}
                                                     />
                                                 </Col>
