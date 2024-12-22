@@ -1,5 +1,5 @@
 import { pipelineDetail, savePipeline } from "@/services/zhiwei/pipeline";
-import { ModalForm, ProFormCheckbox, ProFormItem, ProFormRadio, ProFormSwitch, ProFormText, ProFormTextArea, ProFormTimePicker } from "@ant-design/pro-components";
+import { DrawerForm, ModalForm, ProFormCheckbox, ProFormItem, ProFormRadio, ProFormSwitch, ProFormText, ProFormTextArea, ProFormTimePicker } from "@ant-design/pro-components";
 import { Button, Col, message, Row, Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTask from "./PipelineTask";
@@ -319,13 +319,14 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
 
     return (
         <>
-            {!loading && <ModalForm
+            {!loading && <DrawerForm
                 open={props.open}
                 title={id ? '编辑流水线' : '新建流水线'}
                 width={1200}
-                style={{ height: 800 }}
+                // style={{ height: 800 }}
                 clearOnDestroy
-                modalProps={{ centered: true, destroyOnClose: true }}
+                // modalProps={{ centered: true, destroyOnClose: true }}
+                drawerProps={{ destroyOnClose: true }}
                 onOpenChange={(open) => {
                     if (open === false) {
                         if (props.onSuccess) {
@@ -363,7 +364,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                 initialValues={pipeline}
             >
                 <Tabs items={tabItems} centered activeKey={activeKey} onChange={(key) => setActiveKey(key)} style={{ maxHeight: 800 }} />
-            </ModalForm>
+            </DrawerForm>
             }
         </>
     );
