@@ -171,7 +171,7 @@ export const TASK_TEMPLATE = {
         "taskType": QUERY_DATA,
         "taskName": "从数仓查询数据",
         "taskConfig": {
-            "INPUT": {},
+            "INPUT": { "BIZ_DATA": "" },
             "OUTPUT": { "BIZ_DATA": "BIZ_DATA" },
             "DATA_FILTER": [],
         },
