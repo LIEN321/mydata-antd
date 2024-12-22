@@ -260,10 +260,10 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
 
     return (
         <>
-            <Splitter style={{ height: "100%" }}>
+            <Splitter style={{ height: "calc(100vh - 220px)" }}>
                 <Splitter.Panel defaultSize={"30%"} min={"20%"} max={"50%"}>
                     {/* 左侧任务列表外层Card */}
-                    <Card bordered={false} style={{ maxHeight: "70vh" }}>
+                    <Card bordered={false} style={{ height: "100%", overflow: "auto" }}>
                         {
                             tasks.length == 0 &&
                             <Dropdown menu={{
