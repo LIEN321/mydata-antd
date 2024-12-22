@@ -323,7 +323,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="原始的JSON"
+                                                        label="获取的JSON"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.PIPELINE_JSON = e.target.value;
@@ -599,7 +599,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="原始的JSON"
+                                                        label="获取的JSON"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.PIPELINE_JSON = e.target.value;
@@ -681,7 +681,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="原始的JSON"
+                                                        label="获取的JSON"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.INPUT.PIPELINE_JSON = e.target.value;
