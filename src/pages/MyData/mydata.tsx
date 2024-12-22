@@ -85,7 +85,7 @@ export const TASK_TEMPLATE = {
         "taskName": "用Webhook触发流水线",
         "taskConfig": {
             "INPUT": { "DATA_JSON": "DATA_JSON" },
-            "OUTPUT": { "ORIGIN_JSON": "ORIGIN_JSON", "DATA_JSON": "DATA_JSON" },
+            "OUTPUT": {},
             "PIPELINE_ID": null,
         },
     },

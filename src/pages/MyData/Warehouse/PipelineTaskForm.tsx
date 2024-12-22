@@ -201,7 +201,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             label="选择应用"
                                             rules={[
                                                 {
-                                                    required: true,
+                                                    required: false,
                                                     message: '请选择应用！',
                                                 }
                                             ]}
@@ -382,7 +382,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             label="选择应用"
                                             rules={[
                                                 {
-                                                    required: true,
+                                                    required: false,
                                                     message: '请选择应用！',
                                                 }
                                             ]}
@@ -543,7 +543,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             label="选择应用"
                                             rules={[
                                                 {
-                                                    required: true,
+                                                    required: false,
                                                     message: '请选择应用！',
                                                 }
                                             ]}
