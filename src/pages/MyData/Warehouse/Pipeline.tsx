@@ -11,7 +11,7 @@ import { STATUS_RUNNING, openLogWindow } from "../mydata";
 import CopyToClipboard from "react-copy-to-clipboard";
 
 export type PipelineProp = {
-    project: API.ProjectVO;
+    projectId: number;
 };
 
 const timeout = 5000;
@@ -23,7 +23,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
     const [modal, contextHolder] = Modal.useModal();
 
     const cardWidth = 300;
-    const { project } = props;
+    const { projectId } = props;
     const [groups, setGroups] = useState<API.PipelineGroupVO[]>([]);
     const [group, setGroup] = useState<API.PipelineGroupVO>({});
     const [pipeline, setPipeline] = useState<API.PipelineVO>({});
@@ -34,9 +34,9 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
     // 加载分组
     const loadPipelineGroups = async () => {
         setGroups([]);
-        if (project && project.id) {
+        if (projectId) {
             setLoading(true);
-            const response = await pipelineGroupList({ projectId: project.id });
+            const response = await pipelineGroupList({ projectId });
             if (response && response.success) {
                 setGroups(response.data || []);
                 setLoading(false);
@@ -50,9 +50,9 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
 
     // 只加载分组数据，不使用loading效果
     const fetchPipelineGroups = async () => {
-        if (project && project.id) {
+        if (projectId) {
             // 查询分组
-            const response = await pipelineGroupList({ projectId: project.id });
+            const response = await pipelineGroupList({ projectId });
 
             if (response && response.success) {
                 const groups = response.data || [];
@@ -260,7 +260,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                 width={400}
                                                 onFinish={async (value) => {
                                                     const hide = message.loading("正在提交...");
-                                                    const params = { ...value, id: group.id, projectId: project.id };
+                                                    const params = { ...value, id: group.id, projectId };
                                                     const response = await savePipelineGroup(params);
                                                     if (response && response.success === true) {
                                                         hide();
@@ -416,7 +416,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                 width={400}
                                 onFinish={async (value) => {
                                     const hide = message.loading("正在提交...");
-                                    const params = { ...value, projectId: project.id };
+                                    const params = { ...value, projectId };
                                     const response = await savePipelineGroup(params);
                                     try {
                                         if (response && response.success === true) {
@@ -440,7 +440,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                 {pipelineFormOpen && <PipelineForm
                     open={pipelineFormOpen}
                     onOpenChange={setPipelineFormOpen}
-                    projectId={project.id}
+                    projectId={projectId}
                     groupId={group.id}
                     id={pipeline.id}
                     onSuccess={() => {
