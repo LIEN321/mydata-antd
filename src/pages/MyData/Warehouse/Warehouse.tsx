@@ -12,20 +12,18 @@ import Pipeline from "./Pipeline";
 import BizData from "../Data/BizData";
 import TabPane from "antd/es/tabs/TabPane";
 import CRUD_Simple from "@/components/Gyrfalcon/CRUD_Simple";
+import { latestProject, saveUserConfig } from "@/services/zhiwei/userConfig";
 
 const Warehouse: React.FC = () => {
 
     const tableRef = useRef<ActionType>();
+    const projectRef = useRef<ActionType>();
 
     // -------------------- 项目Tab相关 --------------------
-    // tab 相关
-    const [tabItems, setTabItems] = useState<TabsProps['items']>([]);
-    const [activeKey, setActiveKey] = useState("");
-    const [tabLoading, setTabLoading] = useState(false);
     // 项目列表
-    const [projects, setProjects] = useState<API.ProjectVO[]>([]);
+    const [projects, setProjects] = useState<API.SelectVO[]>([]);
     // 当前项目
-    const [currentProject, setCurrentProject] = useState<API.ProjectVO>();
+    const [currentProject, setCurrentProject] = useState<API.SelectVO>();
     // 流水线tab的key
     const [pipelineKey, setPipelineKey] = useState(Date.now());
     // 刷新 Pipeline 组件
@@ -38,33 +36,31 @@ const Warehouse: React.FC = () => {
      * @param isLast 是否定位到最后一个
      */
     const loadProjects = async (isLast: boolean) => {
-        setTabLoading(true);
-        const response = await projectList();
-        if (response && response.success) {
-            const projects = response.data;
-            if (projects && projects.length > 0) {
-                const items: TabsProps['items'] = [];
-                projects.map((p, i) => {
-                    items.push({
-                        key: i.toString(),
-                        label: p.projectName,
-                        closable: false,
-                    });
-                });
-                setTabItems(() => items);
-                setProjects(() => projects);
+        const userConfigResponse = await latestProject();
+        const projectId = userConfigResponse.data;
 
-                if (isLast) {
-                    setActiveKey((projects.length - 1).toString());
-                    setCurrentProject(projects[projects.length - 1]);
+        const projects = await projectSelect();
+        if (projects && projects.length > 0) {
+            setProjects(() => projects);
+
+            if (projectId) {
+                const project = projects.find(project => project.value === projectId.toString());
+                if (project) {
+                    setCurrentProject(() => project);
                 } else {
-                    setActiveKey("0");
-                    setCurrentProject(projects[0]);
+                    setCurrentProject(() => projects[0]);
                 }
-                tableRef.current?.reload();
+            } else {
+                setCurrentProject(() => projects[0]);
             }
+            // if (isLast) {
+            //     setCurrentProject(projects[projects.length - 1]);
+            // } else {
+            //     setCurrentProject(projects[0]);
+            // }
+            tableRef.current?.reload();
+            refreshPipelineKey();
         }
-        setTabLoading(false);
     }
 
     // 初始时，加载项目
@@ -183,24 +179,36 @@ const Warehouse: React.FC = () => {
         <>
             <Card>
                 <Row>
-                    <Col span={4}>
+                    <Col span={12}>
                         <ProFormSelect
-                            request={projectSelect}
+                            options={projects}
                             label="当前项目"
                             allowClear={false}
                             fieldProps={{
-                                value: currentProject?.id,
+                                value: currentProject?.value,
                                 onChange: (projectId) => {
-                                    // TODO 发送请求 记录用户所选项目，下次自动打开所选项目
-                                    const selectedProject = projects.find(project => project.id === projectId);
+                                    const selectedProject = projects.find(project => project.value === projectId);
                                     if (selectedProject) {
                                         setCurrentProject(selectedProject);
                                         tableRef.current?.reload();
                                         refreshPipelineKey();
+
+                                        // 记录用户所选项目，下次自动打开所选项目
+                                        saveUserConfig(projectId);
                                     }
-                                }
+                                },
                             }}
+                            addonWarpStyle={{ width: "100%" }}
+                            addonAfter={<AddProject
+                                // open={addProjectOpen}
+                                // onOpenChange={setAddProjectOpen}
+                                onSuccess={() => {
+                                    loadProjects(true);
+                                }}
+                            />}
+                            style={{ width: 200 }}
                         />
+
                     </Col>
                 </Row>
                 <Tabs
@@ -243,7 +251,7 @@ const Warehouse: React.FC = () => {
                             key: "pipelineManage",
                             children: <>
                                 {currentProject && <Pipeline key={pipelineKey}
-                                    project={currentProject || {}}
+                                    projectId={currentProject.id || 0}
                                 />}
                             </>,
                             // destroyInactiveTabPane: true,
@@ -251,17 +259,6 @@ const Warehouse: React.FC = () => {
                     ]}
                 />
             </Card>
-
-            {
-                // 新建项目 Modal
-                addProjectOpen && <AddProject
-                    open={addProjectOpen}
-                    onOpenChange={setAddProjectOpen}
-                    onSuccess={() => {
-                        loadProjects(true);
-                    }}
-                />
-            }
 
             {
                 bizDataModalOpen && <BizData data={data} open={bizDataModalOpen} onOpenChange={setBizDataModalOpen} />

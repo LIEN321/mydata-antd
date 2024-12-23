@@ -4,6 +4,7 @@
 // API 唯一标识：
 import * as role from './role';
 import * as user from './user';
+import * as userConfig from './userConfig';
 import * as tenant from './tenant';
 import * as api from './api';
 import * as project from './project';
@@ -28,6 +29,7 @@ import * as bizData from './bizData';
 export default {
   role,
   user,
+  userConfig,
   tenant,
   api,
   project,
