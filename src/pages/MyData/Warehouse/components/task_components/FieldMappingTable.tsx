@@ -1,6 +1,6 @@
-import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { GetRef, InputRef, TableProps } from 'antd';
-import { Button, Checkbox, Divider, Form, Input, Popconfirm, Radio, Select, Switch, Table } from 'antd';
+import { Form, Input, Switch, Table } from 'antd';
 
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
@@ -82,7 +82,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
-        if (dataIndex == "isId") {
+        if (dataIndex === "isId") {
             return <Switch onChange={save} />
         }
         return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
@@ -194,20 +194,6 @@ const FieldMappingTable: React.FC<EditableTableProps> = (props) => {
         }
     }, []);
 
-    // 新增行
-    const handleAdd = () => {
-        const newData: FieldMappingDataType = {
-            key: count
-            , fieldCode: ''
-            , fieldName: ''
-            , apiField: ''
-            , isId: false
-        };
-
-        setFieldMappings([...fieldMappings, newData]);
-        setCount(count + 1);
-    };
-
     // 更新数据
     const handleSave = (row: FieldMappingDataType) => {
         const newData = [...fieldMappings];
@@ -217,12 +203,6 @@ const FieldMappingTable: React.FC<EditableTableProps> = (props) => {
             ...item,
             ...row,
         });
-        setFieldMappings(newData);
-        props.handleUpdateFieldMappings(newData);
-    };
-
-    const handleDelete = (key: React.Key) => {
-        const newData = fieldMappings.filter((item) => item.key !== key);
         setFieldMappings(newData);
         props.handleUpdateFieldMappings(newData);
     };

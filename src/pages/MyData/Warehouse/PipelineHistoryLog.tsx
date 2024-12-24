@@ -19,27 +19,9 @@ const PipelineHistoryLog: React.FC = () => {
     // 当前选中的日志卡片
     const [log, setLog] = useState<API.PipelineLogVO>();
 
-    // 查询log列表
-    const loadHistoryLogs = async () => {
-        if (historyId) {
-            const response = await pipelineLogList({ historyId: historyId as unknown as number });
-            if (response.success) {
-                const logs = response.data || [];
-                setLogs(logs);
-                if (logs.length > 0) {
-                    setLog(logs[0]);
-                    for (const l of logs) {
-                        if (l.executionStatus === STATUS_RUNNING) {
-                            setLog(l);
-                            break;
-                        }
-                    }
-                }
-
-                checkIsRefresh(logs);
-            }
-        }
-    };
+    // 是否自动刷新
+    const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+    const timeout = 5000;
 
     const checkIsRefresh = (logs: API.PipelineLogVO[]) => {
         let hasRunningPipeline = false;
@@ -62,6 +44,28 @@ const PipelineHistoryLog: React.FC = () => {
         setIsRefreshing(hasRunningPipeline);
     };
 
+    // 查询log列表
+    const loadHistoryLogs = async () => {
+        if (historyId) {
+            const response = await pipelineLogList({ historyId: historyId as unknown as number });
+            if (response.success) {
+                const logs = response.data || [];
+                setLogs(logs);
+                if (logs.length > 0) {
+                    setLog(logs[0]);
+                    for (const l of logs) {
+                        if (l.executionStatus === STATUS_RUNNING) {
+                            setLog(l);
+                            break;
+                        }
+                    }
+                }
+
+                checkIsRefresh(logs);
+            }
+        }
+    };
+
     useEffect(() => {
         loadHistoryLogs();
     }, []);
@@ -70,16 +74,12 @@ const PipelineHistoryLog: React.FC = () => {
     const { token } = useToken();
     // 日志状态图标
     const statusIcons = [
-        <ClockCircleOutlined style={{ color: token.colorBorder }} title="未开始" />
-        , <LoadingOutlined style={{ color: token.blue }} title="执行中" />
-        , <StopOutlined style={{ color: token.colorWarning }} title="手动停止" />
-        , <CheckOutlined style={{ color: token.colorSuccess }} title="执行成功" />
-        , <CloseOutlined style={{ color: token.colorError }} title="执行失败" />
+        <ClockCircleOutlined key="ready" style={{ color: token.colorBorder }} title="未开始" />
+        , <LoadingOutlined key="running" style={{ color: token.blue }} title="执行中" />
+        , <StopOutlined key="stop" style={{ color: token.colorWarning }} title="手动停止" />
+        , <CheckOutlined key="success" style={{ color: token.colorSuccess }} title="执行成功" />
+        , <CloseOutlined key="error" style={{ color: token.colorError }} title="执行失败" />
     ];
-
-    // 是否自动刷新
-    const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-    const timeout = 5000;
 
     useEffect(() => {
         if (!isRefreshing)
@@ -116,7 +116,7 @@ const PipelineHistoryLog: React.FC = () => {
                                     </Row>
                                 </ProCard>
                                 {/* 向下箭头连线 */}
-                                {index != (logs.length - 1) && DownwardArrowLine}
+                                {index !== (logs.length - 1) && DownwardArrowLine}
                             </>
                         })}
                     </Card>

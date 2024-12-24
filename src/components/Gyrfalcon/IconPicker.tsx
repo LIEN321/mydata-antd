@@ -1,5 +1,5 @@
 import { getIcon } from "@/util/FixMenuItemIcon";
-import { Button, Card, Col, Flex, Modal, Popover, Row, Space, Tabs, TabsProps } from "antd";
+import { Button, Card, Col, Flex, Modal, Row, Space, Tabs, TabsProps } from "antd";
 import { useState } from "react";
 
 export type IconPickerProps = {
@@ -62,7 +62,7 @@ const IconPicker: React.FC<IconPickerProps> = (props) => {
             children:
                 <>
                     <Row gutter={[gutterX, gutterY]}>
-                        {directionIcons.map(icon => { return <Col span={colSpan}>{iconCard(icon)}</Col> })}
+                        {directionIcons.map(icon => { return <Col key={icon} span={colSpan}>{iconCard(icon)}</Col> })}
                     </Row>
                 </>,
         },
@@ -72,7 +72,7 @@ const IconPicker: React.FC<IconPickerProps> = (props) => {
             children:
                 <>
                     <Row gutter={[gutterX, gutterY]}>
-                        {suggestionIcons.map(icon => { return <Col span={colSpan}>{iconCard(icon)}</Col> })}
+                        {suggestionIcons.map(icon => { return <Col key={icon} span={colSpan}>{iconCard(icon)}</Col> })}
                     </Row>
                 </>,
         },
@@ -82,7 +82,7 @@ const IconPicker: React.FC<IconPickerProps> = (props) => {
             children:
                 <>
                     <Row gutter={[gutterX, gutterY]}>
-                        {editionIcons.map(icon => { return <Col span={colSpan}>{iconCard(icon)}</Col> })}
+                        {editionIcons.map(icon => { return <Col key={icon} span={colSpan}>{iconCard(icon)}</Col> })}
                     </Row>
                 </>,
         },
@@ -92,7 +92,7 @@ const IconPicker: React.FC<IconPickerProps> = (props) => {
             children:
                 <>
                     <Row gutter={[gutterX, gutterY]}>
-                        {dataIcons.map(icon => { return <Col span={colSpan}>{iconCard(icon)}</Col> })}
+                        {dataIcons.map(icon => { return <Col key={icon} span={colSpan}>{iconCard(icon)}</Col> })}
                     </Row>
                 </>,
         },
@@ -102,7 +102,7 @@ const IconPicker: React.FC<IconPickerProps> = (props) => {
             children:
                 <>
                     <Row gutter={[gutterX, gutterY]}>
-                        {brandIcons.map(icon => { return <Col span={colSpan}>{iconCard(icon)}</Col> })}
+                        {brandIcons.map(icon => { return <Col key={icon} span={colSpan}>{iconCard(icon)}</Col> })}
                     </Row>
                 </>,
         },
@@ -112,7 +112,7 @@ const IconPicker: React.FC<IconPickerProps> = (props) => {
             children:
                 <>
                     <Row gutter={[gutterX, gutterY]}>
-                        {commonIcons.map(icon => { return <Col span={colSpan}>{iconCard(icon)}</Col> })}
+                        {commonIcons.map(icon => { return <Col key={icon} span={colSpan}>{iconCard(icon)}</Col> })}
                     </Row>
                 </>,
         },

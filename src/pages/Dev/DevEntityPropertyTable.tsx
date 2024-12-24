@@ -113,7 +113,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
-        if (dataIndex == "type") {
+        if (dataIndex === "type") {
             return <Select
                 defaultValue="String"
                 options={[
@@ -127,11 +127,11 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 ]}
                 onSelect={save}
             />
-        } else if (dataIndex == "isList") {
+        } else if (dataIndex === "isList") {
             return <Switch onChange={save} />
-        } else if (dataIndex == "isSearch") {
+        } else if (dataIndex === "isSearch") {
             return <Switch onChange={save} />
-        } else if (dataIndex == "searchType") {
+        } else if (dataIndex === "searchType") {
             return <Select
                 defaultValue=""
                 options={[
@@ -148,9 +148,9 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 ]}
                 onSelect={save}
             />
-        } else if (dataIndex == "isForm") {
+        } else if (dataIndex === "isForm") {
             return <Switch onChange={save} />
-        } else if (dataIndex == "formComponent") {
+        } else if (dataIndex === "formComponent") {
             return <Select
                 defaultValue=""
                 options={[
@@ -166,7 +166,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 ]}
                 onChange={save}
             />
-        } else if (dataIndex == "isRequired") {
+        } else if (dataIndex === "isRequired") {
             return <Switch onChange={save} />
         } else {
             return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
@@ -242,6 +242,45 @@ const DevEntityPropertyTable: React.FC<EditableTableProps> = (props) => {
     const [properties, setProperties] = useState<DataType[]>(props.properties);
 
     const [count, setCount] = useState(props.properties.length);
+
+    // 新增行
+    const handleAdd = () => {
+        const newData: DataType = {
+            key: count
+            , code: ''
+            , name: ''
+            , type: 'String',
+        };
+
+        setProperties([...properties, newData]);
+        setCount(count + 1);
+    };
+
+    // 更新数据
+    const handleSave = (row: DataType) => {
+        const newData = [...properties];
+        const index = newData.findIndex((item) => row.key === item.key);
+        const item = newData[index];
+        newData.splice(index, 1, {
+            ...item,
+            ...row,
+        });
+        setProperties(newData);
+        props.handleUpdateProperties(newData);
+    };
+
+    const handleDelete = (key: React.Key) => {
+        const newData = properties.filter((item) => item.key !== key);
+        setProperties(newData);
+        props.handleUpdateProperties(newData);
+    };
+
+    const components = {
+        body: {
+            row: EditableRow,
+            cell: EditableCell,
+        },
+    };
 
     const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
         {
@@ -320,45 +359,6 @@ const DevEntityPropertyTable: React.FC<EditableTableProps> = (props) => {
                 ) : null,
         },
     ];
-
-    // 新增行
-    const handleAdd = () => {
-        const newData: DataType = {
-            key: count
-            , code: ''
-            , name: ''
-            , type: 'String',
-        };
-
-        setProperties([...properties, newData]);
-        setCount(count + 1);
-    };
-
-    // 更新数据
-    const handleSave = (row: DataType) => {
-        const newData = [...properties];
-        const index = newData.findIndex((item) => row.key === item.key);
-        const item = newData[index];
-        newData.splice(index, 1, {
-            ...item,
-            ...row,
-        });
-        setProperties(newData);
-        props.handleUpdateProperties(newData);
-    };
-
-    const handleDelete = (key: React.Key) => {
-        const newData = properties.filter((item) => item.key !== key);
-        setProperties(newData);
-        props.handleUpdateProperties(newData);
-    };
-
-    const components = {
-        body: {
-            row: EditableRow,
-            cell: EditableCell,
-        },
-    };
 
     const columns = defaultColumns.map((col) => {
         if (!col.editable) {

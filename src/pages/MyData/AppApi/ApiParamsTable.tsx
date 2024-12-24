@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import type { GetRef, InputRef, TableProps } from 'antd';
-import { Button, Checkbox, Divider, Form, Input, Popconfirm, Radio, Select, Switch, Table } from 'antd';
+import { Button, Form, Input, Popconfirm, Switch, Table } from 'antd';
 
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
@@ -80,7 +80,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
-        if (dataIndex == "enable") {
+        if (dataIndex === "enable") {
             return <Switch onChange={save} />
         } else {
             return <Input ref={inputRef} onPressEnter={save} onBlur={save} />

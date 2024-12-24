@@ -2,7 +2,7 @@ import CRUD from "@/components/Gyrfalcon/CRUD";
 import { menuListByRole, menuTree } from "@/services/zhiwei/menu";
 import { deleteRole, deleteRoles, grantRole, rolePage, saveRole } from "@/services/zhiwei/role";
 import { ModalForm, ProColumns, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Divider, Tree, TreeProps, message } from "antd";
+import { Divider, Tree, message } from "antd";
 import { Fragment, useState } from "react";
 
 const Role: React.FC = () => {

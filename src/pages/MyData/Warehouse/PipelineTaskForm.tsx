@@ -1,8 +1,7 @@
-import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea, ProTable } from "@ant-design/pro-components";
-import { Button, Col, Form, Row, Skeleton, Table, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, TASK_TEMPLATE, TaskKey, WEBHOOK_CALL_PIPELINE, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
+import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
+import { Col, Form, Row, Skeleton, Typography } from "antd";
+import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, WEBHOOK_CALL_PIPELINE, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
 import { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
 import { TaskItem } from "./PipelineTask";
 import { appSelect } from "@/services/zhiwei/app";
 import { apiSelect } from "@/services/zhiwei/appApi";
@@ -42,17 +41,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
     // 字段映射 相关对象
     const [fieldMappings, setFieldMappings] = useState<FieldMappingDataType[]>([]);
 
-    // 当 task 变化时，更新表单内容
-    useEffect(() => {
-        form.resetFields();
-        setDataFields(() => []);
-        setFieldMappings(() => []);
-
-        if (task) {
-            form.setFieldsValue(task);
-        }
-        loadDataFields(task.dataId || null);
-    }, [task]);
+    /** 加载状态 */
+    const [loading, setLoading] = useState<boolean>(false);
 
     // 加载标准数据的字段列表
     const loadDataFields = async (dataId: number | null) => {
@@ -86,6 +76,18 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
         }
         setLoading(false);
     };
+
+    // 当 task 变化时，更新表单内容
+    useEffect(() => {
+        form.resetFields();
+        setDataFields(() => []);
+        setFieldMappings(() => []);
+
+        if (task) {
+            form.setFieldsValue(task);
+        }
+        loadDataFields(task.dataId || null);
+    }, [task]);
 
     const handleUpdateFieldMappings = (fieldMappings: FieldMappingDataType[]) => {
         setFieldMappings(fieldMappings);
@@ -122,9 +124,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
         task.taskConfig.DATA_PROCESS = dataProcesses;
         updateTask();
     };
-
-    /** 加载状态 */
-    const [loading, setLoading] = useState<boolean>(false);
 
     return (
         <>

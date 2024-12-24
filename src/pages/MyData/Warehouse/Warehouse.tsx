@@ -1,23 +1,20 @@
-import CRUD from "@/components/Gyrfalcon/CRUD";
 import { dataDetail, dataPage, deleteData, deleteDatas, saveData } from "@/services/zhiwei/data";
-import { projectList, projectSelect } from "@/services/zhiwei/project";
-import { ActionType, DrawerForm, ProCard, ProColumns, ProFormSelect } from "@ant-design/pro-components";
-import { Button, Card, Col, Divider, Drawer, Row, Select, Skeleton, Space, Tabs, TabsProps } from "antd";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { projectSelect } from "@/services/zhiwei/project";
+import { ActionType, ProColumns, ProFormSelect } from "@ant-design/pro-components";
+import { Card, Col, Row, Space, Tabs } from "antd";
+import { useEffect, useRef, useState } from "react";
 import AddProject from "./components/AddProject";
-import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
+import { ReloadOutlined } from "@ant-design/icons";
 import { DataFieldDataType } from "../Data/DataFieldTable";
 import DataForm from "../Data/components/DataForm";
 import Pipeline from "./Pipeline";
 import BizData from "../Data/BizData";
-import TabPane from "antd/es/tabs/TabPane";
 import CRUD_Simple from "@/components/Gyrfalcon/CRUD_Simple";
 import { latestProject, saveUserConfig } from "@/services/zhiwei/userConfig";
 
 const Warehouse: React.FC = () => {
 
     const tableRef = useRef<ActionType>();
-    const projectRef = useRef<ActionType>();
 
     // -------------------- 项目Tab相关 --------------------
     // 项目列表
@@ -33,9 +30,8 @@ const Warehouse: React.FC = () => {
 
     /**
      * 加载项目列表，作为Tab项
-     * @param isLast 是否定位到最后一个
      */
-    const loadProjects = async (isLast: boolean) => {
+    const loadProjects = async () => {
         const userConfigResponse = await latestProject();
         const projectId = userConfigResponse.data;
 
@@ -65,18 +61,8 @@ const Warehouse: React.FC = () => {
 
     // 初始时，加载项目
     useEffect(() => {
-        loadProjects(false);
+        loadProjects();
     }, []);
-
-    // 新建项目 窗口显示状态
-    const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false);
-    // tab 编辑操作
-    const onEditTab = (targetKey: React.MouseEvent | React.KeyboardEvent | string,
-        action: 'add' | 'remove',) => {
-        if (action === 'add') {
-            setAddProjectOpen(true);
-        }
-    };
 
     // -------------------- 数据Table相关 --------------------
     const [data, setData] = useState<API.DataVO>({});
@@ -159,7 +145,7 @@ const Warehouse: React.FC = () => {
             if (response.success) {
                 const dataFields = await response.data?.dataFields;
                 if (dataFields) {
-                    setDataFields(prevFields => {
+                    setDataFields(() => {
                         return dataFields as DataFieldDataType[]
                     });
                 }
@@ -203,7 +189,7 @@ const Warehouse: React.FC = () => {
                                 // open={addProjectOpen}
                                 // onOpenChange={setAddProjectOpen}
                                 onSuccess={() => {
-                                    loadProjects(true);
+                                    loadProjects();
                                 }}
                             />}
                             style={{ width: 200 }}

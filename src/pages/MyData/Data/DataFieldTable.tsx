@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import type { GetRef, InputRef, TableProps } from 'antd';
-import { Button, Checkbox, Divider, Form, Input, Popconfirm, Radio, Select, Switch, Table } from 'antd';
+import { Button, Form, Input, Popconfirm, Select, Switch, Table } from 'antd';
 
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
@@ -84,7 +84,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
-        if (dataIndex == "fieldType") {
+        if (dataIndex === "fieldType") {
             return <Select
                 defaultValue="String"
                 options={[
@@ -96,9 +96,9 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 ]}
                 onSelect={save}
             />
-        } else if (dataIndex == "isId") {
+        } else if (dataIndex === "isId") {
             return <Switch onChange={save} />
-        } else if (dataIndex == "displayMode") {
+        } else if (dataIndex === "displayMode") {
             return <Switch onChange={save} />
         } else {
             return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
@@ -166,6 +166,56 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
 
     const [count, setCount] = useState(props.dataFields.length);
 
+    useEffect(() => {
+        let index = 0;
+        if (dataFields && dataFields.length > 0) {
+            dataFields.map(f => {
+                f.key = index;
+                index++;
+            });
+        }
+    }, []);
+
+    // 新增行
+    const handleAdd = () => {
+        const newData: DataFieldDataType = {
+            key: count
+            , fieldCode: ''
+            , fieldName: ''
+            , fieldType: 'default'
+            , defaultValue: ''
+        };
+
+        setDataFields([...dataFields, newData]);
+        setCount(count + 1);
+    };
+
+    // 更新数据
+    const handleSave = (row: DataFieldDataType) => {
+        const newData = [...dataFields];
+        const index = newData.findIndex((item) => row.key === item.key);
+        const item = newData[index];
+        newData.splice(index, 1, {
+            ...item,
+            ...row,
+        });
+        setDataFields(newData);
+        props.handleUpdateDataFields(newData);
+    };
+
+    const handleDelete = (key: React.Key) => {
+        const newData = dataFields.filter((item) => item.key !== key);
+        setDataFields(newData);
+        props.handleUpdateDataFields(newData);
+    };
+
+    const components = {
+        body: {
+            row: EditableRow,
+            cell: EditableCell,
+        },
+    };
+
     const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
         {
             title: '字段编号',
@@ -222,56 +272,6 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
                 ) : null,
         },
     ];
-
-    useEffect(() => {
-        let index = 0;
-        if (dataFields && dataFields.length > 0) {
-            dataFields.map(f => {
-                f.key = index;
-                index++;
-            });
-        }
-    }, []);
-
-    // 新增行
-    const handleAdd = () => {
-        const newData: DataFieldDataType = {
-            key: count
-            , fieldCode: ''
-            , fieldName: ''
-            , fieldType: 'default'
-            , defaultValue: ''
-        };
-
-        setDataFields([...dataFields, newData]);
-        setCount(count + 1);
-    };
-
-    // 更新数据
-    const handleSave = (row: DataFieldDataType) => {
-        const newData = [...dataFields];
-        const index = newData.findIndex((item) => row.key === item.key);
-        const item = newData[index];
-        newData.splice(index, 1, {
-            ...item,
-            ...row,
-        });
-        setDataFields(newData);
-        props.handleUpdateDataFields(newData);
-    };
-
-    const handleDelete = (key: React.Key) => {
-        const newData = dataFields.filter((item) => item.key !== key);
-        setDataFields(newData);
-        props.handleUpdateDataFields(newData);
-    };
-
-    const components = {
-        body: {
-            row: EditableRow,
-            cell: EditableCell,
-        },
-    };
 
     const columns = defaultColumns.map((col) => {
         if (!col.editable) {

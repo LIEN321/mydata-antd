@@ -1,7 +1,7 @@
 import { changePassword } from '@/services/zhiwei/me';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { List, Modal, message } from 'antd';
+import { List, message } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 
@@ -9,11 +9,11 @@ type Unpacked<T> = T extends (infer U)[] ? U : T;
 
 const passwordStrength = [
   <></>,
-  <span className="weak">弱</span>,
-  <span className="medium">中</span>,
-  <span className="strong">强</span>,
-  <span className="strong">很强</span>,
-  <span className="strong">极强</span>,
+  <span key="weak" className="weak">弱</span>,
+  <span key="medium" className="medium">中</span>,
+  <span key="strong" className="strong">强</span>,
+  <span key="strong" className="strong">很强</span>,
+  <span key="strong" className="strong">极强</span>,
 ];
 
 const SecurityView: React.FC = () => {
@@ -73,7 +73,7 @@ const SecurityView: React.FC = () => {
               return;
             }
             changePassword(values as any).then(response => {
-              const { success, data } = response;
+              const { success } = response;
               if (success === true) {
                 message.success("修改密码成功");
                 handleChangePasswordModalOpen(false);

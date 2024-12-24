@@ -7,6 +7,7 @@ import { Card, Col, Row } from "antd";
 import { useEffect, useRef, useState } from "react";
 
 const Api: React.FC = () => {
+    const tableRef = useRef<ActionType>();
 
     // 所有菜单
     const [menus, setMenus] = useState<any[]>();
@@ -161,9 +162,6 @@ const Api: React.FC = () => {
             />
         </Card>
     </>;
-
-
-    const tableRef = useRef<ActionType>();
 
     return (
         <>

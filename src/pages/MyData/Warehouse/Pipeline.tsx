@@ -1,6 +1,6 @@
 import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
-import { ApiOutlined, ApiTwoTone, CheckOutlined, ClockCircleOutlined, CloseOutlined, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HistoryOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined, UserOutlined } from "@ant-design/icons";
-import { DrawerForm, ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
+import { ApiOutlined, ApiTwoTone, CheckOutlined, ClockCircleOutlined, CloseOutlined, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined, UserOutlined } from "@ant-design/icons";
+import { ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space, theme } from "antd";
 import { Fragment, useEffect, useState } from "react";
 import PipelineForm from "./PipelineForm";
@@ -30,6 +30,28 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
     const [loading, setLoading] = useState<boolean>(false);
     // 是否自动刷新
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+    const checkIsRefresh = (groups: API.PipelineGroupVO[]) => {
+        let hasRunningPipeline = false;
+        if (groups.length > 0) {
+            // 若有运行中的流水线，则自动刷新
+            for (const group of groups) {
+                const { pipelines } = group;
+                if (pipelines && pipelines.length > 0) {
+                    for (const pipeline of pipelines) {
+                        if (pipeline.latestHistory?.executionStatus === STATUS_RUNNING) {
+                            hasRunningPipeline = true;
+                            break;
+                        }
+                    }
+                    if (hasRunningPipeline) {
+                        break;
+                    }
+                }
+            }
+        }
+        setIsRefreshing(hasRunningPipeline);
+    };
 
     // 加载分组
     const loadPipelineGroups = async () => {
@@ -61,28 +83,6 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                 checkIsRefresh(groups);
             }
         }
-    };
-
-    const checkIsRefresh = (groups: API.PipelineGroupVO[]) => {
-        let hasRunningPipeline = false;
-        if (groups.length > 0) {
-            // 若有运行中的流水线，则自动刷新
-            for (const group of groups) {
-                const { pipelines } = group;
-                if (pipelines && pipelines.length > 0) {
-                    for (const pipeline of pipelines) {
-                        if (pipeline.latestHistory?.executionStatus === STATUS_RUNNING) {
-                            hasRunningPipeline = true;
-                            break;
-                        }
-                    }
-                    if (hasRunningPipeline) {
-                        break;
-                    }
-                }
-            }
-        }
-        setIsRefreshing(hasRunningPipeline);
     };
 
     useEffect(() => {
@@ -184,31 +184,22 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         }
     };
 
-    // 流水线状态图标
-    const pipelineStatusIcons = [
-        <></>
-        , <LoadingOutlined style={{ color: token.blue }} title="执行中" />
-        , <StopOutlined style={{ color: token.colorWarning }} title="手动停止" />
-        , <CheckOutlined style={{ color: token.colorSuccess }} title="执行成功" />
-        , <CloseOutlined style={{ color: token.colorError }} title="执行失败" />
-    ];
-
     const getPipelineStatusIcon = (historyId: string, executionStatus: number) => {
         return [
             <></>
-            , <LoadingOutlined style={{ color: token.blue }} title="执行中" onClick={() => openLogWindow(historyId)} />
-            , <StopOutlined style={{ color: token.colorWarning }} title="手动停止" onClick={() => openLogWindow(historyId)} />
-            , <CheckOutlined style={{ color: token.colorSuccess }} title="执行成功" onClick={() => openLogWindow(historyId)} />
-            , <CloseOutlined style={{ color: token.colorError }} title="执行失败" onClick={() => openLogWindow(historyId)} />
+            , <LoadingOutlined key="loading" style={{ color: token.blue }} title="执行中" onClick={() => openLogWindow(historyId)} />
+            , <StopOutlined key="stop" style={{ color: token.colorWarning }} title="手动停止" onClick={() => openLogWindow(historyId)} />
+            , <CheckOutlined key="success" style={{ color: token.colorSuccess }} title="执行成功" onClick={() => openLogWindow(historyId)} />
+            , <CloseOutlined key="error" style={{ color: token.colorError }} title="执行失败" onClick={() => openLogWindow(historyId)} />
         ][executionStatus];
     }
 
     // 流水线触发类型图标
     const pipelineTriggerIcons = [
         <></>
-        , <UserOutlined title="触发：手动执行" />
-        , <ClockCircleOutlined title="触发：定时任务" />
-        , <ApiOutlined title="触发：webhook推送" />
+        , <UserOutlined key="user" title="触发：手动执行" />
+        , <ClockCircleOutlined key="schedule" title="触发：定时任务" />
+        , <ApiOutlined key="webhook" title="触发：webhook推送" />
     ];
 
     return (
@@ -234,7 +225,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                     {/* 分组列 */}
                     {groups.map((group) => {
                         return (
-                            <Col>
+                            <Col key={group.id}>
                                 {/* 流水线分组 Card */}
                                 <Card
                                     // bordered={false}
@@ -297,12 +288,13 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                         {
                                             group.pipelines && group.pipelines.length > 0 && group.pipelines.map(pipeline => (
                                                 <Card
+                                                    key={pipeline.id}
                                                     title={pipeline.pipelineName}
                                                     type="inner"
                                                     size="small"
                                                     actions={[
                                                         (
-                                                            (pipeline.latestHistory && pipeline.latestHistory.executionStatus == 1) ?
+                                                            (pipeline.latestHistory && pipeline.latestHistory.executionStatus === 1) ?
                                                                 <Popconfirm title="确认停止吗？" onConfirm={async () => {
                                                                     if (pipeline.id) {
                                                                         // 暂停执行
@@ -331,9 +323,9 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                 </Popconfirm>
                                                         )
                                                         // 查看流水线历史记录
-                                                        , <PipelineHistory pipeline={pipeline} />
-                                                        , <StarOutlined />
-                                                        , <Dropdown menu={{
+                                                        , <PipelineHistory key="history" pipeline={pipeline} />
+                                                        , <StarOutlined key="star" disabled />
+                                                        , <Dropdown key="more" menu={{
                                                             items: dropdownItems, onClick: (info) => {
                                                                 setGroup(() => group);
                                                                 setPipeline(() => pipeline);

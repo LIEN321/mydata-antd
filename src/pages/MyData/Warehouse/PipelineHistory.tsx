@@ -19,6 +19,8 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
     const timeout = 5000;
 
+    const tableRef = useRef<ActionType>();
+
     useEffect(() => {
         if (!isRefreshing)
             return;
@@ -33,18 +35,18 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
     // 流水线状态徽标
     const statusBadges = [
         <></>
-        , <Badge color={token.blue} text="执行中" title="执行中" />
-        , <Badge color={token.colorWarning} text="停止" title="手动停止" />
-        , <Badge color={token.colorSuccess} text="成功" title="执行成功" />
-        , <Badge color={token.colorError} text="失败" title="执行失败" />
+        , <Badge key="running" color={token.blue} text="执行中" title="执行中" />
+        , <Badge key="stop" color={token.colorWarning} text="停止" title="手动停止" />
+        , <Badge key="success" color={token.colorSuccess} text="成功" title="执行成功" />
+        , <Badge key="error" color={token.colorError} text="失败" title="执行失败" />
     ];
     // 流水线状态图标
     const statusIcons = [
         <></>
-        , <LoadingOutlined style={{ color: token.blue }} title="执行中" />
-        , <StopOutlined style={{ color: token.colorWarning }} title="手动停止" />
-        , <CheckOutlined style={{ color: token.colorSuccess }} title="执行成功" />
-        , <CloseOutlined style={{ color: token.colorError }} title="执行失败" />
+        , <LoadingOutlined key="running" style={{ color: token.blue }} title="执行中" />
+        , <StopOutlined key="stop" style={{ color: token.colorWarning }} title="手动停止" />
+        , <CheckOutlined key="success" style={{ color: token.colorSuccess }} title="执行成功" />
+        , <CloseOutlined key="error" style={{ color: token.colorError }} title="执行失败" />
     ];
 
     // 流水线触发类型图标
@@ -116,8 +118,6 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
             }
         },
     ];
-
-    const tableRef = useRef<ActionType>();
 
     return (
         <>

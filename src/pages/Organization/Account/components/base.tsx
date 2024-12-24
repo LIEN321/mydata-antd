@@ -1,14 +1,18 @@
 import { UploadOutlined } from '@ant-design/icons';
 import { ProForm, ProFormItem, ProFormText, } from '@ant-design/pro-components';
-import { useModel, useRequest } from '@umijs/max';
-import { Button, Input, message, Upload } from 'antd';
+import { useModel } from '@umijs/max';
+import { Button, message, Upload } from 'antd';
 import React, { useState } from 'react';
 import useStyles from './index.style';
-import { updateUserInfo, userInfo } from '@/services/zhiwei/me';
+import { updateUserInfo } from '@/services/zhiwei/me';
 import { flushSync } from 'react-dom';
 
 const BaseView: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
+
+  const currentUser = initialState?.currentUser;
+
+  const [avatarUrl, setAvatarUrl] = useState<string>(currentUser?.avatar || '/images/default_avatar.png');
 
   const { styles } = useStyles();
   // 头像组件 方便以后独立，增加裁剪之类的功能
@@ -49,11 +53,6 @@ const BaseView: React.FC = () => {
   // const { data: currentUser, loading } = useRequest(() => {
   //   return userInfo();
   // });
-  const currentUser = initialState?.currentUser;
-
-  const initAvatarUrl = (currentUser && currentUser.avatar) ? currentUser.avatar : '/images/default_avatar.png';
-
-  const [avatarUrl, setAvatarUrl] = useState<string>(currentUser?.avatar || '/images/default_avatar.png');
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();

@@ -1,10 +1,9 @@
 import CRUD from "@/components/Gyrfalcon/CRUD";
 import { appSelect } from "@/services/zhiwei/app";
 import { deleteAppApi, deleteAppApis, appApiPage, saveAppApi } from "@/services/zhiwei/appApi";
-import { ActionType, ProColumns, ProFormText, ProFormSelect, ProFormRadio, } from "@ant-design/pro-components";
-import { Col, Input, Radio, Row, Tabs, TabsProps } from "antd";
+import { ActionType, ProColumns } from "@ant-design/pro-components";
 import { useRef, useState } from "react";
-import ApiParamsTable, { ApiParamDataType } from "./ApiParamsTable";
+import { ApiParamDataType } from "./ApiParamsTable";
 import ApiForm from "./ApiForm";
 import { OP_TYPE_PROVIDER } from "../mydata";
 

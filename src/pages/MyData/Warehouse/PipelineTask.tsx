@@ -1,6 +1,6 @@
 import { DeleteOutlined, DownCircleFilled, PlusCircleFilled, PlusOutlined, UpCircleFilled } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
-import { Button, Card, Col, Dropdown, MenuProps, Popconfirm, Row, Space, Splitter, Typography, theme } from "antd";
+import { Button, Card, Dropdown, MenuProps, Popconfirm, Space, Splitter, Typography, theme } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTaskForm from "./PipelineTaskForm";
 import { API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, PROCESS_DATA, TASK_TEMPLATE, TaskKey } from "../mydata";
@@ -265,7 +265,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                     {/* 左侧任务列表外层Card */}
                     <Card bordered={false} style={{ height: "100%", overflow: "auto" }}>
                         {
-                            tasks.length == 0 &&
+                            tasks.length === 0 &&
                             <Dropdown menu={{
                                 items: dropDownItems, onClick: ({ key }) => {
                                     handleAddTask(0, key);
@@ -298,7 +298,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                                     <PlusCircleFilled style={{ fontSize: 20, color: token.blue }} />
                                                 </Dropdown>
                                                 {/* 上移位置图标 */}
-                                                {index != 0 && <UpCircleFilled style={{ fontSize: 20, color: token.blue, marginLeft: 20 }} onClick={() => { handleMoveTask(index, index - 1) }} />}
+                                                {index !== 0 && <UpCircleFilled style={{ fontSize: 20, color: token.blue, marginLeft: 20 }} onClick={() => { handleMoveTask(index, index - 1) }} />}
                                             </div>
                                         }
 
@@ -342,12 +342,12 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                                     <PlusCircleFilled style={{ fontSize: 20, color: token.blue }} />
                                                 </Dropdown>
                                                 {/* 下移位置图标 */}
-                                                {index != (tasks.length - 1) && <DownCircleFilled style={{ fontSize: 20, color: token.blue, marginLeft: 20 }} onClick={(e) => { handleMoveTask(index, index + 1); }} />}
+                                                {index !== (tasks.length - 1) && <DownCircleFilled style={{ fontSize: 20, color: token.blue, marginLeft: 20 }} onClick={() => { handleMoveTask(index, index + 1); }} />}
                                             </div>
                                         }
                                     </ProCard >
                                     {/* 向下箭头连线 */}
-                                    {index != (tasks.length - 1) && DownwardArrowLine}
+                                    {index !== (tasks.length - 1) && DownwardArrowLine}
                                 </>
                             })
                         }

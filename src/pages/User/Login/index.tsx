@@ -156,7 +156,7 @@ const Login: React.FC = () => {
   };
   const { success } = userLoginState;
 
-  const tenantVisible = (tenantCode == null || tenantCode === '');
+  const tenantVisible = (tenantCode === null || tenantCode === '');
 
   return (
     <div className={styles.container}>

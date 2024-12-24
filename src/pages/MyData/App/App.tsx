@@ -1,6 +1,6 @@
 import CRUD from "@/components/Gyrfalcon/CRUD";
 import { deleteApp, deleteApps, appPage, saveApp } from "@/services/zhiwei/app";
-import { ActionType, ProColumns, ProFormText, ProFormTextArea, } from "@ant-design/pro-components";
+import { ActionType, ProColumns } from "@ant-design/pro-components";
 import { Button } from "antd";
 import { useRef, useState } from "react";
 import AppForm from "./AppForm";
@@ -28,7 +28,7 @@ const App: React.FC = () => {
             search: true,
             render: (_, record) => {
                 const { appUrl } = record;
-                if (appUrl && appUrl != "") {
+                if (appUrl && appUrl !== "") {
                     return <Button type="link" href={appUrl} target="_blank">{appUrl}</Button>
                 }
                 return "-";

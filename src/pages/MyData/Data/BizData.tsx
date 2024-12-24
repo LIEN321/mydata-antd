@@ -1,7 +1,7 @@
 import { bizDataFieldList, bizDataPage } from "@/services/zhiwei/bizData";
 import Icon from "@ant-design/icons";
-import { ModalForm, PageContainer, ProColumns, ProTable } from "@ant-design/pro-components";
-import { Button, Divider, Grid, Popconfirm } from "antd";
+import { ModalForm, ProColumns, ProTable } from "@ant-design/pro-components";
+import { Button, Divider, Popconfirm } from "antd";
 import { useEffect, useState } from "react";
 
 export type BizDataProp = {
@@ -34,7 +34,7 @@ const BizData: React.FC<BizDataProp> = (props) => {
                         dataIndex: field.fieldCode,
                         search: field.isId === 1,
                         renderText(text) {
-                            return (text != undefined || text != null) ? text.toString() : "";
+                            return (text !== undefined || text !== null) ? text.toString() : "";
                         },
                     });
                 }
@@ -48,7 +48,7 @@ const BizData: React.FC<BizDataProp> = (props) => {
                         title: '操作',
                         width: 120,
                         search: false,
-                        render: (text, record) => {
+                        render: () => {
                             return <>
                                 <Popconfirm
                                     title="确认删除该数据吗？"
@@ -82,9 +82,9 @@ const BizData: React.FC<BizDataProp> = (props) => {
             title={`业务数据 - ${data.dataName}`}
             width={'90%'}
             submitter={{
-                render: (props, dom) => {
+                render: () => {
                     return [
-                        <Button>刷新</Button>
+                        <Button key="refresh">刷新</Button>
                     ];
                 },
             }}

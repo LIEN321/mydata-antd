@@ -1,7 +1,6 @@
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { ActionType, ModalForm, PageContainer, ProColumns, ProFormInstance, ProTable } from "@ant-design/pro-components";
-import { Button, Col, Divider, message, Popconfirm, Row } from "antd";
-import React, { Fragment, useRef, useState } from "react";
+import { PageContainer, ProColumns } from "@ant-design/pro-components";
+import { Col, Row } from "antd";
+import React from "react";
 import CRUD_Simple from "./CRUD_Simple";
 
 export type CRUDProps = {

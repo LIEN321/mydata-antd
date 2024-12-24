@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import type { GetRef, InputRef, TableProps } from 'antd';
-import { Button, Checkbox, Divider, Form, Input, InputNumber, Popconfirm, Radio, Select, Switch, Table } from 'antd';
+import { Button, Form, Input, InputNumber, Popconfirm, Radio, Table } from 'antd';
 
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
@@ -80,7 +80,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
-        if (dataIndex == "op") {
+        if (dataIndex === "op") {
             return <Radio.Group
                 optionType="button"
                 defaultValue={"fix"}
@@ -91,7 +91,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 onChange={save}
             />
         }
-        else if (dataIndex == "step") {
+        else if (dataIndex === "step") {
             return <InputNumber onPressEnter={save} onBlur={save} />;
         }
         return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
@@ -158,47 +158,6 @@ const BatchParamTable: React.FC<EditableTableProps> = (props) => {
 
     const [count, setCount] = useState(batchParams.length);
 
-    const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
-        {
-            title: '参数名',
-            dataIndex: 'code',
-            width: 150,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '参数值',
-            dataIndex: 'value',
-            width: 150,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '变化方式',
-            dataIndex: 'op',
-            width: 150,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '递增值',
-            dataIndex: 'step',
-            width: 150,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '操作',
-            dataIndex: 'operation',
-            align: 'center',
-            width: 60,
-            render: (_, record) =>
-                <Popconfirm title="确认删除吗?" onConfirm={() => handleDelete(record.key)}>
-                    <a>删除</a>
-                </Popconfirm>
-        },
-    ];
-
     useEffect(() => {
         let index = 0;
         if (batchParams && batchParams.length > 0) {
@@ -248,6 +207,47 @@ const BatchParamTable: React.FC<EditableTableProps> = (props) => {
             cell: EditableCell,
         },
     };
+
+    const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
+        {
+            title: '参数名',
+            dataIndex: 'code',
+            width: 150,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '参数值',
+            dataIndex: 'value',
+            width: 150,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '变化方式',
+            dataIndex: 'op',
+            width: 150,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '递增值',
+            dataIndex: 'step',
+            width: 150,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            align: 'center',
+            width: 60,
+            render: (_, record) =>
+                <Popconfirm title="确认删除吗?" onConfirm={() => handleDelete(record.key)}>
+                    <a>删除</a>
+                </Popconfirm>
+        },
+    ];
 
     const columns = defaultColumns.map((col) => {
         if (!col.editable) {

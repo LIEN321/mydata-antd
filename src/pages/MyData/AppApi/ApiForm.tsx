@@ -2,7 +2,7 @@ import { appSelect } from "@/services/zhiwei/app";
 import { ProFormRadio, ProFormSelect, ProFormText } from "@ant-design/pro-components";
 import { Button, Col, Divider, Input, Radio, Row, Tabs, TabsProps } from "antd";
 import ApiParamsTable, { ApiParamDataType } from "./ApiParamsTable";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export type ApiFormProp = {
     // 请求参数
@@ -96,7 +96,7 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                         }}
                     />
                     <Divider type="vertical" />
-                    {opType == 2 && props.reqBodyType == "json" &&
+                    {opType === 2 && props.reqBodyType === "json" &&
                         <Button type="link" title="插入业务数据占位符" onClick={() => {
                             insertTextAtCursor('${DATA_JSON}');
                         }}>
@@ -105,14 +105,14 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                     <br />
                     <br />
                     {
-                        props.reqBodyType == "x-www-form-urlencoded" &&
+                        props.reqBodyType === "x-www-form-urlencoded" &&
                         <ApiParamsTable
                             params={props.reqBodyForm}
                             handleUpdateParams={props.setReqBodyForm}
                         />
                     }
                     {
-                        props.reqBodyType == "json" &&
+                        props.reqBodyType === "json" &&
                         <Input.TextArea ref={(input) => {
                             if (input) {
                                 textareaRef.current = input.resizableTextArea?.textArea || null;
@@ -255,7 +255,7 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                     />
                 </Col>
                 {
-                    opType == 1 && <Col span={6}>
+                    opType === 1 && <Col span={6}>
                         <ProFormText
                             rules={[
                                 {
@@ -270,7 +270,7 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                     </Col>
                 }
                 {
-                    opType == 2 && <Col span={6}>
+                    opType === 2 && <Col span={6}>
                         <ProFormRadio.Group
                             rules={[
                                 {

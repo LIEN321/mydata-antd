@@ -1,5 +1,5 @@
 import { pipelineDetail, savePipeline } from "@/services/zhiwei/pipeline";
-import { DrawerForm, ModalForm, ProFormCheckbox, ProFormItem, ProFormRadio, ProFormSwitch, ProFormText, ProFormTextArea, ProFormTimePicker } from "@ant-design/pro-components";
+import { DrawerForm, ProFormCheckbox, ProFormItem, ProFormRadio, ProFormSwitch, ProFormText, ProFormTextArea, ProFormTimePicker } from "@ant-design/pro-components";
 import { Button, Col, message, Row, Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTask from "./PipelineTask";

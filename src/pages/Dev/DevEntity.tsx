@@ -2,9 +2,9 @@ import CRUD from "@/components/Gyrfalcon/CRUD";
 import { deleteDevEntity, deleteDevEntities, devEntityPage, saveDevEntity, saveDevEntityProperty } from "@/services/zhiwei/devEntity";
 import { generateCode } from "@/services/zhiwei/generateCode";
 import { ActionType, ModalForm, ProColumns, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Button, Card, Col, Divider, Row, Space, message } from "antd";
+import { Button, Divider, message } from "antd";
 import { Fragment, useRef, useState } from "react";
-import DevEntityPropertyTable, { BaseEntityProperties, DataType } from "./DevEntityPropertyTable";
+import DevEntityPropertyTable, { DataType } from "./DevEntityPropertyTable";
 import { devEntityPropertyList } from "@/services/zhiwei/devEntityProperty";
 
 const DevEntity: React.FC = () => {
@@ -68,7 +68,7 @@ const DevEntity: React.FC = () => {
                 // 设置选中的记录id
                 setEntityIds([devEntity.id]);
                 // 设置继承模式
-                if(devEntity.extendMode){
+                if (devEntity.extendMode) {
                     setExtendMode(devEntity.extendMode);
                 }
 
@@ -200,7 +200,7 @@ const DevEntity: React.FC = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
 
     const toolBarButton = [
-        <Button disabled={selectedRowKeys.length === 0} onClick={() => {
+        <Button key="btnGenerate" disabled={selectedRowKeys.length === 0} onClick={() => {
             setEntityIds([...selectedRowKeys]);
             // 显示Modal
             setGenerateCodeModalOpen(true);

@@ -1,6 +1,6 @@
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { ActionType, ModalForm, PageContainer, ProColumns, ProFormInstance, ProTable } from "@ant-design/pro-components";
-import { Button, Col, Divider, message, Popconfirm, Row } from "antd";
+import { ActionType, ModalForm, ProColumns, ProTable } from "@ant-design/pro-components";
+import { Button, Divider, message, Popconfirm } from "antd";
 import React, { Fragment, useRef, useState } from "react";
 
 export type CRUD_SimpleProps = {
@@ -56,6 +56,21 @@ export type CRUD_SimpleProps = {
 };
 
 const CRUD_Simple: React.FC<CRUD_SimpleProps> = (props) => {
+
+    // 新建窗口常量
+    const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
+
+    // 更新窗口常量
+    const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
+    // 当前编辑记录
+    const [currentRow, setCurrentRow] = useState<any>();
+
+    // 表格
+    const tableRef = props.tableRef || useRef<ActionType>();
+    // 表格选择
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+    const renderActionButton = props.renderOptionButton;
 
     const handleCreate = async (fields: any) => {
         const hide = message.loading("正在提交...");
@@ -125,23 +140,8 @@ const CRUD_Simple: React.FC<CRUD_SimpleProps> = (props) => {
         }
     }
 
-    // 新建窗口常量
-    const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
-
-    // 更新窗口常量
-    const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
-    // 当前编辑记录
-    const [currentRow, setCurrentRow] = useState<any>();
-
-    // 表格
-    const tableRef = props.tableRef || useRef<ActionType>();
-    // 表格选择
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
-    const renderActionButton = props.renderOptionButton;
-
     let columns = props.columns;
-    if (columns[columns.length - 1].key != 'option') {
+    if (columns[columns.length - 1].key !== 'option') {
         if (props.handleUpdate || props.handleDelete) {
             columns.push(
                 {
@@ -297,7 +297,7 @@ const CRUD_Simple: React.FC<CRUD_SimpleProps> = (props) => {
                 width={props.formWidth}
                 open={updateModalOpen}
                 onOpenChange={(visible) => {
-                    if (visible == false) {
+                    if (visible === false) {
                         handleUpdateModalOpen(visible);
                         setCurrentRow(undefined);
                     }

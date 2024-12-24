@@ -13,6 +13,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 const User: React.FC = () => {
+
+    const tableRef = useRef<ActionType>();
     const [api, contextHolder] = notification.useNotification();
 
     const openNotificationWithIcon = (type: NotificationType, title: string, content: any) => {
@@ -253,8 +255,6 @@ const User: React.FC = () => {
             />
         </Card>
     </>;
-
-    const tableRef = useRef<ActionType>();
 
     return (
         <>

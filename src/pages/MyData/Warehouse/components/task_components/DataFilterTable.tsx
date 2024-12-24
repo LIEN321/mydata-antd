@@ -1,6 +1,6 @@
-import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { GetRef, InputRef, TableProps } from 'antd';
-import { Button, Checkbox, Divider, Form, Input, InputNumber, Popconfirm, Radio, Select, Space, Switch, Table } from 'antd';
+import { Button, Form, Input, Popconfirm, Select, Space, Table } from 'antd';
 import { TASK_FILTER_TYPE_FIELD, TASK_FILTER_TYPE_VALUE } from '@/pages/MyData/mydata';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -105,17 +105,17 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
-        if (dataIndex == "k") {
+        if (dataIndex === "k") {
             return <Select options={dataFieldSelectOptions} onSelect={save} />
         }
-        if (dataIndex == "op") {
+        if (dataIndex === "op") {
             return <Select
                 defaultValue={"="}
                 options={opOptions}
                 onSelect={save}
             />
         }
-        if (dataIndex == "v" && record.t === TASK_FILTER_TYPE_FIELD) {
+        if (dataIndex === "v" && record.t === TASK_FILTER_TYPE_FIELD) {
             return <Select options={dataFieldSelectOptions} onSelect={save} />
         }
         return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
@@ -123,7 +123,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 
     if (editable) {
         childNode = editing ? (
-            (dataIndex == 'k' || dataIndex == 'op' || (dataIndex == 'v' && record.op != '' && record.op != 'nn' && record.op != 'ne') || record.t === TASK_FILTER_TYPE_FIELD) ?
+            (dataIndex === 'k' || dataIndex === 'op' || (dataIndex === 'v' && record.op !== '' && record.op !== 'nn' && record.op !== 'ne') || record.t === TASK_FILTER_TYPE_FIELD) ?
                 <Form.Item
                     style={{ margin: 0 }}
                     name={dataIndex}
@@ -185,40 +185,6 @@ const DataFilterTable: React.FC<EditableTableProps> = (props) => {
 
     const [count, setCount] = useState(dataFilters.length);
 
-    const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
-        {
-            title: '数据字段',
-            dataIndex: 'k',
-            width: 200,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '条件',
-            dataIndex: 'op',
-            width: 100,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '条件值',
-            dataIndex: 'v',
-            width: 200,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '操作',
-            dataIndex: 'operation',
-            align: 'center',
-            width: 60,
-            render: (_, record) =>
-                <Popconfirm title="确认删除吗?" onConfirm={() => handleDelete(record.key)}>
-                    <a>删除</a>
-                </Popconfirm>
-        },
-    ];
-
     useEffect(() => {
         let index = 0;
         if (dataFilters && dataFilters.length > 0) {
@@ -268,6 +234,40 @@ const DataFilterTable: React.FC<EditableTableProps> = (props) => {
             cell: EditableCell,
         },
     };
+
+    const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
+        {
+            title: '数据字段',
+            dataIndex: 'k',
+            width: 200,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '条件',
+            dataIndex: 'op',
+            width: 100,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '条件值',
+            dataIndex: 'v',
+            width: 200,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            align: 'center',
+            width: 60,
+            render: (_, record) =>
+                <Popconfirm title="确认删除吗?" onConfirm={() => handleDelete(record.key)}>
+                    <a>删除</a>
+                </Popconfirm>
+        },
+    ];
 
     const columns = defaultColumns.map((col) => {
         if (!col.editable) {

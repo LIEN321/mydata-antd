@@ -1,10 +1,8 @@
 import CRUD from "@/components/Gyrfalcon/CRUD";
 import { deleteData, deleteDatas, dataPage, saveData, dataDetail } from "@/services/zhiwei/data";
-import { projectList, projectSelect } from "@/services/zhiwei/project";
-import { ActionType, ProColumns, ProFormText, ProFormSelect, } from "@ant-design/pro-components";
-import { Col, Row } from "antd";
-import { useEffect, useRef, useState } from "react";
-import DataFieldTable, { DataFieldDataType } from "./DataFieldTable";
+import { ActionType, ProColumns } from "@ant-design/pro-components";
+import { useRef, useState } from "react";
+import { DataFieldDataType } from "./DataFieldTable";
 import DataForm from "./components/DataForm";
 
 const Data: React.FC = () => {
@@ -52,7 +50,7 @@ const Data: React.FC = () => {
             if (response.success) {
                 const dataFields = await response.data?.dataFields;
                 if (dataFields) {
-                    setDataFields(prevFields => {
+                    setDataFields(() => {
                         return dataFields as DataFieldDataType[]
                     });
                 }
