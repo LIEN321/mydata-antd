@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, Skeleton, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, WEBHOOK_CALL_PIPELINE, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, TRIGGER_PIPELINE, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
 import { useEffect, useState } from "react";
 import { TaskItem } from "./PipelineTask";
 import { appSelect } from "@/services/zhiwei/app";
@@ -349,7 +349,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     {/* 业务数据变量 */}
                                                     <ProFormText
-                                                        label="业务数据"
+                                                        label="待发送的业务数据"
                                                         rules={[
                                                             {
                                                                 required: true,
@@ -531,6 +531,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                             </>
                         }
+                        {/* ######################################## Webhook ######################################## */}
                         {
                             // ---------------------------------------- 从Webhook接收JSON ----------------------------------------
                             (task.taskType === WEBHOOK_GET_JSON) && <>
@@ -613,59 +614,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             </Row>
                                         </ProFormItem>
                                     </Col>
-                                </Row>
-                            </>
-                        }
-                        {
-                            // ---------------------------------------- 用Webhook触发流水线 ----------------------------------------
-                            (task.taskType === WEBHOOK_CALL_PIPELINE) && <>
-                                <Row gutter={24}>
-                                    {/* 选择应用 */}
-                                    <Col span={12}>
-                                        <ProFormText
-                                            label="JSON"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: '请输入JSON的变量名！',
-                                                }
-                                            ]}
-                                            fieldProps={{
-                                                onChange: (e) => {
-                                                    task.taskConfig.INPUT.DATA_JSON = e.target.value;
-                                                    updateTask();
-                                                },
-                                                value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
-                                            }}
-                                        />
-                                    </Col>
-                                </Row>
-                                <Row gutter={24}>
-                                    <Col span={12}>
-                                        <ProFormSelect
-                                            label="选择流水线"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: '请选择流水线！',
-                                                }
-                                            ]}
-                                            width={"sm"}
-                                            request={(params) => {
-                                                params.projectId = props.projectId;
-                                                return pipelineSelect(params);
-                                            }}
-                                            onChange={(pipelineId: number) => {
-                                                task.taskConfig.PIPELINE_ID = pipelineId;
-                                                updateTask();
-                                            }}
-                                            fieldProps={{
-                                                value: task.taskConfig.PIPELINE_ID,
-                                            }}
-                                        />
-
-                                    </Col>
-                                    <Col span={12}></Col>
                                 </Row>
                             </>
                         }
@@ -841,9 +789,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             <Row gutter={24}>
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
-                                                    {/* JSON变量名 */}
                                                     <ProFormText
-                                                        label="JSON"
+                                                        label="数据JSON"
                                                         rules={[
                                                             {
                                                                 required: true,
@@ -1039,7 +986,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="有效业务数据"
+                                                        label="处理后的业务数据"
                                                         fieldProps={{
                                                             onChange: (e) => {
                                                                 task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
@@ -1296,7 +1243,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 <Row gutter={24}>
                                     <Col span={12}>
                                         <ProFormText
-                                            label="收件人"
+                                            label="收件邮箱"
                                             fieldProps={{
                                                 onChange: (e) => {
                                                     task.taskConfig.EMAIL.ADDRESS = e.target.value;
@@ -1338,7 +1285,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
 
                                     <Col span={12}>
                                         <ProFormText
-                                            label="附件Excel（变量名）"
+                                            label="附件文件（变量名）"
                                             fieldProps={{
                                                 onChange: (e) => {
                                                     task.taskConfig.EMAIL.FILE = e.target.value;
@@ -1351,6 +1298,60 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     <Col span={12}></Col>
                                 </Row>
                             </>)
+                        }
+                        {/* ######################################## 流水线 ######################################## */}
+                        {
+                            // ---------------------------------------- 用Webhook触发流水线 ----------------------------------------
+                            (task.taskType === TRIGGER_PIPELINE) && <>
+                                <Row gutter={24}>
+                                    {/* 选择应用 */}
+                                    <Col span={12}>
+                                        <ProFormText
+                                            label="推送的JSON"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请输入JSON的变量名！',
+                                                }
+                                            ]}
+                                            fieldProps={{
+                                                onChange: (e) => {
+                                                    task.taskConfig.INPUT.DATA_JSON = e.target.value;
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    <Col span={12}>
+                                        <ProFormSelect
+                                            label="选择流水线"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请选择流水线！',
+                                                }
+                                            ]}
+                                            width={"sm"}
+                                            request={(params) => {
+                                                params.projectId = props.projectId;
+                                                return pipelineSelect(params);
+                                            }}
+                                            onChange={(pipelineId: number) => {
+                                                task.taskConfig.PIPELINE_ID = pipelineId;
+                                                updateTask();
+                                            }}
+                                            fieldProps={{
+                                                value: task.taskConfig.PIPELINE_ID,
+                                            }}
+                                        />
+
+                                    </Col>
+                                    <Col span={12}></Col>
+                                </Row>
+                            </>
                         }
                     </ProForm>
                 </ProCard >

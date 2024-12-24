@@ -64,19 +64,22 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                     label: TASK_TEMPLATE.API_SEND_DATA.taskName,
                 },
                 {
-                    key: TASK_TEMPLATE.WEBHOOK_GET_JSON.taskType,
-                    label: TASK_TEMPLATE.WEBHOOK_GET_JSON.taskName,
-                },
-                {
-                    key: TASK_TEMPLATE.WEBHOOK_CALL_PIPELINE.taskType,
-                    label: TASK_TEMPLATE.WEBHOOK_CALL_PIPELINE.taskName,
-                },
-                {
                     key: TASK_TEMPLATE.API_GET_VAR.taskType,
                     label: TASK_TEMPLATE.API_GET_VAR.taskName,
                     disabled: true,
                 },
             ],
+        },
+        {
+            key: 'group_webhook',
+            type: 'group',
+            label: 'Webhook',
+            children: [
+                {
+                    key: TASK_TEMPLATE.WEBHOOK_GET_JSON.taskType,
+                    label: TASK_TEMPLATE.WEBHOOK_GET_JSON.taskName,
+                },
+            ]
         },
         {
             key: 'group_data',
@@ -129,6 +132,17 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                     key: TASK_TEMPLATE.SEND_EMAIL.taskType,
                     label: TASK_TEMPLATE.SEND_EMAIL.taskName,
                 }
+            ],
+        },
+        {
+            key: 'group_pipeline',
+            type: 'group',
+            label: '流水线',
+            children: [
+                {
+                    key: TASK_TEMPLATE.TRIGGER_PIPELINE.taskType,
+                    label: TASK_TEMPLATE.TRIGGER_PIPELINE.taskName,
+                },
             ],
         },
     ];
@@ -289,11 +303,14 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                         {
                                             hoveredCard === index &&
                                             <div style={{ position: "absolute", right: 0, top: -18, width: 80, height: 50, paddingTop: 10, paddingLeft: 10, zIndex: 999 }}>
-                                                <Dropdown menu={{
-                                                    items: dropDownItems, onClick: ({ key }) => {
-                                                        handleAddTask(index, key);
-                                                    }
-                                                }} trigger={["click"]}>
+                                                <Dropdown
+                                                    menu={{
+                                                        items: dropDownItems, onClick: ({ key }) => {
+                                                            handleAddTask(index, key);
+                                                        }
+                                                    }}
+                                                    placement="bottomCenter"
+                                                    trigger={["click"]}>
                                                     {/* 上方添加图标 */}
                                                     <PlusCircleFilled style={{ fontSize: 20, color: token.blue }} />
                                                 </Dropdown>
@@ -333,11 +350,14 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                         {
                                             hoveredCard === index &&
                                             <div style={{ position: "absolute", right: 0, bottom: -18, width: 80, height: 50, paddingTop: 20, paddingLeft: 10 }}>
-                                                <Dropdown menu={{
-                                                    items: dropDownItems, onClick: ({ key }) => {
-                                                        handleAddTask(index + 1, key);
-                                                    }
-                                                }} trigger={["click"]}>
+                                                <Dropdown
+                                                    menu={{
+                                                        items: dropDownItems, onClick: ({ key }) => {
+                                                            handleAddTask(index + 1, key);
+                                                        }
+                                                    }}
+                                                    placement="bottomCenter"
+                                                    trigger={["click"]}>
                                                     {/* 下方添加图标 */}
                                                     <PlusCircleFilled style={{ fontSize: 20, color: token.blue }} />
                                                 </Dropdown>

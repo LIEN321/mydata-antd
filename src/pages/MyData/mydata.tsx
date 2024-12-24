@@ -31,7 +31,7 @@ export const OP_TYPE_PROVIDER = 1;
 export const API_GET_JSON = "API_GET_JSON";
 export const API_SEND_DATA = "API_SEND_DATA";
 export const WEBHOOK_GET_JSON = "WEBHOOK_GET_JSON";
-export const WEBHOOK_CALL_PIPELINE = "WEBHOOK_CALL_PIPELINE";
+export const TRIGGER_PIPELINE = "TRIGGER_PIPELINE";
 export const API_GET_VAR = "API_GET_VAR";
 export const SAVE_DATA = "SAVE_DATA";
 export const QUERY_DATA = "QUERY_DATA";
@@ -80,9 +80,9 @@ export const TASK_TEMPLATE = {
     },
 
     // 用Webhook触发流水线
-    WEBHOOK_CALL_PIPELINE: {
-        "taskType": WEBHOOK_CALL_PIPELINE,
-        "taskName": "用Webhook触发流水线",
+    TRIGGER_PIPELINE: {
+        "taskType": TRIGGER_PIPELINE,
+        "taskName": "触发流水线",
         "taskConfig": {
             "INPUT": { "DATA_JSON": "DATA_JSON" },
             "OUTPUT": {},
