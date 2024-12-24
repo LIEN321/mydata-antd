@@ -18,10 +18,11 @@ import {
 import { FormattedMessage, Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
 import { login } from '@/services/zhiwei/auth';
+import { getSubdomain } from '@/util/Utils';
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -102,6 +103,14 @@ const Login: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const intl = useIntl();
+  const [tenantCode, setTenantCode] = useState<string>("");
+
+  useEffect(() => {
+    const subDomain = getSubdomain();
+    if (subDomain && subDomain !== "") {
+      setTenantCode(subDomain);
+    }
+  }, []);
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -117,8 +126,12 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginDTO) => {
     try {
+      const payload = { ...values };
+      if (tenantCode && tenantCode !== '') {
+        payload.code = tenantCode;
+      }
       // 登录
-      const response = await login({ ...values });
+      const response = await login(payload);
       if (response.success === true) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
@@ -142,6 +155,8 @@ const Login: React.FC = () => {
     }
   };
   const { success } = userLoginState;
+
+  const tenantVisible = (tenantCode == null || tenantCode === '');
 
   return (
     <div className={styles.container}>
@@ -218,7 +233,7 @@ const Login: React.FC = () => {
           )}
           {type === 'account' && (
             <>
-              <ProFormText
+              {tenantVisible && <ProFormText
                 name="code"
                 fieldProps={{
                   size: 'large',
@@ -232,6 +247,7 @@ const Login: React.FC = () => {
                   },
                 ]}
               />
+              }
               <ProFormText
                 name="username"
                 fieldProps={{
