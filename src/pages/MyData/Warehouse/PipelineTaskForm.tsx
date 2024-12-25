@@ -1301,27 +1301,37 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         }
                         {/* ######################################## 流水线 ######################################## */}
                         {
-                            // ---------------------------------------- 用Webhook触发流水线 ----------------------------------------
+                            // ---------------------------------------- 触发流水线 ----------------------------------------
                             (task.taskType === TRIGGER_PIPELINE) && <>
-                                <Row gutter={24}>
-                                    {/* 选择应用 */}
-                                    <Col span={12}>
-                                        <ProFormText
-                                            label="推送的JSON"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: '请输入JSON的变量名！',
-                                                }
-                                            ]}
-                                            fieldProps={{
-                                                onChange: (e) => {
-                                                    task.taskConfig.INPUT.DATA_JSON = e.target.value;
-                                                    updateTask();
-                                                },
-                                                value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
-                                            }}
-                                        />
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem label="输入变量" >
+                                            <Row gutter={24}>
+                                                <Col span={2}></Col>
+                                                <Col span={10}>
+                                                    <ProFormText
+                                                        label="推送的JSON"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: '请输入JSON的变量名！',
+                                                            }
+                                                        ]}
+                                                        fieldProps={{
+                                                            onChange: (e) => {
+                                                                task.taskConfig.INPUT.DATA_JSON = e.target.value;
+                                                                updateTask();
+                                                            },
+                                                            value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
+                                                        }}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                </Col>
+                                                <Col span={10}>
+                                                </Col>
+                                            </Row>
+                                        </ProFormItem>
                                     </Col>
                                 </Row>
                                 <Row gutter={24}>
