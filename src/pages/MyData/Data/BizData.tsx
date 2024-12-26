@@ -34,7 +34,7 @@ const BizData: React.FC<BizDataProp> = (props) => {
                         dataIndex: field.fieldCode,
                         search: field.isId === 1,
                         renderText(text) {
-                            return (text !== undefined || text !== null) ? text.toString() : "";
+                            return (text !== undefined && text !== null) ? text.toString() : "";
                         },
                     });
                 }
