@@ -19,11 +19,15 @@ export const STATUS_SUCCESS = 3;
 */
 export const STATUS_FAILED = 4;
 
-
 /**
  * 操作类型：数据提供者
  */
 export const OP_TYPE_PROVIDER = 1;
+
+/**
+ * 定时刷新的间隔
+ */
+export const timeout = 2000;
 
 /**
  * 任务类型

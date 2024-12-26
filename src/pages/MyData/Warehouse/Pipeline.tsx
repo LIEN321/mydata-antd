@@ -7,14 +7,12 @@ import PipelineForm from "./PipelineForm";
 import { deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
 import { timeAgo } from "@/util/DateUtil";
 import PipelineHistory from "./PipelineHistory";
-import { STATUS_RUNNING, openLogWindow } from "../mydata";
+import { STATUS_RUNNING, openLogWindow, timeout } from "../mydata";
 import CopyToClipboard from "react-copy-to-clipboard";
 
 export type PipelineProp = {
     projectId: number;
 };
-
-const timeout = 5000;
 
 const Pipeline: React.FC<PipelineProp> = (props) => {
     const { useToken } = theme;

@@ -5,7 +5,7 @@ import { useLocation } from "@umijs/max";
 import { Card, Col, Input, Row, Splitter, theme, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { DownwardArrowLine } from "../Icons";
-import { STATUS_FAILED, STATUS_READY, STATUS_RUNNING, STATUS_STOPPED } from "../mydata";
+import { STATUS_FAILED, STATUS_READY, STATUS_RUNNING, STATUS_STOPPED, timeout } from "../mydata";
 
 const PipelineHistoryLog: React.FC = () => {
 
@@ -21,7 +21,6 @@ const PipelineHistoryLog: React.FC = () => {
 
     // 是否自动刷新
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-    const timeout = 5000;
 
     const checkIsRefresh = (logs: API.PipelineLogVO[]) => {
         let hasRunningPipeline = false;
