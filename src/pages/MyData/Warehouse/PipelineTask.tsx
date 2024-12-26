@@ -63,11 +63,6 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                     key: TASK_TEMPLATE.API_SEND_DATA.taskType,
                     label: TASK_TEMPLATE.API_SEND_DATA.taskName,
                 },
-                {
-                    key: TASK_TEMPLATE.API_GET_VAR.taskType,
-                    label: TASK_TEMPLATE.API_GET_VAR.taskName,
-                    disabled: true,
-                },
             ],
         },
         {
@@ -142,6 +137,17 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.TRIGGER_PIPELINE.taskType,
                     label: TASK_TEMPLATE.TRIGGER_PIPELINE.taskName,
+                },
+            ],
+        },
+        {
+            key: 'group_var',
+            type: 'group',
+            label: '参数变量',
+            children: [
+                {
+                    key: TASK_TEMPLATE.JSON_TO_VAR.taskType,
+                    label: TASK_TEMPLATE.JSON_TO_VAR.taskName,
                 },
             ],
         },

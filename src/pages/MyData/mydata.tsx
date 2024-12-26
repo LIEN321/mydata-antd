@@ -32,7 +32,6 @@ export const API_GET_JSON = "API_GET_JSON";
 export const API_SEND_DATA = "API_SEND_DATA";
 export const WEBHOOK_GET_JSON = "WEBHOOK_GET_JSON";
 export const TRIGGER_PIPELINE = "TRIGGER_PIPELINE";
-export const API_GET_VAR = "API_GET_VAR";
 export const SAVE_DATA = "SAVE_DATA";
 export const QUERY_DATA = "QUERY_DATA";
 export const JSON_TO_DATA = "JSON_TO_DATA";
@@ -41,6 +40,7 @@ export const FILTER_DATA = "FILTER_DATA";
 export const PROCESS_DATA = "PROCESS_DATA";
 export const WRITE_EXCEL = "WRITE_EXCEL";
 export const SEND_EMAIL = "SEND_EMAIL";
+export const JSON_TO_VAR = "JSON_TO_VAR";
 
 /**
  * 任务类型对应的配置模板
@@ -87,16 +87,6 @@ export const TASK_TEMPLATE = {
             "INPUT": { "DATA_JSON": "DATA_JSON" },
             "OUTPUT": {},
             "PIPELINE_ID": null,
-        },
-    },
-
-    // 从API获取参数
-    API_GET_VAR: {
-        "taskType": API_GET_VAR,
-        "taskName": "从API获取参数",
-        "taskConfig": {
-            "INPUT": {},
-            "OUTPUT": {},
         },
     },
 
@@ -190,6 +180,17 @@ export const TASK_TEMPLATE = {
                 "CONTENT": "",
                 "FILE": "",
             }
+        },
+    },
+
+    // JSON值存入变量
+    JSON_TO_VAR: {
+        "taskType": JSON_TO_VAR,
+        "taskName": "JSON值存入变量",
+        "taskConfig": {
+            "INPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
+            "OUTPUT": {},
+            "VAR_MAPPING": [],
         },
     },
 }
