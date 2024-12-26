@@ -68,6 +68,20 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         }
     };
 
+    // 加载分组（不使用加载效果）
+    const loadPipelineGroupsWithoutLoading = async () => {
+        if (projectId) {
+            const response = await pipelineGroupList({ projectId });
+            if (response && response.success) {
+                setGroups(response.data || []);
+
+                checkIsRefresh(response.data || []);
+            }
+        } else {
+            // message.warning("项目参数无效，请重试...");
+        }
+    };
+
     // 只加载分组数据，不使用loading效果
     const fetchPipelineGroups = async () => {
         if (projectId) {
@@ -298,7 +312,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                         // 暂停执行
                                                                         const response = await stopPipeline({ id: pipeline.id });
                                                                         if (response.success) {
-                                                                            loadPipelineGroups();
+                                                                            loadPipelineGroupsWithoutLoading();
                                                                         }
                                                                     }
                                                                 }}>
@@ -310,7 +324,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                         // 手动执行
                                                                         const response = await executePipeline({ id: pipeline.id });
                                                                         if (response.success) {
-                                                                            loadPipelineGroups();
+                                                                            loadPipelineGroupsWithoutLoading();
                                                                             setTimeout(() => {
                                                                                 setIsRefreshing(true);
                                                                             }, timeout);
