@@ -164,6 +164,8 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 index++;
 
                 const taskTemplate = structuredClone(TASK_TEMPLATE[task.taskType as TaskKey]);
+                if(!taskTemplate)
+                    return;
                 const taskTemplateConfig = structuredClone(taskTemplate.taskConfig);
 
                 if (!task.taskConfig) {
