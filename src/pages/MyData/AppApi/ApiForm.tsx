@@ -105,7 +105,7 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                     <br />
                     <br />
                     {
-                        props.reqBodyType === "x-www-form-urlencoded" &&
+                        props.reqBodyType === "form" &&
                         <ApiParamsTable
                             params={props.reqBodyForm}
                             handleUpdateParams={props.setReqBodyForm}
