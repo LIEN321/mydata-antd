@@ -316,7 +316,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                         }
                                                                     }
                                                                 }}>
-                                                                    <PauseOutlined title="停止" />
+                                                                    <Button type="text" icon={<PauseOutlined title="停止" />} />
                                                                 </Popconfirm>
                                                                 :
                                                                 <Popconfirm title="确认执行吗？" onConfirm={async () => {
@@ -331,12 +331,12 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                         }
                                                                     }
                                                                 }}>
-                                                                    <PlayCircleOutlined title="执行" />
+                                                                    <Button type="text" icon={<PlayCircleOutlined title="执行" />} />
                                                                 </Popconfirm>
                                                         )
                                                         // 查看流水线历史记录
-                                                        , <PipelineHistory key="history" pipeline={pipeline} />
-                                                        , <StarOutlined key="star" disabled />
+                                                        , <Button type="text" icon={<PipelineHistory key="history" pipeline={pipeline} />} title="执行历史" />
+                                                        , <Button type="text" disabled icon={<StarOutlined key="star" />} title="收藏流水线（暂不可用）" />
                                                         , <Dropdown key="more" menu={{
                                                             items: dropdownItems, onClick: (info) => {
                                                                 setGroup(() => group);
@@ -345,7 +345,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                             }
                                                         }}
                                                         >
-                                                            <EllipsisOutlined />
+                                                            <Button type="text" icon={<EllipsisOutlined />} />
                                                         </Dropdown>
                                                     ]}
                                                     extra={
