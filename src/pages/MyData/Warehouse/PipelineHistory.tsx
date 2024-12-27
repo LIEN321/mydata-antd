@@ -123,7 +123,7 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
         <>
             <DrawerForm
                 title={`执行历史 - ${pipeline.pipelineName}`}
-                trigger={<HistoryOutlined title="历史记录" />}
+                trigger={<HistoryOutlined />}
                 submitter={false}
                 width={'800'}
                 onOpenChange={(visible) => {
