@@ -207,7 +207,7 @@ const Warehouse: React.FC = () => {
                             children: <>
                                 <CRUD_Simple
                                     tableRef={tableRef}
-                                    title={null}
+                                    title={"数据"}
                                     columns={columns}
 
                                     formWidth={1300}
