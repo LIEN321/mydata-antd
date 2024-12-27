@@ -164,7 +164,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 index++;
 
                 const taskTemplate = structuredClone(TASK_TEMPLATE[task.taskType as TaskKey]);
-                if(!taskTemplate)
+                if (!taskTemplate)
                     return;
                 const taskTemplateConfig = structuredClone(taskTemplate.taskConfig);
 
@@ -282,7 +282,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
 
     return (
         <>
-            <Splitter style={{ height: "calc(100vh - 220px)" }}>
+            <Splitter style={{ height: "calc(100vh - 216px)" }}>
                 <Splitter.Panel defaultSize={"30%"} min={"20%"} max={"50%"}>
                     {/* 左侧任务列表外层Card */}
                     <Card bordered={false} style={{ height: "100%", overflow: "auto" }}>
