@@ -321,7 +321,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
         <>
             {!loading && <DrawerForm
                 open={props.open}
-                title={id ? '编辑流水线' : '新建流水线'}
+                title={id ? `编辑流水线 - ${pipeline.pipelineName}` : '新建流水线'}
                 width={1200}
                 // style={{ height: 800 }}
                 clearOnDestroy
