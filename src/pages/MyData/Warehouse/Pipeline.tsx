@@ -362,7 +362,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                 }}
                                                             >
                                                                 <ApiTwoTone
-                                                                    title={`Webhook${pipeline.isWebhook ? '已启用，点击复制' : '未启用'}`}
+                                                                    title={`Webhook${pipeline.isWebhook ? '已启用' : '未启用'}，点击复制`}
                                                                     twoToneColor={pipeline.isWebhook ? token.green : token.colorBorder}
                                                                 />
                                                             </CopyToClipboard>
