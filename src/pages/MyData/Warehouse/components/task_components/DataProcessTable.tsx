@@ -113,6 +113,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                             { label: "前置添加", value: "prepend" },
                             { label: "后置追加", value: "append" },
                             { label: "置空(empty)", value: "empty" },
+                            { label: "无效时置空(emptyIfNull)", value: "emptyIfNull" },
                         ]
                     },
                     {
@@ -137,7 +138,14 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 
     if (editable) {
         childNode = editing ? (
-            (dataIndex === 'k' || dataIndex === 'op' || (dataIndex === 'v' && record.op !== '' && record.op !== 'md5' && record.op !== 'base64' && record.op !== 'empty' && record.op !== 'null')) ?
+            (dataIndex === 'k'
+                || dataIndex === 'op'
+                || (
+                    dataIndex === 'v' && record.op !== ''
+                    && record.op !== 'md5' && record.op !== 'base64' && record.op !== 'empty' && record.op !== 'emptyIfNull'
+                    && record.op !== 'null'
+                )
+            ) ?
                 <Form.Item
                     style={{ margin: 0 }}
                     name={dataIndex}
@@ -253,19 +261,19 @@ const DataProcessTable: React.FC<EditableTableProps> = (props) => {
         {
             title: '数据字段',
             dataIndex: 'k',
-            width: 200,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '条件',
-            dataIndex: 'op',
             width: 150,
             align: 'center',
             editable: true,
         },
         {
-            title: '条件值',
+            title: '处理方式',
+            dataIndex: 'op',
+            width: 200,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '处理值',
             dataIndex: 'v',
             width: 150,
             align: 'center',
