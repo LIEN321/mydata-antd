@@ -324,6 +324,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                                         // 手动执行
                                                                         const response = await executePipeline({ id: pipeline.id });
                                                                         if (response.success) {
+                                                                            message.info("执行已开始...")
                                                                             loadPipelineGroupsWithoutLoading();
                                                                             setTimeout(() => {
                                                                                 setIsRefreshing(true);
