@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { GetRef, InputRef, TableProps } from 'antd';
-import { Button, Form, Input, Popconfirm, Select, Space, Table } from 'antd';
+import { Button, Form, Input, Popconfirm, Select, Space, Switch, Table } from 'antd';
 import { TASK_FILTER_TYPE_FIELD, TASK_FILTER_TYPE_VALUE } from '@/pages/MyData/mydata';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -14,6 +14,8 @@ interface Item {
     varCode: string;
     /** json字段 */
     jsonField: string;
+    /** 无效时是否置空字符串 */
+    switchEmpty: boolean;
 }
 
 interface EditableRowProps {
@@ -78,6 +80,9 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
+        if (dataIndex === "switchEmpty") {
+            return <Switch onChange={save} />
+        }
         return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
     };
 
@@ -195,6 +200,13 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
             title: 'JSON字段',
             dataIndex: 'jsonField',
             width: 200,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '无效时置空',
+            dataIndex: 'switchEmpty',
+            width: 100,
             align: 'center',
             editable: true,
         },
