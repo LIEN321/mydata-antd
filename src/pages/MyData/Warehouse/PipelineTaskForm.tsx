@@ -155,7 +155,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     ]}
                                     fieldProps={{
                                         onChange: (e) => {
-                                            task.taskName = e.target.value;
+                                            task.taskName = e.target.value.trim();
                                             updateTask();
                                         }
                                     }}
@@ -175,15 +175,9 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="作为参数的业务数据"
-                                                        rules={[
-                                                            {
-                                                                required: true,
-                                                                message: '请输入业务数据变量名',
-                                                            }
-                                                        ]}
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.PARAM_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.PARAM_DATA = e.target.value.trim();
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.PARAM_DATA || "",
@@ -206,7 +200,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             label="选择应用"
                                             rules={[
                                                 {
-                                                    required: false,
+                                                    required: true,
                                                     message: '请选择应用！',
                                                 }
                                             ]}
@@ -291,21 +285,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 }} />
                                             </Col>
                                             <Col span={2}></Col>
-                                            <Col span={10}>
-                                                {/* <ProFormRadio.Group label="结束方式" radioType="button"
-                                                    options={[
-                                                        { label: "接口无数据", value: 0 },
-                                                        { label: "数据重复", value: 1 },
-                                                    ]}
-                                                    fieldProps={{
-                                                        onChange: (e) => {
-                                                            task.taskConfig.BATCH.END_TYPE = e.target.value;
-                                                            updateTask();
-                                                        },
-                                                        value: task.taskConfig.BATCH.END_TYPE,
-                                                    }}
-                                                /> */}
-                                            </Col>
+                                            <Col span={10}></Col>
                                             <Col span={24}>
                                                 <Skeleton loading={loading} active>
                                                     {
@@ -329,12 +309,22 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="获取的JSON"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="output"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.PIPELINE_JSON = e.target.value;
+                                                                task.taskConfig.OUTPUT.PIPELINE_JSON = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.PIPELINE_JSON) {
+                                                                    task.taskConfig.OUTPUT.PIPELINE_JSON = "PIPELINE_JSON";
+                                                                }
                                                                 updateTask();
                                                             },
-                                                            value: task.taskConfig.OUTPUT.PIPELINE_JSON || "PIPELINE_JSON",
+                                                            value: (task.taskConfig.OUTPUT.PIPELINE_JSON) || "PIPELINE_JSON",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -362,12 +352,17 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                                 message: '请输入业务数据变量名！',
                                                             }
                                                         ]}
+                                                        name="input"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.INPUT.BIZ_DATA) {
+                                                                    task.taskConfig.INPUT.BIZ_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -387,7 +382,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             label="选择应用"
                                             rules={[
                                                 {
-                                                    required: false,
+                                                    required: true,
                                                     message: '请选择应用！',
                                                 }
                                             ]}
@@ -447,42 +442,26 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     </Col>
                                 </Row>
                                 <Row gutter={24}>
-                                    {/* 选择数据 */}
-                                    {/* <Col span={12}>
-                                        <ProFormSelect
-                                            name="dataId"
-                                            label="选择数据"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: '请选择数据！',
-                                                }
-                                            ]}
-                                            request={() => { return dataSelect({ projectId: props.projectId }); }}
-                                            onChange={(dataId: number) => {
-                                                loadDataFields(dataId);
-                                                task.dataId = dataId;
-                                                updateTask();
-                                            }}
-                                        />
-                                    </Col> */}
-                                    {/* <Col span={12}></Col> */}
-                                </Row>
-                                <Row gutter={24}>
                                     {/* 字段映射 */}
                                     <Col span={24}>
                                         <ProFormItem
                                             label="字段映射"
                                         >
-                                            <Skeleton loading={loading} active>
-                                                {
-                                                    !loading && <FieldMappingTable
-                                                        fieldMappings={fieldMappings}
-                                                        handleUpdateFieldMappings={handleUpdateFieldMappings}
-                                                        loading={loading}
-                                                    />
-                                                }
-                                            </Skeleton>
+                                            {fieldMappings && fieldMappings.length > 0 &&
+                                                <Skeleton loading={loading} active>
+                                                    {
+                                                        !loading && <FieldMappingTable
+                                                            fieldMappings={fieldMappings}
+                                                            handleUpdateFieldMappings={handleUpdateFieldMappings}
+                                                            loading={loading}
+                                                        />
+                                                    }
+                                                </Skeleton>
+                                            }
+                                            {
+                                                (!fieldMappings || fieldMappings.length == 0) &&
+                                                <Typography.Text type="danger">前置任务未配置业务数据，请先添加数据配置，再重新添加本任务</Typography.Text>
+                                            }
                                         </ProFormItem>
                                     </Col>
                                 </Row>
@@ -521,17 +500,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                     value: task.taskConfig.BATCH.COUNT,
                                                 }} />
                                             </Col>
-                                            {/* <Col span={24}>
-                                                <Skeleton loading={loading} active>
-                                                    {
-                                                        !loading && <BatchParamTable
-                                                            batchParams={task.taskConfig.BATCH.PARAMS}
-                                                            handleUpdateBatchParams={handleUpdateBatchParams}
-                                                            loading={loading}
-                                                        />
-                                                    }
-                                                </Skeleton>
-                                            </Col> */}
                                         </>
                                     }
                                 </Row>
@@ -587,9 +555,10 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             name="fieldPrefix"
                                             label="数据在JSON中的前缀层级"
                                             placeholder="请输入数据层级"
+                                            help="格式为a.b.c，空则表示在json根目录；"
                                             fieldProps={{
                                                 onChange: (e) => {
-                                                    task.taskConfig.FIELD_PREFIX = e.target.value;
+                                                    task.taskConfig.FIELD_PREFIX = e.target.value.trim();
                                                     updateTask();
                                                 },
                                                 value: task.taskConfig.FIELD_PREFIX,
@@ -606,12 +575,22 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="获取的JSON"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="output"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.PIPELINE_JSON = e.target.value;
+                                                                task.taskConfig.OUTPUT.PIPELINE_JSON = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.PIPELINE_JSON) {
+                                                                    task.taskConfig.OUTPUT.PIPELINE_JSON = "PIPELINE_JSON";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.OUTPUT.PIPELINE_JSON || "PIPELINE_JSON",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -635,12 +614,22 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="获取的JSON"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="input"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.PIPELINE_JSON = e.target.value;
+                                                                task.taskConfig.INPUT.PIPELINE_JSON = e.target.value.trim();
+                                                                if (!task.taskConfig.INPUT.PIPELINE_JSON) {
+                                                                    task.taskConfig.INPUT.PIPELINE_JSON = "PIPELINE_JSON";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.PIPELINE_JSON || "PIPELINE_JSON",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -701,12 +690,22 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="业务数据"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="output"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.BIZ_DATA) {
+                                                                    task.taskConfig.OUTPUT.BIZ_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.OUTPUT.BIZ_DATA || "BIZ_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -731,12 +730,22 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="业务数据"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="input"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.INPUT.BIZ_DATA) {
+                                                                    task.taskConfig.INPUT.BIZ_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -768,9 +777,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                                 <Row gutter={24}>
                                     {/* JSON模板 */}
-                                    <Col span={12}>
+                                    <Col span={24}>
                                         <ProFormTextArea
-                                            name="dataId"
                                             label="JSON模板"
                                             rules={[
                                                 {
@@ -778,16 +786,17 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                     message: '请选择数据！',
                                                 }
                                             ]}
+                                            name="json_template"
                                             fieldProps={{
                                                 onChange: (e) => {
                                                     task.taskConfig.JSON_TEMPLATE = e.target.value;
                                                     updateTask();
                                                 },
                                                 value: task.taskConfig.JSON_TEMPLATE || "${DATA_JSON}",
+                                                style: { height: 200 }
                                             }}
                                         />
                                     </Col>
-                                    <Col span={12}></Col>
                                 </Row>
                                 <Row>
                                     <Col span={24}>
@@ -803,12 +812,17 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                                 message: '请输入JSON的变量名！',
                                                             }
                                                         ]}
+                                                        name="output"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.DATA_JSON = e.target.value;
+                                                                task.taskConfig.OUTPUT.DATA_JSON = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.DATA_JSON) {
+                                                                    task.taskConfig.OUTPUT.DATA_JSON = "DATA_JSON";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.OUTPUT.DATA_JSON || "DATA_JSON",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -840,12 +854,17 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                                 message: '请输入待过滤的数据变量名',
                                                             }
                                                         ]}
+                                                        name="input"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.INPUT.BIZ_DATA) {
+                                                                    task.taskConfig.INPUT.BIZ_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -854,15 +873,9 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="作为参数的业务数据"
-                                                        rules={[
-                                                            {
-                                                                required: true,
-                                                                message: '请输入业务数据变量名',
-                                                            }
-                                                        ]}
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.PARAM_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.PARAM_DATA = e.target.value.trim();
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.PARAM_DATA || "",
@@ -900,13 +913,23 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="有效业务数据"
+                                                        label="有效的业务数据"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="output"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.BIZ_DATA) {
+                                                                    task.taskConfig.OUTPUT.BIZ_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.OUTPUT.BIZ_DATA || "BIZ_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -915,12 +938,22 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="被过滤的无效数据"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="filterdData"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.FILTER_BLOCKED_DATA = e.target.value;
+                                                                task.taskConfig.OUTPUT.FILTER_BLOCKED_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.FILTER_BLOCKED_DATA) {
+                                                                    task.taskConfig.OUTPUT.FILTER_BLOCKED_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.OUTPUT.FILTER_BLOCKED_DATA || "FILTER_BLOCKED_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -948,12 +981,17 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                                 message: '请输入待处理的数据变量名',
                                                             }
                                                         ]}
+                                                        name="input"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.INPUT.BIZ_DATA) {
+                                                                    task.taskConfig.INPUT.BIZ_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -993,9 +1031,18 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="处理后的业务数据"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="output"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.BIZ_DATA) {
+                                                                    task.taskConfig.OUTPUT.BIZ_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.OUTPUT.BIZ_DATA || "BIZ_DATA",
@@ -1030,12 +1077,17 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                                 message: '请输入业务数据的变量名！',
                                                             }
                                                         ]}
+                                                        name="input"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.INPUT.BIZ_DATA) {
+                                                                    task.taskConfig.INPUT.BIZ_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -1055,12 +1107,22 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="Excel文件"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="output"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.EXCEL_FILE = e.target.value;
+                                                                task.taskConfig.OUTPUT.EXCEL_FILE = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.EXCEL_FILE) {
+                                                                    task.taskConfig.OUTPUT.EXCEL_FILE = "EXCEL_FILE";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.OUTPUT.EXCEL_FILE || "EXCEL_FILE",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -1093,12 +1155,17 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                                 message: '请输入业务数据的变量名！',
                                                             }
                                                         ]}
+                                                        name="input"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.BIZ_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.INPUT.BIZ_DATA) {
+                                                                    task.taskConfig.INPUT.BIZ_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.BIZ_DATA || "BIZ_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -1118,12 +1185,22 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="实际保存的数据"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="output"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.SAVED_DATA = e.target.value;
+                                                                task.taskConfig.OUTPUT.SAVED_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.SAVED_DATA) {
+                                                                    task.taskConfig.OUTPUT.SAVED_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.OUTPUT.SAVED_DATA || "SAVED_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -1156,7 +1233,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         ]}
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.PARAM_DATA = e.target.value;
+                                                                task.taskConfig.INPUT.PARAM_DATA = e.target.value.trim();
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.PARAM_DATA || "",
@@ -1223,12 +1300,22 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="查询的业务数据"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="output"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value;
+                                                                task.taskConfig.OUTPUT.BIZ_DATA = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.BIZ_DATA) {
+                                                                    task.taskConfig.OUTPUT.BIZ_DATA = "BIZ_DATA";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.OUTPUT.BIZ_DATA || "BIZ_DATA",
+                                                            allowClear: false,
                                                         }}
                                                     />
                                                 </Col>
@@ -1250,12 +1337,19 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     <Col span={12}>
                                         <ProFormText
                                             label="收件邮箱"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                }
+                                            ]}
+                                            name="address"
                                             fieldProps={{
                                                 onChange: (e) => {
-                                                    task.taskConfig.EMAIL.ADDRESS = e.target.value;
+                                                    task.taskConfig.EMAIL.ADDRESS = e.target.value.trim();
                                                     updateTask();
                                                 },
                                                 value: task.taskConfig.EMAIL.ADDRESS || "",
+                                                allowClear: false,
                                             }}
                                         />
                                     </Col>
@@ -1264,9 +1358,15 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     <Col span={12}>
                                         <ProFormText
                                             label="邮件主题"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                }
+                                            ]}
+                                            name="subject"
                                             fieldProps={{
                                                 onChange: (e) => {
-                                                    task.taskConfig.EMAIL.SUBJECT = e.target.value;
+                                                    task.taskConfig.EMAIL.SUBJECT = e.target.value.trimStart();
                                                     updateTask();
                                                 },
                                                 value: task.taskConfig.EMAIL.SUBJECT || "",
@@ -1275,9 +1375,15 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     </Col>
                                     <Col span={12}></Col>
 
-                                    <Col span={12}>
+                                    <Col span={24}>
                                         <ProFormTextArea
                                             label="邮件内容"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                }
+                                            ]}
+                                            name="content"
                                             fieldProps={{
                                                 onChange: (e) => {
                                                     task.taskConfig.EMAIL.CONTENT = e.target.value;
@@ -1287,14 +1393,14 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             }}
                                         />
                                     </Col>
-                                    <Col span={12}></Col>
 
                                     <Col span={12}>
                                         <ProFormText
                                             label="附件文件（变量名）"
                                             fieldProps={{
                                                 onChange: (e) => {
-                                                    task.taskConfig.EMAIL.FILE = e.target.value;
+                                                    task.taskConfig.EMAIL.FILE = e.target.value.trim();
+                                                    task.taskConfig.INPUT.FILE = e.target.value.trim();
                                                     updateTask();
                                                 },
                                                 value: task.taskConfig.EMAIL.FILE || "",
@@ -1316,7 +1422,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={2}></Col>
                                                 <Col span={10}>
                                                     <ProFormText
-                                                        label="推送的JSON"
+                                                        label="推送的数据JSON"
                                                         rules={[
                                                             {
                                                                 required: true,
@@ -1325,10 +1431,10 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         ]}
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.DATA_JSON = e.target.value;
+                                                                task.taskConfig.INPUT.DATA_JSON = e.target.value.trim();
                                                                 updateTask();
                                                             },
-                                                            value: task.taskConfig.INPUT.DATA_JSON || "DATA_JSON",
+                                                            value: task.taskConfig.INPUT.DATA_JSON || "",
                                                         }}
                                                     />
                                                 </Col>
@@ -1350,18 +1456,25 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                     message: '请选择流水线！',
                                                 }
                                             ]}
+                                            name="pipelineId"
                                             width={"sm"}
                                             request={(params) => {
                                                 params.projectId = props.projectId;
                                                 return pipelineSelect(params);
                                             }}
-                                            onChange={(pipelineId: number) => {
+                                            onChange={(pipelineId: number, option: any) => {
                                                 task.taskConfig.PIPELINE_ID = pipelineId;
+                                                if (option)
+                                                    task.taskConfig.OUTPUT.PIPELINE = option.title;
+                                                else {
+                                                    task.taskConfig.OUTPUT.PIPELINE = null;
+                                                }
                                                 updateTask();
                                             }}
                                             fieldProps={{
                                                 value: task.taskConfig.PIPELINE_ID,
                                             }}
+                                            showSearch
                                         />
 
                                     </Col>
@@ -1382,9 +1495,19 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 <Col span={10}>
                                                     <ProFormText
                                                         label="JSON"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        ]}
+                                                        name="input"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.PIPELINE_JSON = e.target.value;
+                                                                task.taskConfig.INPUT.PIPELINE_JSON = e.target.value.trim();
+
+                                                                if (!task.taskConfig.INPUT.PIPELINE_JSON) {
+                                                                    task.taskConfig.INPUT.PIPELINE_JSON = "PIPELINE_JSON";
+                                                                }
                                                                 updateTask();
                                                             },
                                                             value: task.taskConfig.INPUT.PIPELINE_JSON || "PIPELINE_JSON",
