@@ -341,6 +341,17 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                         }
                                         {
                                             <>
+                                                输入：
+                                                {Object.keys(t.taskConfig.INPUT).length > 0
+                                                    ?
+                                                    <Space>
+                                                        {Object.keys(t.taskConfig.INPUT).map((key) => {
+                                                            return <>{t.taskConfig.INPUT[key]}</>
+                                                        })}
+                                                    </Space>
+                                                    : '--'
+                                                }
+                                                <br/>
                                                 输出：
                                                 {Object.keys(t.taskConfig.OUTPUT).length > 0
                                                     ?
