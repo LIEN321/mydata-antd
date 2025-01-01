@@ -91,26 +91,26 @@ const Warehouse: React.FC = () => {
                 }}>{entity.dataCount}</a></>;
             },
         },
-        {
-            title: '来源应用',
-            dataIndex: '',
-            search: false,
-        },
-        {
-            title: '消费应用',
-            dataIndex: '',
-            search: false,
-        },
-        {
-            title: '最近一次同步',
-            dataIndex: '',
-            search: false,
-        },
-        {
-            title: '相关流水线',
-            dataIndex: '',
-            search: false,
-        },
+        // {
+        //     title: '来源应用',
+        //     dataIndex: '',
+        //     search: false,
+        // },
+        // {
+        //     title: '消费应用',
+        //     dataIndex: '',
+        //     search: false,
+        // },
+        // {
+        //     title: '最近一次同步',
+        //     dataIndex: '',
+        //     search: false,
+        // },
+        // {
+        //     title: '相关流水线',
+        //     dataIndex: '',
+        //     search: false,
+        // },
     ];
 
     // 根据项目查询数据标准列表
