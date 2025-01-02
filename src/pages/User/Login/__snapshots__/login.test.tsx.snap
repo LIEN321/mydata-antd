@@ -880,7 +880,7 @@ exports[`Login Page should show login form 1`] = `
                         <input
                           class="ant-input ant-input-lg"
                           id="password"
-                          placeholder="Password: 123456"
+                          placeholder="Password"
                           type="password"
                           value=""
                         />
