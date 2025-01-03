@@ -153,9 +153,10 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
                         setIsRefreshing(hasRunningPipeline);
                         return response;
                     }}
-                    pagination={{ pageSize: 10 }}
+                    pagination={{ pageSize: 10, showSizeChanger: false }}
                     options={false}
                     search={{ span: 12 }}
+                    size="small"
                 />
             </DrawerForm>
         </>
