@@ -538,11 +538,11 @@ declare namespace API {
 
   type LoginDTO = {
     /** 租户编号 */
-    code?: string;
+    code: string;
     /** 登录账号 */
-    username?: string;
+    username: string;
     /** 登录密码 */
-    password?: string;
+    password: string;
     /** 自动登录 */
     autoLogin?: boolean;
   };
