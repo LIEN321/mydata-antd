@@ -1,11 +1,11 @@
-FROM nginx:stable-alpine-perl
+FROM nginx
 
-RUN rm -f /etc/nginx/nginx.conf \
-    && rm -f /etc/nginx/conf.d/default.conf
-COPY docker/nginx.k8s.conf /etc/nginx/nginx.conf
+WORKDIR /usr/src/app/
+
+COPY ./docker/nginx.conf /etc/nginx/
+
+COPY ./dist  /usr/share/nginx/html/
 
 EXPOSE 80
 
-COPY ./dist /usr/share/nginx/html
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]
