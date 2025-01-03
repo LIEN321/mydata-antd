@@ -1,0 +1,9 @@
+.custom-card .ant-card-actions {
+    /* 缩小内边距 */
+    padding: 4px 8px;
+}
+
+.custom-card .ant-card-actions li {
+    /* 去除多余外边距 */
+    margin: 0;
+}

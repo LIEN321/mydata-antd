@@ -9,6 +9,7 @@ import { timeAgo } from "@/util/DateUtil";
 import PipelineHistory from "./PipelineHistory";
 import { STATUS_RUNNING, openLogWindow, timeout } from "../mydata";
 import CopyToClipboard from "react-copy-to-clipboard";
+import "./pipeline.css";
 
 export type PipelineProp = {
     projectId: number;
@@ -20,7 +21,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
 
     const [modal, contextHolder] = Modal.useModal();
 
-    const cardWidth = 300;
+    const cardWidth = 280;
     const { projectId } = props;
     const [groups, setGroups] = useState<API.PipelineGroupVO[]>([]);
     const [group, setGroup] = useState<API.PipelineGroupVO>({});
@@ -304,6 +305,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                     title={pipeline.pipelineName}
                                                     type="inner"
                                                     size="small"
+                                                    className="custom-card"
                                                     actions={[
                                                         (
                                                             (pipeline.latestHistory && pipeline.latestHistory.executionStatus === 1) ?
