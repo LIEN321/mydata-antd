@@ -21,7 +21,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
 
     const [modal, contextHolder] = Modal.useModal();
 
-    const cardWidth = 280;
+    const cardWidth = 300;
     const { projectId } = props;
     const [groups, setGroups] = useState<API.PipelineGroupVO[]>([]);
     const [group, setGroup] = useState<API.PipelineGroupVO>({});
@@ -373,11 +373,11 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                     }
                                                 >
                                                     <Row>
-                                                        <Col span={13}>
+                                                        <Col span={12}>
                                                             最近执行：{pipeline.latestHistory ? <span title={pipeline.latestHistory.startTime}>{timeAgo(pipeline.latestHistory.startTime || '')}</span> : '--'}
                                                         </Col>
-                                                        <Col span={7} style={{ textAlign: "center" }}>
-                                                            耗时：{pipeline.latestHistory && pipeline.latestHistory.executionTime ? timeDesc(pipeline.latestHistory.executionTime) : '--'}
+                                                        <Col span={8} style={{ textAlign: "center" }}>
+                                                            耗时：1{pipeline.latestHistory && pipeline.latestHistory.executionTime ? timeDesc(pipeline.latestHistory.executionTime) : '--'}
                                                         </Col>
                                                         <Col span={4} style={{ textAlign: "right" }}>
                                                             <Space>
