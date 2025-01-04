@@ -24,3 +24,26 @@ export const timeAgo = (inputTime: Date | string | number): string => {
         return `${Math.floor(diff / 2592000)}个月前`;
     return `${Math.floor(diff / 31536000)}年前`;
 };
+
+/**
+ * 格式化时间为简化的描述
+ * @param inputTime 输入时间
+ * @returns 简化的描述
+ */
+export const timeDesc = (inputTime: number): string => {
+    if (!inputTime) {
+        return '';
+    }
+
+    if (inputTime < 60)
+        return `${inputTime}秒`;
+    if (inputTime < 3600)
+        return `${Math.floor(inputTime / 60)}分钟`;
+    if (inputTime < 86400)
+        return `${Math.floor(inputTime / 3600)}小时`;
+    if (inputTime < 2592000)
+        return `${Math.floor(inputTime / 86400)}天`;
+    if (inputTime < 31536000)
+        return `${Math.floor(inputTime / 2592000)}个月`;
+    return `${Math.floor(inputTime / 31536000)}年`;
+};

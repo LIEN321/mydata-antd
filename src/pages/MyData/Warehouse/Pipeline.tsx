@@ -5,7 +5,7 @@ import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfir
 import { Fragment, useEffect, useState } from "react";
 import PipelineForm from "./PipelineForm";
 import { deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
-import { timeAgo } from "@/util/DateUtil";
+import { timeAgo, timeDesc } from "@/util/DateUtil";
 import PipelineHistory from "./PipelineHistory";
 import { STATUS_RUNNING, openLogWindow, timeout } from "../mydata";
 import CopyToClipboard from "react-copy-to-clipboard";
@@ -373,11 +373,11 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                     }
                                                 >
                                                     <Row>
-                                                        <Col span={12}>
+                                                        <Col span={13}>
                                                             最近执行：{pipeline.latestHistory ? <span title={pipeline.latestHistory.startTime}>{timeAgo(pipeline.latestHistory.startTime || '')}</span> : '--'}
                                                         </Col>
-                                                        <Col span={8} style={{ textAlign: "center" }}>
-                                                            耗时：{pipeline.latestHistory && pipeline.latestHistory.executionTime ? pipeline.latestHistory.executionTime + 's' : '--'}
+                                                        <Col span={7} style={{ textAlign: "center" }}>
+                                                            耗时：{pipeline.latestHistory && pipeline.latestHistory.executionTime ? timeDesc(pipeline.latestHistory.executionTime) : '--'}
                                                         </Col>
                                                         <Col span={4} style={{ textAlign: "right" }}>
                                                             <Space>
