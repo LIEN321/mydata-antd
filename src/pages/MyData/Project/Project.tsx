@@ -1,10 +1,12 @@
 import CRUD from "@/components/Gyrfalcon/CRUD";
 import { deleteProject, deleteProjects, projectPage, saveProject } from "@/services/zhiwei/project";
 import { ActionType, ProColumns } from "@ant-design/pro-components";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import ProjectForm from "./components/ProjectForm";
 
 const Project: React.FC = () => {
+
+    const [projectId, setProjectId] = useState<number>();
 
     // 表格列
     const columns: ProColumns<API.ProjectVO>[] = [
@@ -20,7 +22,11 @@ const Project: React.FC = () => {
         },
     ];
 
-    const projectForm = <ProjectForm />;
+    const handleOnClickEditBtn = (record: any) => {
+        setProjectId(record.id);
+    }
+
+    const projectForm = <ProjectForm projectId={projectId} />;
 
     const tableRef = useRef<ActionType>();
 
@@ -40,6 +46,9 @@ const Project: React.FC = () => {
                 handleUpdate={saveProject}
                 handleDelete={deleteProject}
                 handleBatchDelete={deleteProjects}
+
+                onClickCreateBtn={()=>{setProjectId(undefined);}}
+                onClickEditBtn={handleOnClickEditBtn}
             />
         </>
     );
