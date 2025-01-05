@@ -151,7 +151,7 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
     }, []);
 
     // 新增行
-    const handleAdd = (type: number) => {
+    const handleAdd = () => {
         const newData: VarMappingDataType = {
             key: count
             , varCode: ''
@@ -241,11 +241,8 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
     return (
         <div>
             <Space>
-                <Button icon={<PlusOutlined />} onClick={() => { handleAdd(TASK_FILTER_TYPE_VALUE) }} type="primary" style={{ marginBottom: 16 }}>
-                    值条件
-                </Button>
-                <Button icon={<PlusOutlined />} onClick={() => { handleAdd(TASK_FILTER_TYPE_FIELD) }} type="primary" style={{ marginBottom: 16 }}>
-                    字段对比
+                <Button icon={<PlusOutlined />} onClick={() => { handleAdd() }} type="primary" style={{ marginBottom: 16 }}>
+                    添加变量
                 </Button>
             </Space>
             <Table<VarMappingDataType>
