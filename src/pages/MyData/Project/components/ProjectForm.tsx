@@ -1,6 +1,10 @@
 import { ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 
-const ProjectForm: React.FC = () => {
+export type ProjectFormProp = {
+    projectId?: number;
+};
+
+const ProjectForm: React.FC<ProjectFormProp> = (props) => {
     return (
         <>
             <ProFormText
@@ -13,6 +17,7 @@ const ProjectForm: React.FC = () => {
                 name="projectCode"
                 label="项目编号"
                 placeholder="请输入项目编号"
+                disabled={props.projectId != undefined}
             />
             <ProFormText
                 rules={[

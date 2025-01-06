@@ -5,7 +5,7 @@ import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfir
 import { Fragment, useEffect, useState } from "react";
 import PipelineForm from "./PipelineForm";
 import { deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
-import { timeAgo } from "@/util/DateUtil";
+import { timeAgo, timeDesc } from "@/util/DateUtil";
 import PipelineHistory from "./PipelineHistory";
 import { STATUS_RUNNING, openLogWindow, timeout } from "../mydata";
 import CopyToClipboard from "react-copy-to-clipboard";
@@ -21,7 +21,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
 
     const [modal, contextHolder] = Modal.useModal();
 
-    const cardWidth = 280;
+    const cardWidth = 300;
     const { projectId } = props;
     const [groups, setGroups] = useState<API.PipelineGroupVO[]>([]);
     const [group, setGroup] = useState<API.PipelineGroupVO>({});
@@ -377,7 +377,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                             最近执行：{pipeline.latestHistory ? <span title={pipeline.latestHistory.startTime}>{timeAgo(pipeline.latestHistory.startTime || '')}</span> : '--'}
                                                         </Col>
                                                         <Col span={8} style={{ textAlign: "center" }}>
-                                                            耗时：{pipeline.latestHistory && pipeline.latestHistory.executionTime ? pipeline.latestHistory.executionTime + 's' : '--'}
+                                                            耗时：1{pipeline.latestHistory && pipeline.latestHistory.executionTime ? timeDesc(pipeline.latestHistory.executionTime) : '--'}
                                                         </Col>
                                                         <Col span={4} style={{ textAlign: "right" }}>
                                                             <Space>
