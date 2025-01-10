@@ -104,6 +104,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                             { label: "-", value: "-" },
                             { label: "*", value: "*" },
                             { label: "÷", value: "/" },
+                            { label: "无效时置0", value: "zeroIfNull" },
                         ]
                     },
                     {
@@ -142,6 +143,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 || dataIndex === 'op'
                 || (
                     dataIndex === 'v' && record.op !== ''
+                    && record.op !== 'zeroIfNull'
                     && record.op !== 'md5' && record.op !== 'base64' && record.op !== 'empty' && record.op !== 'emptyIfNull'
                     && record.op !== 'null'
                 )
