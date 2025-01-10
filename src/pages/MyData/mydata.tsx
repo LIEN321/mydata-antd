@@ -1,3 +1,5 @@
+import { values } from "lodash";
+
 /**
  * 执行状态：待执行
 */
@@ -211,3 +213,61 @@ export const openLogWindow = (historyId: string) => {
 export const TASK_FILTER_TYPE_VALUE = 1;
 /** 任务过滤条件值类型 - 字段名*/
 export const TASK_FILTER_TYPE_FIELD = 2;
+
+/** 数据处理 */
+export const dataOp = [
+    {
+        label: "无", value: ""
+    },
+    {
+        label: "数字", title: "数字", options: [
+            { label: "+", value: "+" },
+            { label: "-", value: "-" },
+            { label: "*", value: "*" },
+            { label: "÷", value: "/" },
+            { label: "无效时置0", value: "zeroIfNull" },
+        ]
+    },
+    {
+        label: "字符串", title: "字符串", options: [
+            { label: "md5", value: "md5" },
+            { label: "base64", value: "base64" },
+            { label: "前置添加", value: "prepend" },
+            { label: "后置追加", value: "append" },
+            { label: "置空(empty)", value: "empty" },
+            { label: "无效时置空(emptyIfNull)", value: "emptyIfNull" },
+        ]
+    },
+    {
+        label: "日期时间", title: "日期时间", options: [
+            { label: "增加秒数", value: "addSecond" },
+        ]
+    },
+    {
+        label: "通用", title: "通用", options: [
+            { label: "置空(null)", value: "null" },
+        ]
+    },
+]
+
+/** 变量处理 */
+export const varOp = [
+    {
+        label: "无", value: ""
+    },
+    {
+        label: "数字", title: "数字", options: [
+            { label: "无效时置0", value: "zeroIfNull" },
+        ]
+    },
+    {
+        label: "字符串", title: "字符串", options: [
+            { label: "md5", value: "md5" },
+            { label: "base64", value: "base64" },
+            { label: "前置添加", value: "prepend" },
+            { label: "后置追加", value: "append" },
+            { label: "置空(empty)", value: "empty" },
+            { label: "无效时置空(emptyIfNull)", value: "emptyIfNull" },
+        ]
+    },
+]
