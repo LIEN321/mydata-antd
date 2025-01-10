@@ -377,7 +377,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                             最近执行：{pipeline.latestHistory ? <span title={pipeline.latestHistory.startTime}>{timeAgo(pipeline.latestHistory.startTime || '')}</span> : '--'}
                                                         </Col>
                                                         <Col span={8} style={{ textAlign: "center" }}>
-                                                            耗时：1{pipeline.latestHistory && pipeline.latestHistory.executionTime ? timeDesc(pipeline.latestHistory.executionTime) : '--'}
+                                                            耗时：{pipeline.latestHistory && pipeline.latestHistory.executionTime ? timeDesc(pipeline.latestHistory.executionTime) : '--'}
                                                         </Col>
                                                         <Col span={4} style={{ textAlign: "right" }}>
                                                             <Space>
