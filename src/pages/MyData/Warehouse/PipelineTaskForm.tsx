@@ -815,13 +815,13 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         name="output"
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.OUTPUT.DATA_JSON = e.target.value.trim();
-                                                                if (!task.taskConfig.OUTPUT.DATA_JSON) {
-                                                                    task.taskConfig.OUTPUT.DATA_JSON = "DATA_JSON";
+                                                                task.taskConfig.OUTPUT.PIPELINE_JSON = e.target.value.trim();
+                                                                if (!task.taskConfig.OUTPUT.PIPELINE_JSON) {
+                                                                    task.taskConfig.OUTPUT.PIPELINE_JSON = "PIPELINE_JSON";
                                                                 }
                                                                 updateTask();
                                                             },
-                                                            value: task.taskConfig.OUTPUT.DATA_JSON || "DATA_JSON",
+                                                            value: task.taskConfig.OUTPUT.PIPELINE_JSON || "PIPELINE_JSON",
                                                             allowClear: false,
                                                         }}
                                                     />
@@ -1431,10 +1431,10 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                         ]}
                                                         fieldProps={{
                                                             onChange: (e) => {
-                                                                task.taskConfig.INPUT.DATA_JSON = e.target.value.trim();
+                                                                task.taskConfig.INPUT.PIPELINE_JSON = e.target.value.trim();
                                                                 updateTask();
                                                             },
-                                                            value: task.taskConfig.INPUT.DATA_JSON || "",
+                                                            value: task.taskConfig.INPUT.PIPELINE_JSON || "",
                                                         }}
                                                     />
                                                 </Col>

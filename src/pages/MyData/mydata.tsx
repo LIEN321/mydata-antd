@@ -90,7 +90,7 @@ export const TASK_TEMPLATE = {
         "taskType": TRIGGER_PIPELINE,
         "taskName": "触发流水线",
         "taskConfig": {
-            "INPUT": { "DATA_JSON": "DATA_JSON" },
+            "INPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
             "OUTPUT": {},
             "PIPELINE_ID": null,
         },
@@ -113,7 +113,7 @@ export const TASK_TEMPLATE = {
         "taskName": "数据转JSON",
         "taskConfig": {
             "INPUT": { "BIZ_DATA": "BIZ_DATA" },
-            "OUTPUT": { "DATA_JSON": "DATA_JSON" },
+            "OUTPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
             "JSON_TEMPLATE": "${DATA_JSON}",
             "FIELD_MAPPING": {},
             "ID_FIELD": [],
