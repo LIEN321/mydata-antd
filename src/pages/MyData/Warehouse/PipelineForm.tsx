@@ -31,19 +31,20 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
     const [tasks, setTasks] = useState<API.PipelineTaskVO[]>();
 
     // 初始时 加载流水线详情
-    const loadPipeline = async () => {
-        if (id) {
-            setLoading(true);
-            const response = await pipelineDetail({ id });
-            if (response.success && response.data) {
-                setPipeline(() => response.data || {});
-                setTasks(response.data.tasks);
-            }
-            setLoading(false);
+    const loadPipeline = async (id: number) => {
+        setLoading(true);
+        const response = await pipelineDetail({ id });
+        if (response.success && response.data) {
+            setPipeline(() => response.data || {});
+            setTasks(response.data.tasks);
         }
+        setLoading(false);
     }
+
     useEffect(() => {
-        loadPipeline();
+        if (id) {
+            loadPipeline(id);
+        }
     }, []);
 
     const tabItems: TabsProps['items'] = [
@@ -354,7 +355,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                         // 初始的id无效，则为新建流水线，不关闭表单
                         if (!id) {
                             setId(() => response.data);
-                            loadPipeline();
+                            loadPipeline(response.data);
                             setActiveKey("2");
                             return false;
                         }
