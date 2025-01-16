@@ -100,7 +100,7 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                         <Button type="link" title="插入业务数据占位符" onClick={() => {
                             insertTextAtCursor('${DATA_JSON}');
                         }}>
-                            {'${DATA_JSON}'}
+                            {'插入${DATA_JSON}'}
                         </Button>}
                     <br />
                     <br />
