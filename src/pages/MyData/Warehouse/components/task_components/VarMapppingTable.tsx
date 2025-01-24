@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { GetRef, InputRef, TableProps } from 'antd';
 import { Button, Form, Input, Popconfirm, Select, Space, Switch, Table } from 'antd';
-import { TASK_FILTER_TYPE_FIELD, TASK_FILTER_TYPE_VALUE } from '@/pages/MyData/mydata';
+import { dataOp, TASK_FILTER_TYPE_FIELD, TASK_FILTER_TYPE_VALUE, varOp } from '@/pages/MyData/mydata';
 import { PlusOutlined } from '@ant-design/icons';
 
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -14,8 +14,8 @@ interface Item {
     varCode: string;
     /** json字段 */
     jsonField: string;
-    /** 无效时是否置空字符串 */
-    switchEmpty: boolean;
+    /** 处理方式 */
+    op: string;
 }
 
 interface EditableRowProps {
@@ -80,8 +80,12 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
-        if (dataIndex === "switchEmpty") {
-            return <Switch onChange={save} />
+        if (dataIndex === "op") {
+            return <Select
+                defaultValue={"="}
+                options={varOp}
+                onSelect={save}
+            />
         }
         return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
     };
@@ -120,6 +124,8 @@ export interface VarMappingDataType {
     varCode: string;
     /** json字段 */
     jsonField: string;
+    /** 后续处理 */
+    op: string;
 }
 
 type ColumnTypes = Exclude<TableProps<VarMappingDataType>['columns'], undefined>;
@@ -156,6 +162,7 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
             key: count
             , varCode: ''
             , jsonField: ''
+            , op: ''
         };
 
         setVarMappings([...varMappings, newData]);
@@ -204,9 +211,9 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
             editable: true,
         },
         {
-            title: '无效时置空',
-            dataIndex: 'switchEmpty',
-            width: 100,
+            title: '后续处理',
+            dataIndex: 'op',
+            width: 150,
             align: 'center',
             editable: true,
         },

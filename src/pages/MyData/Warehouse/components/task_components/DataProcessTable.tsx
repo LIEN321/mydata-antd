@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { GetRef, InputRef, TableProps } from 'antd';
 import { Button, Form, Input, Popconfirm, Select, Space, Table } from 'antd';
-import { TASK_FILTER_TYPE_FIELD, TASK_FILTER_TYPE_VALUE } from '@/pages/MyData/mydata';
+import { dataOp, TASK_FILTER_TYPE_FIELD, TASK_FILTER_TYPE_VALUE } from '@/pages/MyData/mydata';
 import { PlusOutlined } from '@ant-design/icons';
 
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -97,36 +97,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
         if (dataIndex === "op") {
             return <Select
                 defaultValue={"="}
-                options={[
-                    {
-                        label: "数字", title: "数字", options: [
-                            { label: "+", value: "+" },
-                            { label: "-", value: "-" },
-                            { label: "*", value: "*" },
-                            { label: "÷", value: "/" },
-                        ]
-                    },
-                    {
-                        label: "字符串", title: "字符串", options: [
-                            { label: "md5", value: "md5" },
-                            { label: "base64", value: "base64" },
-                            { label: "前置添加", value: "prepend" },
-                            { label: "后置追加", value: "append" },
-                            { label: "置空(empty)", value: "empty" },
-                            { label: "无效时置空(emptyIfNull)", value: "emptyIfNull" },
-                        ]
-                    },
-                    {
-                        label: "日期时间", title: "日期时间", options: [
-                            { label: "增加秒数", value: "addSecond" },
-                        ]
-                    },
-                    {
-                        label: "通用", title: "通用", options: [
-                            { label: "置空(null)", value: "null" },
-                        ]
-                    },
-                ]}
+                options={dataOp}
                 onSelect={save}
             />
         }
@@ -142,6 +113,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 || dataIndex === 'op'
                 || (
                     dataIndex === 'v' && record.op !== ''
+                    && record.op !== 'zeroIfNull'
                     && record.op !== 'md5' && record.op !== 'base64' && record.op !== 'empty' && record.op !== 'emptyIfNull'
                     && record.op !== 'null'
                 )
