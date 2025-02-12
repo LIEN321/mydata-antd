@@ -19,11 +19,14 @@ const BizData: React.FC<BizDataProp> = (props) => {
     const [columns, setColumns] = useState<ProColumns<API.DataFieldVO>[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
+    // 加载业务数据的字段列
     const loadColumns = async () => {
         setLoading(true);
         if (data.id) {
+            // 调用接口 查询业务数据的字段
             const response = await bizDataFieldList({ dataId: data.id });
             if (response.success && response.data) {
+                // 查询返回的字段列表
                 const bizDataFields = response.data;
 
                 const columnsUpdate: ProColumns<API.DataFieldVO>[] = [];
@@ -32,7 +35,8 @@ const BizData: React.FC<BizDataProp> = (props) => {
                     columnsUpdate.push({
                         title: field.fieldName,
                         dataIndex: field.fieldCode,
-                        search: field.isId === 1,
+                        // search: field.isId === 1,
+                        search: true,
                         renderText(text) {
                             return (text !== undefined && text !== null) ? text.toString() : "";
                         },
@@ -96,10 +100,10 @@ const BizData: React.FC<BizDataProp> = (props) => {
                 loading={loading}
                 columns={columns}
                 options={false}
-                // search={{
-                //     labelWidth: "auto",
-                //     span: 8,
-                // }}
+                search={{
+                    span: 4,
+                    // defaultCollapsed: false,
+                }}
                 request={(params: API.bizDataPageParams) => {
                     params.dataId = data.id || 0;
                     return bizDataPage(params);
