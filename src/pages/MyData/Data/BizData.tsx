@@ -19,6 +19,10 @@ const BizData: React.FC<BizDataProp> = (props) => {
     const [columns, setColumns] = useState<ProColumns<API.DataFieldVO>[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
+    const handleEditBizData = (bizData: any) => {
+        console.info(bizData);
+    }
+
     // 加载业务数据的字段列
     const loadColumns = async () => {
         setLoading(true);
@@ -52,8 +56,10 @@ const BizData: React.FC<BizDataProp> = (props) => {
                         title: '操作',
                         width: 120,
                         search: false,
-                        render: () => {
+                        render: (record) => {
                             return <>
+                                <a onClick={() => handleEditBizData(record)}>编辑</a>
+                                <Divider type="vertical" />
                                 <Popconfirm
                                     title="确认删除该数据吗？"
                                     icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
@@ -63,7 +69,6 @@ const BizData: React.FC<BizDataProp> = (props) => {
                                     <a title="删除">删除</a>
                                 </Popconfirm>
                                 {<>
-                                    <Divider type="vertical" />
                                     {/* <a onClick={() => { this.handleShowBizDataHistory(record) }}>历史数据</a> */}
                                 </>
                                 }
