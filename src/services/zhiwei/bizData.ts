@@ -19,6 +19,21 @@ export async function bizDataPage(
   });
 }
 
+/** 删除业务数据 DELETE /bizData/deleteBizData */
+export async function deleteBizData(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.deleteBizDataParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.RBoolean>(`/api/bizData/deleteBizData`, {
+    method: 'DELETE',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** 查询标准数据的可见字段列表 GET /bizData/fieldList */
 export async function bizDataFieldList(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

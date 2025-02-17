@@ -286,6 +286,11 @@ declare namespace API {
     id: number;
   };
 
+  type deleteBizDataParams = {
+    dataId: number;
+    bizDataId: string;
+  };
+
   type deleteDataParams = {
     /** 记录id */
     id: number;

@@ -1,4 +1,4 @@
-import { bizDataFieldList, bizDataPage, saveBizData } from "@/services/zhiwei/bizData";
+import { bizDataFieldList, bizDataPage, deleteBizData, saveBizData } from "@/services/zhiwei/bizData";
 import Icon from "@ant-design/icons";
 import { ActionType, ModalForm, ProColumns, ProForm, ProFormText, ProTable } from "@ant-design/pro-components";
 import { Button, Divider, message, Popconfirm } from "antd";
@@ -24,10 +24,23 @@ const BizData: React.FC<BizDataProp> = (props) => {
     const [editFormOpen, setEditFormOpen] = useState<boolean>(false);
     const [bizData, setBizData] = useState<any>({});
     const handleEditBizData = (bizData: any) => {
-        console.info(bizData);
         setBizData(() => bizData);
         setEditFormOpen(() => true);
     }
+
+    const handleDeleteBizData = async (bizData: any) => {
+        const dataId = data.id;
+        const bizDataId = bizData._MD_DATA_ID_;
+        if (dataId) {
+            const response = await deleteBizData({ dataId, bizDataId });
+            if (response.success) {
+                message.success("删除成功！");
+                tableRef.current?.reload();
+            }
+        } else {
+            message.warning("数据无效");
+        }
+    };
 
     // 加载业务数据的字段列
     const loadColumns = async () => {
@@ -71,7 +84,7 @@ const BizData: React.FC<BizDataProp> = (props) => {
                                     title="确认删除该数据吗？"
                                     icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
                                     placement="topRight"
-                                // onConfirm={() => this.handleDeleteBizData(record)}
+                                    onConfirm={() => handleDeleteBizData(record)}
                                 >
                                     <a title="删除">删除</a>
                                 </Popconfirm>
