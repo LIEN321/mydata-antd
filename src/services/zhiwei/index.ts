@@ -3,6 +3,7 @@
 // API 更新时间：
 // API 唯一标识：
 import * as role from './role';
+import * as bizData from './bizData';
 import * as user from './user';
 import * as userConfig from './userConfig';
 import * as tenant from './tenant';
@@ -25,9 +26,9 @@ import * as appApi from './appApi';
 import * as portal from './portal';
 import * as pipelineHistory from './pipelineHistory';
 import * as devEntityProperty from './devEntityProperty';
-import * as bizData from './bizData';
 export default {
   role,
+  bizData,
   user,
   userConfig,
   tenant,
@@ -50,5 +51,4 @@ export default {
   portal,
   pipelineHistory,
   devEntityProperty,
-  bizData,
 };

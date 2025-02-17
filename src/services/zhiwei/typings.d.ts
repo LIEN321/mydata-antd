@@ -536,9 +536,14 @@ declare namespace API {
     fileName: string;
   };
 
+  type getBizDataParams = {
+    dataId: number;
+    bizDataId: string;
+  };
+
   type LoginDTO = {
     /** 租户编号 */
-    code: string;
+    code?: string;
     /** 登录账号 */
     username: string;
     /** 登录密码 */
@@ -1570,6 +1575,17 @@ declare namespace API {
     data?: number;
   };
 
+  type RMapStringObject = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: Record<string, any>;
+  };
+
   type RMenuVO = {
     /** 响应状态码 */
     code?: number;
@@ -1761,6 +1777,11 @@ declare namespace API {
     /** 响应提示消息 */
     message?: string;
     data?: UserVO;
+  };
+
+  type saveBizDataParams = {
+    dataId: number;
+    bizDataId: string;
   };
 
   type SaveDevEntityPropertiesDTO = {

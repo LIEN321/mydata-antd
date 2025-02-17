@@ -1,8 +1,8 @@
-import { bizDataFieldList, bizDataPage } from "@/services/zhiwei/bizData";
+import { bizDataFieldList, bizDataPage, saveBizData } from "@/services/zhiwei/bizData";
 import Icon from "@ant-design/icons";
-import { ModalForm, ProColumns, ProTable } from "@ant-design/pro-components";
-import { Button, Divider, Popconfirm } from "antd";
-import { useEffect, useState } from "react";
+import { ActionType, ModalForm, ProColumns, ProForm, ProFormText, ProTable } from "@ant-design/pro-components";
+import { Button, Divider, message, Popconfirm } from "antd";
+import { useEffect, useRef, useState } from "react";
 
 export type BizDataProp = {
     /** 数据标准 */
@@ -16,11 +16,17 @@ export type BizDataProp = {
 
 const BizData: React.FC<BizDataProp> = (props) => {
     const { data } = props;
+    const [bizDataFields, setBizDataFields] = useState<API.DataFieldVO[]>([]);
     const [columns, setColumns] = useState<ProColumns<API.DataFieldVO>[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const tableRef = useRef<ActionType>();
 
+    const [editFormOpen, setEditFormOpen] = useState<boolean>(false);
+    const [bizData, setBizData] = useState<any>({});
     const handleEditBizData = (bizData: any) => {
         console.info(bizData);
+        setBizData(() => bizData);
+        setEditFormOpen(() => true);
     }
 
     // 加载业务数据的字段列
@@ -32,6 +38,7 @@ const BizData: React.FC<BizDataProp> = (props) => {
             if (response.success && response.data) {
                 // 查询返回的字段列表
                 const bizDataFields = response.data;
+                setBizDataFields(bizDataFields);
 
                 const columnsUpdate: ProColumns<API.DataFieldVO>[] = [];
 
@@ -114,8 +121,45 @@ const BizData: React.FC<BizDataProp> = (props) => {
                     return bizDataPage(params);
                 }}
                 pagination={{ pageSize: 10, }}
+                actionRef={tableRef}
             />
         </ModalForm>
+        {editFormOpen && <>
+            <ModalForm
+                initialValues={bizData}
+                open={editFormOpen}
+                title="编辑业务数据"
+                width={600}
+                onOpenChange={setEditFormOpen}
+                onFinish={async (formData) => {
+                    const dataId = data.id;
+                    const bizDataId = bizData._MD_DATA_ID_;
+                    if (dataId) {
+                        const response = await saveBizData({ dataId, bizDataId }, formData);
+                        if (response.success) {
+                            message.success("保存成功！");
+                            setBizData({});
+                            setEditFormOpen(false);
+                            tableRef.current?.reload();
+                            return true;
+                        }
+                    } else {
+                        message.warning("数据无效");
+                    }
+                    return false;
+                }}
+            >
+                {bizDataFields.map(field => {
+                    return <>
+                        <ProFormText
+                            name={field.fieldCode}
+                            label={field.fieldName}
+                        />
+                    </>
+                })}
+            </ModalForm>
+        </>}
+
     </>
 };
 
