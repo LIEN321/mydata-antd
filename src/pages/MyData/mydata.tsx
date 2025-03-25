@@ -93,6 +93,7 @@ export const TASK_TEMPLATE = {
             "INPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
             "OUTPUT": {},
             "PIPELINE_ID": null,
+            "SYNC": true,
         },
     },
 

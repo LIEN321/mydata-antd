@@ -1,5 +1,5 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Col, Form, Row, Skeleton, Typography } from "antd";
+import { Col, Form, Row, Skeleton, Switch, Typography } from "antd";
 import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, TRIGGER_PIPELINE, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
 import { useEffect, useState } from "react";
 import { TaskItem } from "./PipelineTask";
@@ -1478,7 +1478,23 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                         />
 
                                     </Col>
-                                    <Col span={12}></Col>
+                                    <Col span={12}>
+                                        <ProFormSwitch
+                                            label="同步执行"
+                                            fieldProps={{
+                                                onChange: (checked) => {
+                                                    task.taskConfig.SYNC = checked;
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.SYNC || true,
+                                            }}
+                                            extra={<>
+                                                <p>同步模式：等待流水线执行完 再往下执行；</p>
+                                                <p>非同步模式：即异步，触发流水线后 立即往下执行；</p>
+                                            </>
+                                            }
+                                        />
+                                    </Col>
                                 </Row>
                             </>
                         }
