@@ -1274,7 +1274,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     {/* 查询条件 */}
                                     <Col span={24}>
                                         <ProFormItem
-                                            label="查询条件"
+                                            label="配置查询条件"
                                         >
                                             {(dataFields && dataFields.length > 0) ?
                                                 <Skeleton loading={loading} active>
@@ -1290,6 +1290,25 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 : <Typography.Text type="secondary">请先选择数据</Typography.Text>
                                             }
                                         </ProFormItem>
+                                    </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    <Col span={24}>
+                                        <ProFormTextArea
+                                            label="自定义查询条件"
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                }
+                                            ]}
+                                            fieldProps={{
+                                                onChange: (e) => {
+                                                    task.taskConfig.CONDITION = e.target.value.trim();
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.CONDITION || "",
+                                            }}
+                                        />
                                     </Col>
                                 </Row>
                                 <Row>

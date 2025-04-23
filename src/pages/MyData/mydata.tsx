@@ -171,6 +171,7 @@ export const TASK_TEMPLATE = {
             "INPUT": { "PARAM_DATA": "" },
             "OUTPUT": { "BIZ_DATA": "BIZ_DATA" },
             "DATA_FILTER": [],
+            "CONDITION": "",
         },
     },
 
