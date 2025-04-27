@@ -1505,7 +1505,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                     task.taskConfig.SYNC = checked;
                                                     updateTask();
                                                 },
-                                                value: task.taskConfig.SYNC || true,
+                                                value: task.taskConfig.SYNC != null ? task.taskConfig.SYNC : true,
                                             }}
                                             extra={<>
                                                 <p>同步模式：等待流水线执行完 再往下执行；</p>
