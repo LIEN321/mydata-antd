@@ -54,6 +54,8 @@ declare namespace API {
   type AppApiVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 所属应用 */
     appId?: number;
     /** 所属应用名称 */
@@ -124,6 +126,8 @@ declare namespace API {
   type AppVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 应用编号 */
     appCode?: string;
     /** 应用名称 */
@@ -227,6 +231,8 @@ declare namespace API {
   type DataFieldVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 所属数据 */
     dataId?: number;
     /** 字段编号 */
@@ -262,6 +268,8 @@ declare namespace API {
   type DataVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 所属项目id */
     projectId?: number;
     /** 所属项目名称 */
@@ -284,6 +292,11 @@ declare namespace API {
   type deleteAppParams = {
     /** 记录id */
     id: number;
+  };
+
+  type deleteBizDataParams = {
+    dataId: number;
+    bizDataId: string;
   };
 
   type deleteDataParams = {
@@ -384,6 +397,8 @@ declare namespace API {
   type DepartmentTreeVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 父菜单id */
     parentId?: number;
     value?: number;
@@ -395,6 +410,8 @@ declare namespace API {
   type DepartmentVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 父菜单id */
     parentId?: number;
     /** 机构名称 */
@@ -470,6 +487,8 @@ declare namespace API {
   type DevEntityPropertyVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 属性编号 */
     code?: string;
     /** 属性名称 */
@@ -493,6 +512,8 @@ declare namespace API {
   type DevEntityVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 实体编号 */
     code?: string;
     /** 实体姓名 */
@@ -536,9 +557,14 @@ declare namespace API {
     fileName: string;
   };
 
+  type getBizDataParams = {
+    dataId: number;
+    bizDataId: string;
+  };
+
   type LoginDTO = {
     /** 租户编号 */
-    code: string;
+    code?: string;
     /** 登录账号 */
     username: string;
     /** 登录密码 */
@@ -600,6 +626,8 @@ declare namespace API {
   type MenuTreeVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 父菜单id */
     parentId?: number;
     value?: number;
@@ -611,6 +639,8 @@ declare namespace API {
   type MenuVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 父菜单id */
     parentId?: number;
     /** 菜单编号 */
@@ -661,6 +691,8 @@ declare namespace API {
   type ParameterVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 系统参数编号 */
     code?: string;
     /** 系统参数名称 */
@@ -745,6 +777,8 @@ declare namespace API {
   type PipelineGroupVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 所属项目 */
     projectId?: number;
     /** 分组名称 */
@@ -774,6 +808,8 @@ declare namespace API {
   type PipelineHistoryVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 所属流水线 */
     pipelineId?: number;
     /** 开始时间 */
@@ -834,6 +870,8 @@ declare namespace API {
   type PipelineLogVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 所属流水线 */
     pipelineId?: number;
     /** 所属执行记录 */
@@ -904,6 +942,8 @@ declare namespace API {
   type PipelineTaskVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 所属项目 */
     projectId?: number;
     /** 所属流水线 */
@@ -925,6 +965,8 @@ declare namespace API {
   type PipelineVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 所属项目 */
     projectId?: number;
     /** 所属分组 */
@@ -1267,6 +1309,8 @@ declare namespace API {
   type ProjectVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 项目编号 */
     projectCode?: string;
     /** 项目名称 */
@@ -1570,6 +1614,17 @@ declare namespace API {
     data?: number;
   };
 
+  type RMapStringObject = {
+    /** 响应状态码 */
+    code?: number;
+    /** true-成功，false-失败 */
+    success?: boolean;
+    /** 响应提示消息 */
+    message?: string;
+    /** 响应数据 */
+    data?: Record<string, any>;
+  };
+
   type RMenuVO = {
     /** 响应状态码 */
     code?: number;
@@ -1634,6 +1689,8 @@ declare namespace API {
   type RoleVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 角色编号 */
     code?: string;
     /** 角色姓名 */
@@ -1763,6 +1820,11 @@ declare namespace API {
     data?: UserVO;
   };
 
+  type saveBizDataParams = {
+    dataId: number;
+    bizDataId: string;
+  };
+
   type SaveDevEntityPropertiesDTO = {
     /** 业务实体id */
     id?: number;
@@ -1775,6 +1837,8 @@ declare namespace API {
   type SelectVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 选项名称 */
     label?: string;
     /** 选项值 */
@@ -1820,6 +1884,8 @@ declare namespace API {
   type SysApiVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 所属菜单id */
     menuId?: number;
     /** 所属菜单名称 */
@@ -1873,6 +1939,8 @@ declare namespace API {
   type TenantVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 租户id */
     tenantId?: string;
     /** 租户编号 */
@@ -1943,6 +2011,8 @@ declare namespace API {
   type UserVO = {
     /** id */
     id?: number;
+    /** 业务状态 */
+    status?: number;
     /** 编号 */
     code?: string;
     /** 用户姓名 */

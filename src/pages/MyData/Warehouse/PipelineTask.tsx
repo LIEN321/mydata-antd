@@ -1,6 +1,6 @@
 import { DeleteOutlined, DownCircleFilled, PlusCircleFilled, PlusOutlined, UpCircleFilled } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
-import { Button, Card, Dropdown, MenuProps, Popconfirm, Space, Splitter, Typography, theme } from "antd";
+import { Button, Card, Dropdown, MenuProps, Popconfirm, Space, Splitter, Switch, Typography, theme } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTaskForm from "./PipelineTaskForm";
 import { API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, PROCESS_DATA, TASK_TEMPLATE, TaskKey } from "../mydata";
@@ -37,6 +37,8 @@ export type TaskItem = {
     taskConfig: Record<string, any>;
     /** 数据仓库名称 */
     warehouse?: string;
+    /** 启禁用状态 */
+    status: number;
 };
 
 const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
@@ -225,6 +227,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
         const newTask = structuredClone(TASK_TEMPLATE[type as TaskKey] as unknown as TaskItem);
         newTasks.splice(index, 0, newTask as TaskItem);
         newTask.projectId = props.projectId;
+        newTask.status = 1;
 
         // 重新更新 任务的key
         newTasks.map((t, index) => {
@@ -307,6 +310,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                         onMouseLeave={() => setHoveredCard(null)}
                                         onClick={() => setTask(() => t)}
                                         boxShadow={t.key === task?.key}
+                                        style={t.status === 0 ? { backgroundColor: "#DDD", color: "#999" } : {}}
                                     >
                                         {
                                             hoveredCard === index &&
@@ -328,15 +332,22 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                         }
 
                                         {/* 任务卡片内容 */}
-                                        <Typography.Title level={5}>{index + 1}. {t.taskName}</Typography.Title>
-                                        {/* 删除任务 */}
+                                        <Typography.Title level={5} style={t.status === 0 ? { color: "#999" } : {}}>{index + 1}. {t.taskName}</Typography.Title>
+                                        {/* 任务操作 */}
                                         {hoveredCard === index &&
-                                            <div style={{ position: "absolute", right: -20, top: 0, width: 60, height: 50, paddingTop: 22, paddingLeft: 10 }}>
-                                                <Popconfirm placement="topRight" title="确认删除吗？" onConfirm={() => {
-                                                    deleteTask(index);
-                                                }}>
-                                                    <Button type="text" icon={<DeleteOutlined />} />
-                                                </Popconfirm>
+                                            <div style={{ position: "absolute", right: -20, top: 0, width: 120, height: 50, paddingTop: 22, paddingLeft: 10, display: "flex", alignItems: "center" }}>
+                                                <Space>
+                                                    <Switch value={t.status === 1} onChange={value => {
+                                                        t.status = value ? 1 : 0;
+                                                        updateTask(t);
+                                                    }}
+                                                    />
+                                                    <Popconfirm placement="topRight" title="确认删除吗？" onConfirm={() => {
+                                                        deleteTask(index);
+                                                    }}>
+                                                        <Button type="text" icon={<DeleteOutlined />} />
+                                                    </Popconfirm>
+                                                </Space>
                                             </div>
                                         }
                                         {
@@ -351,7 +362,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                                                     </Space>
                                                     : '--'
                                                 }
-                                                <br/>
+                                                <br />
                                                 输出：
                                                 {Object.keys(t.taskConfig.OUTPUT).length > 0
                                                     ?

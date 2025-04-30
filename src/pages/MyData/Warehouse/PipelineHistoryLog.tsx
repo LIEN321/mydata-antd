@@ -1,5 +1,5 @@
 import { pipelineLogList } from "@/services/zhiwei/pipelineLog";
-import { CheckOutlined, ClockCircleOutlined, CloseOutlined, LoadingOutlined, StopOutlined } from "@ant-design/icons";
+import { CheckOutlined, ClockCircleOutlined, CloseOutlined, LoadingOutlined, MinusCircleOutlined, StopOutlined } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
 import { useLocation } from "@umijs/max";
 import { Card, Col, Input, Row, Splitter, theme, Typography } from "antd";
@@ -78,6 +78,7 @@ const PipelineHistoryLog: React.FC = () => {
         , <StopOutlined key="stop" style={{ color: token.colorWarning }} title="手动停止" />
         , <CheckOutlined key="success" style={{ color: token.colorSuccess }} title="执行成功" />
         , <CloseOutlined key="error" style={{ color: token.colorError }} title="执行失败" />
+        , <MinusCircleOutlined key="skip" style={{ color: token.colorTextDisabled }} title="禁用，不执行" />
     ];
 
     useEffect(() => {

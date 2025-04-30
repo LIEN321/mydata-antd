@@ -25,6 +25,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
 
     const [id, setId] = useState(props.id);
     const [pipeline, setPipeline] = useState<API.PipelineVO>({})
+    // 当前tab的key
     const [activeKey, setActiveKey] = useState(props.id ? "2" : "1");
     const [loading, setLoading] = useState(false);
 
@@ -354,10 +355,12 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
 
                         // 初始的id无效，则为新建流水线，不关闭表单
                         if (!id) {
-                            setId(() => response.data);
-                            loadPipeline(response.data);
-                            setActiveKey("2");
-                            return false;
+                            if (response.data) {
+                                setId(() => response.data);
+                                loadPipeline(response.data);
+                                setActiveKey("2");
+                                return false;
+                            }
                         }
                     }
                     return true;
