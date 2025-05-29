@@ -104,6 +104,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                 key: '4',
                 label: '执行计划',
                 children: <>
+                    {/* 定时 */}
                     <Row gutter={24}>
                         <Col span={6}></Col>
                         <Col span={2}>
@@ -170,6 +171,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                             />
                         </Col>
                     </Row>
+                    {/* webhook */}
                     <Row gutter={24}>
                         <Col span={6}></Col>
                         <Col span={2}>
@@ -312,6 +314,28 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                     </>
                                 }
                             </Row>
+                        </Col>
+                    </Row>
+                    {/* 邮件通知 */}
+                    <Row gutter={24}>
+                        <Col span={6}></Col>
+                        <Col span={2}>
+                            <ProFormSwitch
+                                label="邮件通知"
+                                name="isEmail"
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <ProFormCheckbox.Group
+                                label="通知策略"
+                                name="emailStrategy"
+                                rules={[{ required: false, message: "请选择通知策略" }]}
+                                options={[
+                                    { label: "执行失败", value: 0 }
+                                    , { label: "执行成功", value: 1 }
+                                ]}
+                                initialValue={[0]}
+                            />
                         </Col>
                     </Row>
                 </>
