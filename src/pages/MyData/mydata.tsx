@@ -55,6 +55,7 @@ export const TASK_TEMPLATE = {
     // 从API获取JSON
     API_GET_JSON: {
         "taskType": API_GET_JSON,
+        "typeName": "从API获取JSON",
         "taskName": "从API获取JSON",
         "taskConfig": {
             "INPUT": { "PARAM_DATA": "" },
@@ -67,6 +68,7 @@ export const TASK_TEMPLATE = {
     // 向API发送数据
     API_SEND_DATA: {
         "taskType": API_SEND_DATA,
+        "typeName": "向API发送数据",
         "taskName": "向API发送数据",
         "taskConfig": {
             "INPUT": { "BIZ_DATA": "BIZ_DATA" },
@@ -78,6 +80,7 @@ export const TASK_TEMPLATE = {
     // 从Webhook接收JSON
     WEBHOOK_GET_JSON: {
         "taskType": WEBHOOK_GET_JSON,
+        "typeName": "从Webhook接收JSON",
         "taskName": "从Webhook接收JSON",
         "taskConfig": {
             "INPUT": { "WEBHOOK_JSON": "WEBHOOK_JSON" },
@@ -88,6 +91,7 @@ export const TASK_TEMPLATE = {
     // 用Webhook触发流水线
     TRIGGER_PIPELINE: {
         "taskType": TRIGGER_PIPELINE,
+        "typeName": "触发流水线",
         "taskName": "触发流水线",
         "taskConfig": {
             "INPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
@@ -100,6 +104,7 @@ export const TASK_TEMPLATE = {
     // JSON转数据
     JSON_TO_DATA: {
         "taskType": JSON_TO_DATA,
+        "typeName": "JSON转数据",
         "taskName": "JSON转数据",
         "taskConfig": {
             "INPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
@@ -111,6 +116,7 @@ export const TASK_TEMPLATE = {
     // 数据转JSON
     DATA_TO_JSON: {
         "taskType": DATA_TO_JSON,
+        "typeName": "数据转JSON",
         "taskName": "数据转JSON",
         "taskConfig": {
             "INPUT": { "BIZ_DATA": "BIZ_DATA" },
@@ -124,6 +130,7 @@ export const TASK_TEMPLATE = {
     // 过滤数据
     FILTER_DATA: {
         "taskType": FILTER_DATA,
+        "typeName": "过滤数据",
         "taskName": "过滤数据",
         "taskConfig": {
             "INPUT": { "BIZ_DATA": "BIZ_DATA", "PARAM_DATA": "" },
@@ -135,6 +142,7 @@ export const TASK_TEMPLATE = {
     // 处理数据
     PROCESS_DATA: {
         "taskType": PROCESS_DATA,
+        "typeName": "处理数据",
         "taskName": "处理数据",
         "taskConfig": {
             "INPUT": { "BIZ_DATA": "BIZ_DATA" },
@@ -146,6 +154,7 @@ export const TASK_TEMPLATE = {
     // 数据写入Excel
     WRITE_EXCEL: {
         "taskType": WRITE_EXCEL,
+        "typeName": "数据写入Excel",
         "taskName": "数据写入Excel",
         "taskConfig": {
             "INPUT": { "BIZ_DATA": "BIZ_DATA" },
@@ -156,6 +165,7 @@ export const TASK_TEMPLATE = {
     // 保存数据到数仓
     SAVE_DATA: {
         "taskType": SAVE_DATA,
+        "typeName": "保存数据到数仓",
         "taskName": "保存数据到数仓",
         "taskConfig": {
             "INPUT": { "BIZ_DATA": "BIZ_DATA" },
@@ -166,6 +176,7 @@ export const TASK_TEMPLATE = {
     // 从数仓查询数据
     QUERY_DATA: {
         "taskType": QUERY_DATA,
+        "typeName": "从数仓查询数据",
         "taskName": "从数仓查询数据",
         "taskConfig": {
             "INPUT": { "PARAM_DATA": "" },
@@ -178,6 +189,7 @@ export const TASK_TEMPLATE = {
     // 发送邮件
     SEND_EMAIL: {
         "taskType": SEND_EMAIL,
+        "typeName": "发送邮件",
         "taskName": "发送邮件",
         "taskConfig": {
             "INPUT": {},
@@ -194,6 +206,7 @@ export const TASK_TEMPLATE = {
     // JSON值存入变量
     JSON_TO_VAR: {
         "taskType": JSON_TO_VAR,
+        "typeName": "JSON值存入变量",
         "taskName": "JSON值存入变量",
         "taskConfig": {
             "INPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },

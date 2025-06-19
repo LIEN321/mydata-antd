@@ -141,6 +141,14 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         initialValues={task}
                         clearOnDestroy
                     >
+                        <Row>
+                            <Col span={24}>
+                                <ProFormItem
+                                    label="步骤类型">
+                                        {task.typeName}
+                                </ProFormItem>
+                            </Col>
+                        </Row>
                         <Row gutter={24}>
                             {/* 步骤名称 */}
                             <Col span={12}>

@@ -25,6 +25,8 @@ export type TaskItem = {
     pipelineId: number;
     /** 任务类型 */
     taskType: string;
+    /** 类型名称 */
+    typeName: string;
     /** 任务名称 */
     taskName: string;
     /** 关联应用 */
@@ -168,6 +170,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 const taskTemplate = structuredClone(TASK_TEMPLATE[task.taskType as TaskKey]);
                 if (!taskTemplate)
                     return;
+                task.typeName = taskTemplate.taskName;
                 const taskTemplateConfig = structuredClone(taskTemplate.taskConfig);
 
                 if (!task.taskConfig) {
