@@ -36,7 +36,7 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
     const statusBadges = [
         <></>
         , <Badge key="running" color={token.blue} text="执行中" title="执行中" />
-        , <Badge key="stop" color={token.colorWarning} text="停止" title="手动停止" />
+        , <Badge key="stop" color={token.colorWarning} text="停止" title="已停止" />
         , <Badge key="success" color={token.colorSuccess} text="成功" title="执行成功" />
         , <Badge key="error" color={token.colorError} text="失败" title="执行失败" />
     ];
@@ -44,7 +44,7 @@ const PipelineHistory: React.FC<PipelineHistoryProp> = (props) => {
     const statusIcons = [
         <></>
         , <LoadingOutlined key="running" style={{ color: token.blue }} title="执行中" />
-        , <StopOutlined key="stop" style={{ color: token.colorWarning }} title="手动停止" />
+        , <StopOutlined key="stop" style={{ color: token.colorWarning }} title="已停止" />
         , <CheckOutlined key="success" style={{ color: token.colorSuccess }} title="执行成功" />
         , <CloseOutlined key="error" style={{ color: token.colorError }} title="执行失败" />
     ];

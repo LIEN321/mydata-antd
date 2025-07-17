@@ -142,6 +142,10 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                     key: TASK_TEMPLATE.TRIGGER_PIPELINE.taskType,
                     label: TASK_TEMPLATE.TRIGGER_PIPELINE.taskName,
                 },
+                {
+                    key: TASK_TEMPLATE.STOP_PIPELINE.taskType,
+                    label: TASK_TEMPLATE.STOP_PIPELINE.taskName,
+                },
             ],
         },
         {

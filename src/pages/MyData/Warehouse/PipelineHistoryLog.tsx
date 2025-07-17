@@ -75,7 +75,7 @@ const PipelineHistoryLog: React.FC = () => {
     const statusIcons = [
         <ClockCircleOutlined key="ready" style={{ color: token.colorBorder }} title="未开始" />
         , <LoadingOutlined key="running" style={{ color: token.blue }} title="执行中" />
-        , <StopOutlined key="stop" style={{ color: token.colorWarning }} title="手动停止" />
+        , <StopOutlined key="stop" style={{ color: token.colorWarning }} title="已停止" />
         , <CheckOutlined key="success" style={{ color: token.colorSuccess }} title="执行成功" />
         , <CloseOutlined key="error" style={{ color: token.colorError }} title="执行失败" />
         , <MinusCircleOutlined key="skip" style={{ color: token.colorTextDisabled }} title="禁用，不执行" />

@@ -47,6 +47,7 @@ export const PROCESS_DATA = "PROCESS_DATA";
 export const WRITE_EXCEL = "WRITE_EXCEL";
 export const SEND_EMAIL = "SEND_EMAIL";
 export const JSON_TO_VAR = "JSON_TO_VAR";
+export const STOP_PIPELINE = "STOP_PIPELINE";
 
 /**
  * 任务类型对应的配置模板
@@ -98,6 +99,18 @@ export const TASK_TEMPLATE = {
             "OUTPUT": {},
             "PIPELINE_ID": null,
             "SYNC": true,
+        },
+    },
+
+    // 根据配置的条件 停止流水线
+    STOP_PIPELINE: {
+        "taskType": STOP_PIPELINE,
+        "typeName": "停止流水线",
+        "taskName": "停止流水线",
+        "taskConfig": {
+            "INPUT": {},
+            "OUTPUT": {},
+            "STOP_CONDITION": [],
         },
     },
 

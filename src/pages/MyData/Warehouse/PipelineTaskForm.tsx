@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, Skeleton, Switch, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, TRIGGER_PIPELINE, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
 import { useEffect, useState } from "react";
 import { TaskItem } from "./PipelineTask";
 import { appSelect } from "@/services/zhiwei/app";
@@ -14,6 +14,7 @@ import DataFilterTable, { DataFilterDataType } from "./components/task_component
 import DataProcessTable, { DataProcessDataType } from "./components/task_components/DataProcessTable";
 import { pipelineSelect } from "@/services/zhiwei/pipeline";
 import VarMapppingTable, { VarMappingDataType } from "./components/task_components/VarMapppingTable";
+import PipelineStopConditionTable, { ConditionType } from "./components/task_components/PipelineStopConditionTable";
 
 export type TaskFormProp = {
     /** 任务信息 */
@@ -131,6 +132,11 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
         updateTask();
     };
 
+    const handleUpdateStopConditions = (stopConditions: ConditionType[]) => {
+        task.taskConfig.STOP_CONDITION = stopConditions;
+        updateTask();
+    };
+
     return (
         <>
             {task &&
@@ -145,7 +151,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             <Col span={24}>
                                 <ProFormItem
                                     label="步骤类型">
-                                        {task.typeName}
+                                    {task.typeName}
                                 </ProFormItem>
                             </Col>
                         </Row>
@@ -910,7 +916,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                     />
                                                 }
                                             </Skeleton>
-
                                         </ProFormItem>
                                     </Col>
                                 </Row>
@@ -1521,6 +1526,29 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             </>
                                             }
                                         />
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+                        {
+                            // ---------------------------------------- 停止流水线 ----------------------------------------
+                            (task.taskType === STOP_PIPELINE) && <>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem
+                                            label="停止条件"
+                                        >
+                                            <Skeleton loading={loading} active>
+                                                {
+                                                    !loading && <PipelineStopConditionTable
+                                                        stopConditions={task.taskConfig.STOP_CONDITION}
+                                                        dataFields={dataFields}
+                                                        handleUpdateStopConditions={handleUpdateStopConditions}
+                                                        loading={loading}
+                                                    />
+                                                }
+                                            </Skeleton>
+                                        </ProFormItem>
                                     </Col>
                                 </Row>
                             </>
