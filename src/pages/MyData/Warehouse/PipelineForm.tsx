@@ -52,6 +52,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
         {
             key: '1',
             label: '基本信息',
+            forceRender: true,
             children: <>
                 <Row>
                     <Col span={6}></Col>
@@ -89,6 +90,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             {
                 key: '2',
                 label: '任务编排',
+                forceRender: true,
                 children: <PipelineTask
                     tasks={tasks || []}
                     setTasks={setTasks}
@@ -98,11 +100,13 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             {
                 key: '3',
                 label: '参数设置',
+                forceRender: true,
                 children: <></>
             },
             {
                 key: '4',
                 label: '执行计划',
+                forceRender: true,
                 children: <>
                     {/* 定时 */}
                     <Row gutter={24}>
