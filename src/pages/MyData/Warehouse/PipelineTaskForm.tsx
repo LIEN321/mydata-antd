@@ -1,4 +1,4 @@
-import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
+import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, Skeleton, Switch, Typography } from "antd";
 import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
 import { useEffect, useState } from "react";
@@ -1554,7 +1554,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>
                         }
                         {/* ######################################## 参数变量 ######################################## */}
-
                         {
                             // ---------------------------------------- JSON值存入变量 ----------------------------------------
                             (task.taskType === JSON_TO_VAR) && <>
@@ -1613,6 +1612,28 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                             </>
                         }
+                        {/* 通用配置 */}
+                        <Row gutter={24}>
+                            <ProFormRadio.Group
+                                label="失败后是否继续运行"
+                                rules={[{ required: true, message: "请选择" }]}
+                                name="preCondition"
+                                radioType="button"
+                                options={[
+                                    { label: "是", value: 0 }
+                                    , { label: "否", value: 1 }
+                                ]}
+                                initialValue={1}
+                                fieldProps={{
+                                    buttonStyle: "solid",
+                                    onChange: (e) => {
+                                        task.preCondition = e.target.value;
+                                        updateTask();
+                                    },
+                                }}
+                            />
+                            <Col span={12}></Col>
+                        </Row>
                     </ProForm>
                 </ProCard >
             }

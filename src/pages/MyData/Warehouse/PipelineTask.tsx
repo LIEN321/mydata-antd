@@ -41,6 +41,8 @@ export type TaskItem = {
     warehouse?: string;
     /** 启禁用状态 */
     status: number;
+    /** 是否继续执行 */
+    preCondition: number;
 };
 
 const PipelineTask: React.FC<PipelineTaskProp> = (props) => {

@@ -737,7 +737,7 @@ declare namespace API {
     /** webhook认证参数 */
     webhookAuthParams?: Record<string, any>;
     /** 是否启用邮件 */
-    isEmail?: number;
+    isEmail?: boolean;
     /** 邮件通知策略 */
     emailStrategy?: number[];
     /** 接收人 */
@@ -927,6 +927,10 @@ declare namespace API {
     dataId?: number;
     /** 任务配置 */
     taskConfig?: Record<string, any>;
+    /** 业务状态 */
+    status?: number;
+    /** 后续的前提条件 */
+    preCondition?: number;
   };
 
   type pipelineTaskPageParams = {
@@ -960,6 +964,8 @@ declare namespace API {
     dataId?: number;
     /** 任务配置 */
     taskConfig?: Record<string, any>;
+    /** 后续的前提条件 */
+    preCondition?: number;
   };
 
   type PipelineVO = {
@@ -994,7 +1000,7 @@ declare namespace API {
     /** webhook认证参数 */
     webhookAuthParams?: Record<string, any>;
     /** 是否启用邮件 */
-    isEmail?: number;
+    isEmail?: boolean;
     /** 邮件通知策略 */
     emailStrategy?: number[];
     /** 接收人 */
