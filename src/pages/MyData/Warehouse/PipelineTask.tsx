@@ -121,6 +121,10 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.QUERY_DATA.taskType,
                     label: TASK_TEMPLATE.QUERY_DATA.taskName,
+                },
+                {
+                    key: TASK_TEMPLATE.TRUNCATE_DATA.taskType,
+                    label: TASK_TEMPLATE.TRUNCATE_DATA.taskName,
                 }
             ],
         },
