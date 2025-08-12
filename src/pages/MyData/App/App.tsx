@@ -1,14 +1,19 @@
 import CRUD from "@/components/Gyrfalcon/CRUD";
 import { deleteApp, deleteApps, appPage, saveApp } from "@/services/zhiwei/app";
 import { ActionType, ProColumns } from "@ant-design/pro-components";
-import { Button } from "antd";
+import { Button, Drawer } from "antd";
 import { useRef, useState } from "react";
 import AppForm from "./AppForm";
 import { ApiParamDataType } from "../AppApi/ApiParamsTable";
+import AppApi from "../AppApi/AppApi";
 
 const App: React.FC = () => {
     // 请求Header
     const [reqHeaders, setReqHeaders] = useState<ApiParamDataType[]>([]);
+
+    // API管理列 所选的APP id
+    const [appId, setAppId] = useState<any>(null);
+    const [apiListOpen, setApiListOpen] = useState<boolean>(false);
 
     // 表格列
     const columns: ProColumns<API.AppVO>[] = [
@@ -43,6 +48,16 @@ const App: React.FC = () => {
             title: 'API管理',
             dataIndex: 'apiCount',
             search: false,
+            render: (_, record) => {
+                const { apiCount } = record;
+                if (apiCount) {
+                    return <Button type="link" onClick={() => {
+                        setAppId(record.id);
+                        setApiListOpen(true);
+                    }}>{apiCount}</Button>
+                }
+                return "-";
+            },
         },
     ];
 
@@ -84,6 +99,20 @@ const App: React.FC = () => {
 
                 onClickEditBtn={handleOnClickEditBtn}
             />
+
+            {/* API列表 */}
+            {apiListOpen &&
+                <Drawer
+                    open={apiListOpen}
+                    onClose={() => {
+                        setApiListOpen(false);
+                        tableRef.current?.reload();
+                    }}
+                    width={"80%"}
+                >
+                    <AppApi appId={appId} />
+                </Drawer>
+            }
         </>
     );
 };

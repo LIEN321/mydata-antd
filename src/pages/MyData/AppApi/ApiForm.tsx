@@ -25,7 +25,7 @@ export type ApiFormProp = {
     setRespExample: (reqParams: string) => void,
 
     /** 初始默认应用id */
-    appId?: number;
+    appId?: string;
 
     /** 编辑时的数据 */
     record?: API.AppApiVO;
@@ -150,7 +150,8 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                         label="所属应用"
                         placeholder="请输入所属应用"
                         request={appSelect}
-                        initialValue={props.appId && props.appId > 0 ? props.appId : null}
+                        initialValue={props.appId ? props.appId : null}
+                        disabled={props.appId !== undefined}
                     />
                 </Col>
                 <Col span={18}>
