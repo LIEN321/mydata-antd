@@ -40,9 +40,9 @@ const App: React.FC = () => {
             },
         },
         {
-            title: '接口前缀地址',
+            title: '接口前缀',
             dataIndex: 'apiPrefix',
-            search: false,
+            search: true,
         },
         {
             title: 'API管理',
