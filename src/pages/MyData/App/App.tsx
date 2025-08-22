@@ -6,13 +6,15 @@ import { useRef, useState } from "react";
 import AppForm from "./AppForm";
 import { ApiParamDataType } from "../AppApi/ApiParamsTable";
 import AppApi from "../AppApi/AppApi";
+import AppAuth from "../AppAuth/AppAuth";
 
 const App: React.FC = () => {
     // 请求Header
     const [reqHeaders, setReqHeaders] = useState<ApiParamDataType[]>([]);
 
-    // API管理列 所选的APP id
+    // 所选的应用id
     const [appId, setAppId] = useState<any>(null);
+    // API管理显示开关
     const [apiListOpen, setApiListOpen] = useState<boolean>(false);
 
     // 表格列

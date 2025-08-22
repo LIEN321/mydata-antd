@@ -49,6 +49,7 @@ declare namespace API {
     total?: number;
     appId?: string;
     apiName?: string;
+    apiUri?: string;
   };
 
   type AppApiVO = {
@@ -121,6 +122,7 @@ declare namespace API {
     appCode?: string;
     appName?: string;
     appUrl?: string;
+    apiPrefix?: string;
   };
 
   type AppVO = {
