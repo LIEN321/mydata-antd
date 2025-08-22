@@ -6,7 +6,6 @@ import { useRef, useState } from "react";
 import AppForm from "./AppForm";
 import { ApiParamDataType } from "../AppApi/ApiParamsTable";
 import AppApi from "../AppApi/AppApi";
-import AppAuth from "../AppAuth/AppAuth";
 
 const App: React.FC = () => {
     // 请求Header
