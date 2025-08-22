@@ -8,6 +8,8 @@ export type CRUDProps = {
     showBreadcrumb?: boolean;
     /** 标题 */
     title: string | null;
+    /** 搜索栏 */
+    search?: any;
     /** 表格工具栏 */
     toolBarButton?: any;
     /** 表格选择方式 */
@@ -88,6 +90,7 @@ const CRUD: React.FC<CRUDProps> = (props) => {
                 <Col span={mainColSpan[1]}>
                     <CRUD_Simple
                         title={props.title}
+                        search={props.search}
                         toolBarButton={props.toolBarButton}
                         rowSelectionCallBack={props.rowSelectionCallBack}
                         pagination={props.pagination}
