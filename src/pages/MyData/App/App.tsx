@@ -8,8 +8,13 @@ import { ApiParamDataType } from "../AppApi/ApiParamsTable";
 import AppApi from "../AppApi/AppApi";
 
 const App: React.FC = () => {
+    const [app, setApp] = useState<API.AppVO>({});
     // 请求Header
     const [reqHeaders, setReqHeaders] = useState<ApiParamDataType[]>([]);
+    // 认证类型
+    const [authType, setAuthType] = useState<string>('');
+    // 认证配置
+    const [authConfig, setAuthConfig] = useState<any>({});
 
     // 所选的应用id
     const [appId, setAppId] = useState<any>(null);
@@ -50,33 +55,48 @@ const App: React.FC = () => {
             dataIndex: 'apiCount',
             search: false,
             render: (_, record) => {
-                const { apiCount } = record;
-                if (apiCount) {
-                    return <Button type="link" onClick={() => {
-                        setAppId(record.id);
-                        setApiListOpen(true);
-                    }}>{apiCount}</Button>
-                }
-                return "-";
+                let { apiCount } = record;
+                if (!apiCount)
+                    apiCount = 0;
+                return <Button type="link" onClick={() => {
+                    setAppId(record.id);
+                    setApiListOpen(true);
+                }}>{apiCount}</Button>
             },
         },
     ];
 
     const appForm = <AppForm
+        appId={app.id}
         reqHeaders={reqHeaders}
         setReqHeaders={setReqHeaders}
-    />;
+        authType={authType}
+        setAuthType={setAuthType}
+        authConfig={authConfig}
+        setAuthConfig={setAuthConfig} />;
 
     const tableRef = useRef<ActionType>();
 
+    const handleOnClickCreateBtn = () => {
+        setApp({});
+        setReqHeaders([]);
+        setAuthType('');
+        setAuthConfig({});
+    }
+
     const handleOnClickEditBtn = (record: any) => {
+        setApp(record);
         setReqHeaders(record.reqHeaders);
+        setAuthType(record.authType);
+        setAuthConfig(record.authConfig);
     }
 
     const handleSaveAppApi = async (formData: any) => {
         const body = {
             ...formData
-            , reqHeaders: reqHeaders
+            , reqHeaders
+            , authType
+            , authConfig
         };
         await saveApp(body);
     }
@@ -98,6 +118,7 @@ const App: React.FC = () => {
                 handleDelete={deleteApp}
                 handleBatchDelete={deleteApps}
 
+                onClickCreateBtn={handleOnClickCreateBtn}
                 onClickEditBtn={handleOnClickEditBtn}
             />
 

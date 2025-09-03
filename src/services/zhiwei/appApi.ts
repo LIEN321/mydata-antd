@@ -91,3 +91,18 @@ export async function apiSelect(
     ...(options || {}),
   });
 }
+
+/** 查询认证接口 GET /appApi/select_auth */
+export async function authApiSelect(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.authApiSelectParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.SelectVO[]>(`/api/appApi/select_auth`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

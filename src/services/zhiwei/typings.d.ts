@@ -110,6 +110,10 @@ declare namespace API {
     apiCount?: number;
     /** 请求Header */
     reqHeaders?: Record<string, any>[];
+    /** 认证类型 */
+    authType?: string;
+    /** 认证配置 */
+    authConfig?: Record<string, any>;
   };
 
   type appPageParams = {
@@ -144,6 +148,14 @@ declare namespace API {
     apiCount?: number;
     /** 请求Header */
     reqHeaders?: Record<string, any>[];
+    /** 认证类型 */
+    authType?: string;
+    /** 认证配置 */
+    authConfig?: Record<string, any>;
+  };
+
+  type authApiSelectParams = {
+    appId?: number;
   };
 
   type AuthUser = {

@@ -204,7 +204,7 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                 </Col>
             </Row>
             <Row gutter={24}>
-                <Col span={6}>
+                <Col span={10}>
                     <ProFormRadio.Group
                         rules={[
                             {
@@ -213,16 +213,20 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                             }
                         ]}
                         name="opType"
-                        label="数据角色"
+                        label="接口类型"
                         placeholder="请选择请求方法"
                         options={[
                             {
-                                label: '提供者',
+                                label: '提供数据',
                                 value: 1,
                             },
                             {
-                                label: '消费者',
+                                label: '消费数据',
                                 value: 2,
+                            },
+                            {
+                                label: '认证授权',
+                                value: 3,
                             },
                         ]}
                         radioType="button"
