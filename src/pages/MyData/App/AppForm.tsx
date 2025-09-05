@@ -1,6 +1,6 @@
 import { ProFormItem, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import ApiParamsTable, { ApiParamDataType } from "../AppApi/ApiParamsTable";
-import { Col, Row, Select, Splitter, Tabs, TabsProps } from "antd";
+import { Col, Input, Radio, Row, Select, Splitter, Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
 import { authApiSelect } from "@/services/zhiwei/appApi";
 
@@ -50,6 +50,7 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                             options={[
                                 { label: 'No Auth', value: '' },
                                 { label: 'Cookie', value: 'cookie' },
+                                { label: 'API Key', value: 'api_key' },
                             ]}
                             defaultValue={props.authType}
                             onChange={props.setAuthType}
@@ -58,7 +59,7 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                     <Splitter.Panel>
                         <Row>
                             <Col span={1}></Col>
-                            <Col span={23}>
+                            <Col span={22}>
                                 {/* cookie */}
                                 {props.authType === 'cookie' && <>
                                     选择API：<Select
@@ -69,6 +70,27 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                             props.setAuthConfig({ 'api': value })
                                         }}
                                     />
+                                </>}
+                                {/* api key */}
+                                {props.authType === 'api_key' && <>
+                                    <Row gutter={[24, 24]}>
+                                        <Col span={4} style={{ textAlign: "right" }}>Key:</Col>
+                                        <Col span={20}><Input defaultValue="Authorization" /></Col>
+                                        <Col span={4} style={{ textAlign: "right" }}>Value:</Col>
+                                        <Col span={20}><Input /></Col>
+                                        <Col span={4} style={{ textAlign: "right" }}>Add to:</Col>
+                                        <Col span={20}><Radio.Group
+                                            optionType="button"
+                                            options={[
+                                                { label: "Header", value: "header" }
+                                                , { label: "query", value: "query" }
+                                            ]}
+                                            defaultValue='header'
+                                            onChange={(e) => {
+
+                                            }}
+                                        /></Col>
+                                    </Row>
                                 </>}
                             </Col>
                         </Row>
