@@ -65,7 +65,7 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                     选择API：<Select
                                         style={{ width: 200 }}
                                         options={apiList}
-                                        defaultValue={props.authConfig.api}
+                                        defaultValue={props.authConfig?.api}
                                         onChange={(value) => {
                                             props.setAuthConfig({ 'api': value })
                                         }}
@@ -74,22 +74,43 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                 {/* api key */}
                                 {props.authType === 'api_key' && <>
                                     <Row gutter={[24, 24]}>
-                                        <Col span={4} style={{ textAlign: "right" }}>Key:</Col>
-                                        <Col span={20}><Input defaultValue="Authorization" /></Col>
-                                        <Col span={4} style={{ textAlign: "right" }}>Value:</Col>
-                                        <Col span={20}><Input /></Col>
-                                        <Col span={4} style={{ textAlign: "right" }}>Add to:</Col>
-                                        <Col span={20}><Radio.Group
-                                            optionType="button"
-                                            options={[
-                                                { label: "Header", value: "header" }
-                                                , { label: "query", value: "query" }
-                                            ]}
-                                            defaultValue='header'
-                                            onChange={(e) => {
+                                        {/* key */}
+                                        <Col span={4} style={{ textAlign: "right" }}>
+                                            Key:
+                                        </Col>
+                                        <Col span={20}>
+                                            <Input defaultValue={props.authConfig?.key || "Authorization"} onChange={(e) => {
+                                                props.setAuthConfig({ ...props.authConfig, key: e.target.value });
+                                            }} />
+                                        </Col>
 
-                                            }}
-                                        /></Col>
+                                        {/* value */}
+                                        <Col span={4} style={{ textAlign: "right" }}>
+                                            Value:
+                                        </Col>
+                                        <Col span={20}>
+                                            <Input defaultValue={props.authConfig?.value || ""} onChange={(e) => {
+                                                props.setAuthConfig({ ...props.authConfig, value: e.target.value });
+                                            }} />
+                                        </Col>
+
+                                        {/* add to */}
+                                        <Col span={4} style={{ textAlign: "right" }}>
+                                            Add to:
+                                        </Col>
+                                        <Col span={20}>
+                                            <Radio.Group
+                                                optionType="button"
+                                                options={[
+                                                    { label: "Header", value: "header" }
+                                                    , { label: "query", value: "query" }
+                                                ]}
+                                                defaultValue={props.authConfig?.addTo || "header"}
+                                                onChange={(e) => {
+                                                    props.setAuthConfig({ ...props.authConfig, addTo: e.target.value });
+                                                }}
+                                            />
+                                        </Col>
                                     </Row>
                                 </>}
                             </Col>
