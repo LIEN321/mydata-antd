@@ -40,7 +40,7 @@ export const WEBHOOK_GET_JSON = "WEBHOOK_GET_JSON";
 export const TRIGGER_PIPELINE = "TRIGGER_PIPELINE";
 export const SAVE_DATA = "SAVE_DATA";
 export const QUERY_DATA = "QUERY_DATA";
-export const TRUNCATE_DATA = "TRUNCATE_DATA";
+export const REMOVE_DATA = "REMOVE_DATA";
 export const JSON_TO_DATA = "JSON_TO_DATA";
 export const DATA_TO_JSON = "DATA_TO_JSON";
 export const FILTER_DATA = "FILTER_DATA";
@@ -201,10 +201,10 @@ export const TASK_TEMPLATE = {
     },
 
     // 从数仓清空指定数据集合
-    TRUNCATE_DATA: {
-        "taskType": TRUNCATE_DATA,
-        "typeName": "清空数据",
-        "taskName": "清空数据",
+    REMOVE_DATA: {
+        "taskType": REMOVE_DATA,
+        "typeName": "删除数据",
+        "taskName": "删除数据",
         "taskConfig": {
             "INPUT": {},
             "OUTPUT": {},

@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, Skeleton, Switch, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, TRUNCATE_DATA, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, REMOVE_DATA, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
 import { useEffect, useState } from "react";
 import { TaskItem } from "./PipelineTask";
 import { appSelect } from "@/services/zhiwei/app";
@@ -1370,8 +1370,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </>)
                         }
                         {
-                            // ---------------------------------------- 清空数据 ----------------------------------------
-                            (task.taskType === TRUNCATE_DATA && <>
+                            // ---------------------------------------- 删除数据 ----------------------------------------
+                            (task.taskType === REMOVE_DATA && <>
                                 <Row gutter={24}>
                                     {/* 选择数据 */}
                                     <Col span={12}>
