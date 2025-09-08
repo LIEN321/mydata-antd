@@ -578,7 +578,7 @@ declare namespace API {
 
   type LoginDTO = {
     /** 租户编号 */
-    code?: string;
+    code: string;
     /** 登录账号 */
     username: string;
     /** 登录密码 */
