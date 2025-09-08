@@ -109,6 +109,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                         , message: ''
                     }]}
                     initialValue={record[dataIndex]}
+                    layout="vertical"
                 >
                     {getInput()}
                 </Form.Item>
