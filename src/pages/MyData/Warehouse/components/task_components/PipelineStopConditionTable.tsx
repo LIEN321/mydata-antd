@@ -106,7 +106,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 
     if (editable) {
         childNode = editing ? (
-            (dataIndex === 'k' || dataIndex === 'op' || (dataIndex === 'v' && record.op !== '' && record.op !== 'nn' && record.op !== 'ne')) ?
+            (dataIndex === 'k' || dataIndex === 'op' || (dataIndex === 'v' && record.op !== '' && record.op !== 'nn' && record.op !== 'ne' && record.op !== 'is null' && record.op !== 'is empty')) ?
                 <Form.Item
                     style={{ margin: 0 }}
                     name={dataIndex}
