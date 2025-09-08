@@ -211,9 +211,7 @@ const Login: React.FC = () => {
               message.warning("拖动滑块验证");
               return;
             }
-            const params = values as API.LoginDTO;
-            params.type = type;
-            await handleSubmit(params);
+            await handleSubmit(values as API.LoginDTO);
           }}
         >
           <Tabs
