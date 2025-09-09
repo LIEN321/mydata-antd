@@ -21,7 +21,7 @@ const Footer: React.FC = () => {
           blankTarget: true,
         },
       ]}
-      copyright={`2024 lient321 v0.9.1`}
+      copyright={`2025 lient321 v0.9.3`}
     />
   );
 };

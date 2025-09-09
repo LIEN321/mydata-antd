@@ -1,6 +1,6 @@
-import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
+import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, Skeleton, Switch, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, TRIGGER_PIPELINE, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, REMOVE_DATA, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
 import { useEffect, useState } from "react";
 import { TaskItem } from "./PipelineTask";
 import { appSelect } from "@/services/zhiwei/app";
@@ -14,6 +14,7 @@ import DataFilterTable, { DataFilterDataType } from "./components/task_component
 import DataProcessTable, { DataProcessDataType } from "./components/task_components/DataProcessTable";
 import { pipelineSelect } from "@/services/zhiwei/pipeline";
 import VarMapppingTable, { VarMappingDataType } from "./components/task_components/VarMapppingTable";
+import PipelineStopConditionTable, { ConditionType } from "./components/task_components/PipelineStopConditionTable";
 
 export type TaskFormProp = {
     /** 任务信息 */
@@ -131,6 +132,11 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
         updateTask();
     };
 
+    const handleUpdateStopConditions = (stopConditions: ConditionType[]) => {
+        task.taskConfig.STOP_CONDITION = stopConditions;
+        updateTask();
+    };
+
     return (
         <>
             {task &&
@@ -141,6 +147,14 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         initialValues={task}
                         clearOnDestroy
                     >
+                        <Row>
+                            <Col span={24}>
+                                <ProFormItem
+                                    label="步骤类型">
+                                    {task.typeName}
+                                </ProFormItem>
+                            </Col>
+                        </Row>
                         <Row gutter={24}>
                             {/* 步骤名称 */}
                             <Col span={12}>
@@ -163,6 +177,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             </Col>
                             <Col span={12}></Col>
                         </Row>
+
+
                         {/* ######################################## API接口 ######################################## */}
                         {
                             // ---------------------------------------- 调用API获取JSON ----------------------------------------
@@ -505,6 +521,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                             </>
                         }
+
+
                         {/* ######################################## Webhook ######################################## */}
                         {
                             // ---------------------------------------- 从Webhook接收JSON ----------------------------------------
@@ -602,6 +620,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                             </>
                         }
+
+
                         {/* ######################################## 数据处理 ######################################## */}
                         {
                             // ---------------------------------------- JSON转业务数据 ----------------------------------------
@@ -902,7 +922,6 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                     />
                                                 }
                                             </Skeleton>
-
                                         </ProFormItem>
                                     </Col>
                                 </Row>
@@ -1136,6 +1155,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                             </>
                         }
+
+
                         {/* ######################################## 数据仓库 ######################################## */}
                         {
                             // ---------------------------------------- 保存数据 ----------------------------------------
@@ -1348,6 +1369,35 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                             </>)
                         }
+                        {
+                            // ---------------------------------------- 删除数据 ----------------------------------------
+                            (task.taskType === REMOVE_DATA && <>
+                                <Row gutter={24}>
+                                    {/* 选择数据 */}
+                                    <Col span={12}>
+                                        <ProFormSelect
+                                            name="dataId"
+                                            label="选择数据"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: '请选择数据！',
+                                                }
+                                            ]}
+                                            request={() => { return dataSelect({ projectId: props.projectId }); }}
+                                            onChange={(dataId: number) => {
+                                                loadDataFields(dataId);
+                                                task.dataId = dataId;
+                                                updateTask();
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col span={12}></Col>
+                                </Row>
+                            </>)
+                        }
+
+
                         {/* ######################################## 邮件 ######################################## */}
                         {
                             // ---------------------------------------- 发送邮件 ----------------------------------------
@@ -1430,6 +1480,8 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                             </>)
                         }
+
+
                         {/* ######################################## 流水线 ######################################## */}
                         {
                             // ---------------------------------------- 触发流水线 ----------------------------------------
@@ -1517,8 +1569,32 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                             </>
                         }
-                        {/* ######################################## 参数变量 ######################################## */}
+                        {
+                            // ---------------------------------------- 停止流水线 ----------------------------------------
+                            (task.taskType === STOP_PIPELINE) && <>
+                                <Row>
+                                    <Col span={24}>
+                                        <ProFormItem
+                                            label="停止条件"
+                                        >
+                                            <Skeleton loading={loading} active>
+                                                {
+                                                    !loading && <PipelineStopConditionTable
+                                                        stopConditions={task.taskConfig.STOP_CONDITION}
+                                                        dataFields={dataFields}
+                                                        handleUpdateStopConditions={handleUpdateStopConditions}
+                                                        loading={loading}
+                                                    />
+                                                }
+                                            </Skeleton>
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
 
+
+                        {/* ######################################## 参数变量 ######################################## */}
                         {
                             // ---------------------------------------- JSON值存入变量 ----------------------------------------
                             (task.taskType === JSON_TO_VAR) && <>
@@ -1577,6 +1653,30 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                 </Row>
                             </>
                         }
+
+
+                        {/* 通用配置 */}
+                        <Row gutter={24}>
+                            <ProFormRadio.Group
+                                label="失败后是否继续运行"
+                                rules={[{ required: true, message: "请选择" }]}
+                                name="preCondition"
+                                radioType="button"
+                                options={[
+                                    { label: "是", value: 0 }
+                                    , { label: "否", value: 1 }
+                                ]}
+                                initialValue={1}
+                                fieldProps={{
+                                    buttonStyle: "solid",
+                                    onChange: (e) => {
+                                        task.preCondition = e.target.value;
+                                        updateTask();
+                                    },
+                                }}
+                            />
+                            <Col span={12}></Col>
+                        </Row>
                     </ProForm>
                 </ProCard >
             }

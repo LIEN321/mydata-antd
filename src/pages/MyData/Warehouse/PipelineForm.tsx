@@ -52,6 +52,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
         {
             key: '1',
             label: '基本信息',
+            forceRender: true,
             children: <>
                 <Row>
                     <Col span={6}></Col>
@@ -89,6 +90,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             {
                 key: '2',
                 label: '任务编排',
+                forceRender: true,
                 children: <PipelineTask
                     tasks={tasks || []}
                     setTasks={setTasks}
@@ -98,12 +100,15 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             {
                 key: '3',
                 label: '参数设置',
+                forceRender: true,
                 children: <></>
             },
             {
                 key: '4',
                 label: '执行计划',
+                forceRender: true,
                 children: <>
+                    {/* 定时 */}
                     <Row gutter={24}>
                         <Col span={6}></Col>
                         <Col span={2}>
@@ -170,6 +175,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                             />
                         </Col>
                     </Row>
+                    {/* webhook */}
                     <Row gutter={24}>
                         <Col span={6}></Col>
                         <Col span={2}>
@@ -312,6 +318,28 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                     </>
                                 }
                             </Row>
+                        </Col>
+                    </Row>
+                    {/* 邮件通知 */}
+                    <Row gutter={24}>
+                        <Col span={6}></Col>
+                        <Col span={2}>
+                            <ProFormSwitch
+                                label="邮件通知"
+                                name="isEmail"
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <ProFormCheckbox.Group
+                                label="通知策略"
+                                name="emailStrategy"
+                                rules={[{ required: false, message: "请选择通知策略" }]}
+                                options={[
+                                    { label: "执行失败", value: 0 }
+                                    , { label: "执行成功", value: 1 }
+                                ]}
+                                initialValue={[0]}
+                            />
                         </Col>
                     </Row>
                 </>

@@ -49,6 +49,7 @@ declare namespace API {
     total?: number;
     appId?: string;
     apiName?: string;
+    apiUri?: string;
   };
 
   type AppApiVO = {
@@ -109,6 +110,10 @@ declare namespace API {
     apiCount?: number;
     /** 请求Header */
     reqHeaders?: Record<string, any>[];
+    /** 认证类型 */
+    authType?: string;
+    /** 认证配置 */
+    authConfig?: Record<string, any>;
   };
 
   type appPageParams = {
@@ -121,6 +126,7 @@ declare namespace API {
     appCode?: string;
     appName?: string;
     appUrl?: string;
+    apiPrefix?: string;
   };
 
   type AppVO = {
@@ -142,6 +148,14 @@ declare namespace API {
     apiCount?: number;
     /** 请求Header */
     reqHeaders?: Record<string, any>[];
+    /** 认证类型 */
+    authType?: string;
+    /** 认证配置 */
+    authConfig?: Record<string, any>;
+  };
+
+  type authApiSelectParams = {
+    appId?: number;
   };
 
   type AuthUser = {
@@ -564,7 +578,7 @@ declare namespace API {
 
   type LoginDTO = {
     /** 租户编号 */
-    code?: string;
+    code: string;
     /** 登录账号 */
     username: string;
     /** 登录密码 */
@@ -737,7 +751,7 @@ declare namespace API {
     /** webhook认证参数 */
     webhookAuthParams?: Record<string, any>;
     /** 是否启用邮件 */
-    isEmail?: number;
+    isEmail?: boolean;
     /** 邮件通知策略 */
     emailStrategy?: number[];
     /** 接收人 */
@@ -927,6 +941,10 @@ declare namespace API {
     dataId?: number;
     /** 任务配置 */
     taskConfig?: Record<string, any>;
+    /** 业务状态 */
+    status?: number;
+    /** 后续的前提条件 */
+    preCondition?: number;
   };
 
   type pipelineTaskPageParams = {
@@ -960,6 +978,8 @@ declare namespace API {
     dataId?: number;
     /** 任务配置 */
     taskConfig?: Record<string, any>;
+    /** 后续的前提条件 */
+    preCondition?: number;
   };
 
   type PipelineVO = {
@@ -994,7 +1014,7 @@ declare namespace API {
     /** webhook认证参数 */
     webhookAuthParams?: Record<string, any>;
     /** 是否启用邮件 */
-    isEmail?: number;
+    isEmail?: boolean;
     /** 邮件通知策略 */
     emailStrategy?: number[];
     /** 接收人 */

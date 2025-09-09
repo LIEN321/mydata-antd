@@ -1,6 +1,8 @@
-import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { GetRef, InputRef, TableProps } from 'antd';
-import { Button, Form, Input, InputNumber, Popconfirm, Radio, Table } from 'antd';
+import { Button, Form, Input, Popconfirm, Select, Space, Table } from 'antd';
+import { TASK_FILTER_TYPE_FIELD, TASK_FILTER_TYPE_VALUE } from '@/pages/MyData/mydata';
+import { PlusOutlined } from '@ant-design/icons';
 
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
@@ -8,14 +10,12 @@ const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
 interface Item {
     key: string;
-    /** 参数名 */
-    code: string;
-    /** 参数值 */
-    value: string;
-    /** 变化方式 */
+    /** 字段名 */
+    k: string;
+    /** 条件值 */
+    v: string;
+    /** 条件 */
     op: string;
-    /** 递增值 */
-    step?: number;
 }
 
 interface EditableRowProps {
@@ -57,6 +57,19 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     const inputRef = useRef<InputRef>(null);
     const form = useContext(EditableContext)!;
 
+    const opOptions: any[] = [
+        { label: "=", value: "=" },
+        { label: "!=", value: "!=" },
+        { label: ">", value: ">" },
+        { label: ">=", value: ">=" },
+        { label: "<", value: "<" },
+        { label: "<=", value: "<=" },
+        { label: "not null", value: "nn" },
+        { label: "not empty", value: "ne" },
+        { label: "is null", value: "is null" },
+        { label: "is empty", value: "is empty" },
+    ];
+
     useEffect(() => {
         if (editing) {
             // 取消输入框获取焦点 inputRef.current?.focus();
@@ -71,6 +84,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     const save = async () => {
         try {
             const values = await form.validateFields();
+            console.info("values = ", values);
             handleSave({ ...record, ...values });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
@@ -81,25 +95,18 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 
     const getInput = () => {
         if (dataIndex === "op") {
-            return <Radio.Group
-                optionType="button"
-                defaultValue={"fix"}
-                options={[
-                    { label: "固定", value: "fix" },
-                    { label: "递增", value: "inc" },
-                ]}
-                onChange={save}
+            return <Select
+                defaultValue={"="}
+                options={opOptions}
+                onSelect={save}
             />
-        }
-        else if (dataIndex === "step") {
-            return <InputNumber onPressEnter={save} onBlur={save} />;
         }
         return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
     };
 
     if (editable) {
         childNode = editing ? (
-            (dataIndex !== "step" || record.op === "inc") ?
+            (dataIndex === 'k' || dataIndex === 'op' || (dataIndex === 'v' && record.op !== '' && record.op !== 'nn' && record.op !== 'ne' && record.op !== 'is null' && record.op !== 'is empty')) ?
                 <Form.Item
                     style={{ margin: 0 }}
                     name={dataIndex}
@@ -128,41 +135,42 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-export interface BatchParamDataType {
+export interface ConditionType {
     key: React.Key;
-    /** 参数名 */
-    code: string;
-    /** 参数值 */
-    value: string;
-    /** 变化方式 */
+    /** 字段名 */
+    k: string;
+    /** 条件之 */
+    v: string;
+    /** 条件 */
     op: string;
-    /** 递增值 */
-    step?: number;
 }
 
-type ColumnTypes = Exclude<TableProps<BatchParamDataType>['columns'], undefined>;
+type ColumnTypes = Exclude<TableProps<ConditionType>['columns'], undefined>;
 
 // -------------------- 表格属性 --------------------
 export type EditableTableProps = {
+    /** 业务数据字段 */
+    dataFields: API.DataFieldVO[];
     /** 用户自定义属性列表 */
-    batchParams: BatchParamDataType[];
+    stopConditions: ConditionType[];
     /** 更新属性列表 */
-    handleUpdateBatchParams: (batchParams: BatchParamDataType[]) => any;
+    handleUpdateStopConditions: (stopConditions: ConditionType[]) => any;
     /** 加载状态 */
     loading: boolean;
 };
 
 // -------------------- 表格 --------------------
-const BatchParamTable: React.FC<EditableTableProps> = (props) => {
+const PipelineStopConditionTable: React.FC<EditableTableProps> = (props) => {
 
-    const [batchParams, setBatchParams] = useState<BatchParamDataType[]>(props.batchParams || []);
+    const [stopConditions, setStopConditions] = useState<ConditionType[]>(props.stopConditions || []);
+    const [dataFields] = useState<API.DataFieldVO[]>(props.dataFields || []);
 
-    const [count, setCount] = useState(batchParams.length);
+    const [count, setCount] = useState(stopConditions.length);
 
     useEffect(() => {
         let index = 0;
-        if (batchParams && batchParams.length > 0) {
-            batchParams.map(f => {
+        if (stopConditions && stopConditions.length > 0) {
+            stopConditions.map(f => {
                 f.key = index;
                 index++;
             });
@@ -171,35 +179,34 @@ const BatchParamTable: React.FC<EditableTableProps> = (props) => {
 
     // 新增行
     const handleAdd = () => {
-        const newData: BatchParamDataType = {
+        const newData: ConditionType = {
             key: count
-            , code: ''
-            , value: ''
-            , op: 'fix'
-            , step: 1
+            , k: ''
+            , v: ''
+            , op: '='
         };
 
-        setBatchParams([...batchParams, newData]);
+        setStopConditions([...stopConditions, newData]);
         setCount(count + 1);
     };
 
     // 更新数据
-    const handleSave = (row: BatchParamDataType) => {
-        const newData = [...batchParams];
+    const handleSave = (row: ConditionType) => {
+        const newData = [...stopConditions];
         const index = newData.findIndex((item) => row.key === item.key);
         const item = newData[index];
         newData.splice(index, 1, {
             ...item,
             ...row,
         });
-        setBatchParams(newData);
-        props.handleUpdateBatchParams(newData);
+        setStopConditions(newData);
+        props.handleUpdateStopConditions(newData);
     };
 
     const handleDelete = (key: React.Key) => {
-        const newData = batchParams.filter((item) => item.key !== key);
-        setBatchParams(newData);
-        props.handleUpdateBatchParams(newData);
+        const newData = stopConditions.filter((item) => item.key !== key);
+        setStopConditions(newData);
+        props.handleUpdateStopConditions(newData);
     };
 
     const components = {
@@ -211,30 +218,23 @@ const BatchParamTable: React.FC<EditableTableProps> = (props) => {
 
     const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
         {
-            title: '参数名',
-            dataIndex: 'code',
-            width: 150,
+            title: '变量字段',
+            dataIndex: 'k',
+            width: 200,
             align: 'center',
             editable: true,
         },
         {
-            title: '参数值',
-            dataIndex: 'value',
-            width: 150,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '变化方式',
+            title: '条件',
             dataIndex: 'op',
-            width: 150,
+            width: 100,
             align: 'center',
             editable: true,
         },
         {
-            title: '递增值',
-            dataIndex: 'step',
-            width: 150,
+            title: '条件值',
+            dataIndex: 'v',
+            width: 200,
             align: 'center',
             editable: true,
         },
@@ -256,28 +256,25 @@ const BatchParamTable: React.FC<EditableTableProps> = (props) => {
         }
         return {
             ...col,
-            onCell: (record: BatchParamDataType) => ({
+            onCell: (record: ConditionType) => ({
                 record,
                 editable: col.editable,
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave,
+                dataFields: dataFields,
             }),
         };
     });
 
     return (
         <div>
-            <Fragment>
-                <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-                    添加
-                </Button>
-            </Fragment>
-            <Table<BatchParamDataType>
+            <Button icon={<PlusOutlined />} onClick={() => { handleAdd() }} type="primary" style={{ marginBottom: 16 }}>新增条件</Button>
+            <Table<ConditionType>
                 components={components}
                 rowClassName={() => 'editable-row'}
                 bordered
-                dataSource={batchParams}
+                dataSource={stopConditions}
                 columns={columns as ColumnTypes}
                 pagination={{ pageSize: 100, position: ['none', 'none'] }}
                 scroll={{ y: 500 }}
@@ -288,4 +285,4 @@ const BatchParamTable: React.FC<EditableTableProps> = (props) => {
     );
 };
 
-export default BatchParamTable;
+export default PipelineStopConditionTable;

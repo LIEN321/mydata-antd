@@ -6,8 +6,15 @@ import { useRef, useState } from "react";
 import { ApiParamDataType } from "./ApiParamsTable";
 import ApiForm from "./ApiForm";
 import { OP_TYPE_PROVIDER } from "../mydata";
+import CRUD_Simple from "@/components/Gyrfalcon/CRUD_Simple";
 
-const AppApi: React.FC = () => {
+export type AppApiProp = {
+    // 应用id
+    appId?: string,
+}
+
+const AppApi: React.FC<AppApiProp> = (props) => {
+    const { appId } = props;
 
     // 请求参数
     const [reqParams, setReqParams] = useState<ApiParamDataType[]>([]);
@@ -30,7 +37,7 @@ const AppApi: React.FC = () => {
         {
             title: '所属应用',
             dataIndex: 'appId',
-            search: true,
+            search: !appId,
             request: appSelect,
             hideInTable: true,
         },
@@ -38,6 +45,7 @@ const AppApi: React.FC = () => {
             title: '所属应用',
             dataIndex: 'appName',
             search: false,
+            hideInTable: appId !== undefined
         },
         {
             title: 'API名称',
@@ -61,7 +69,7 @@ const AppApi: React.FC = () => {
         {
             title: '接口路径',
             dataIndex: 'apiUri',
-            search: false,
+            search: true,
         },
     ];
 
@@ -79,9 +87,17 @@ const AppApi: React.FC = () => {
         respExample={respExample}
         setRespExample={setRespExample}
         record={record}
+        appId={appId}
     />;
 
     const tableRef = useRef<ActionType>();
+
+    const handleAppApiPage = (params: API.appApiPageParams) => {
+        if (appId) {
+            params.appId = appId;
+        }
+        return appApiPage(params);
+    }
 
     const handleOnClickEditBtn = (record: any) => {
         setRecord(record);
@@ -108,7 +124,7 @@ const AppApi: React.FC = () => {
 
     return (
         <>
-            <CRUD
+            {appId && <CRUD_Simple
                 tableRef={tableRef}
                 title="应用接口"
                 columns={columns}
@@ -117,7 +133,7 @@ const AppApi: React.FC = () => {
                 createForm={appApiForm}
                 updateForm={appApiForm}
 
-                handlePage={appApiPage}
+                handlePage={handleAppApiPage}
                 handleCreate={handleSaveAppApi}
                 handleUpdate={handleSaveAppApi}
                 handleDelete={deleteAppApi}
@@ -125,6 +141,27 @@ const AppApi: React.FC = () => {
 
                 onClickEditBtn={handleOnClickEditBtn}
             />
+            }
+
+            {!appId &&
+                <CRUD
+                    tableRef={tableRef}
+                    title="应用接口"
+                    columns={columns}
+
+                    formWidth={800}
+                    createForm={appApiForm}
+                    updateForm={appApiForm}
+
+                    handlePage={handleAppApiPage}
+                    handleCreate={handleSaveAppApi}
+                    handleUpdate={handleSaveAppApi}
+                    handleDelete={deleteAppApi}
+                    handleBatchDelete={deleteAppApis}
+
+                    onClickEditBtn={handleOnClickEditBtn}
+                />
+            }
         </>
     );
 };

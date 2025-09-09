@@ -6,6 +6,8 @@ import React, { Fragment, useRef, useState } from "react";
 export type CRUD_SimpleProps = {
     /** 标题 */
     title: string | null;
+    /** 搜索栏 */
+    search?: any;
     /** 表格工具栏 */
     toolBarButton?: any;
     /** 表格选择方式 */
@@ -16,12 +18,12 @@ export type CRUD_SimpleProps = {
     pagination?: any;
     /** 表格列 */
     columns: ProColumns<any>[];
-    /** 表单宽度 */
-    formWidth?: string | number;
     /** 操作列的宽度 */
     optionWidth?: string | number;
     /** 扩展操作列按钮 */
     renderOptionButton?: (id: any, record: any) => any;
+    /** 表单宽度 */
+    formWidth?: string | number;
     /** 新建表单 */
     createForm?: any;
     /** 编辑表单 */
@@ -263,6 +265,7 @@ const CRUD_Simple: React.FC<CRUD_SimpleProps> = (props) => {
                 toolBarRender={toolBarRender}
                 rowSelection={props.rowSelectionType === 'none' ? undefined : rowSelection}
                 options={false}
+                search={props.search}
             />
 
             {/* 新建窗口 */}

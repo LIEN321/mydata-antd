@@ -25,7 +25,7 @@ export type ApiFormProp = {
     setRespExample: (reqParams: string) => void,
 
     /** 初始默认应用id */
-    appId?: number;
+    appId?: string;
 
     /** 编辑时的数据 */
     record?: API.AppApiVO;
@@ -150,7 +150,8 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                         label="所属应用"
                         placeholder="请输入所属应用"
                         request={appSelect}
-                        initialValue={props.appId && props.appId > 0 ? props.appId : null}
+                        initialValue={props.appId ? props.appId : null}
+                        disabled={props.appId !== undefined}
                     />
                 </Col>
                 <Col span={18}>
@@ -203,7 +204,7 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                 </Col>
             </Row>
             <Row gutter={24}>
-                <Col span={6}>
+                <Col span={10}>
                     <ProFormRadio.Group
                         rules={[
                             {
@@ -212,16 +213,20 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                             }
                         ]}
                         name="opType"
-                        label="数据角色"
+                        label="接口类型"
                         placeholder="请选择请求方法"
                         options={[
                             {
-                                label: '提供者',
+                                label: '提供数据',
                                 value: 1,
                             },
                             {
-                                label: '消费者',
+                                label: '消费数据',
                                 value: 2,
+                            },
+                            {
+                                label: '认证授权',
+                                value: 3,
                             },
                         ]}
                         radioType="button"

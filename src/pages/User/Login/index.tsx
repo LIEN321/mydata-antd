@@ -13,16 +13,18 @@ import {
   LoginForm,
   ProFormCaptcha,
   ProFormCheckbox,
+  ProFormItem,
   ProFormText,
 } from '@ant-design/pro-components';
 import { FormattedMessage, Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
 import { login } from '@/services/zhiwei/auth';
 import { getSubdomain } from '@/util/Utils';
+import SliderCaptcha, { ActionType } from 'rc-slider-captcha';
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -145,6 +147,8 @@ const Login: React.FC = () => {
       }
       // 如果失败去设置用户错误信息
       setUserLoginState(response || {});
+      sliderCaptchaActionRef.current?.refresh();
+      setSliderCaptcha(false);
     } catch (error) {
       // const defaultLoginFailureMessage = intl.formatMessage({
       //   id: 'pages.login.failure',
@@ -158,6 +162,12 @@ const Login: React.FC = () => {
 
   const tenantVisible = (tenantCode === null || tenantCode === '');
 
+  const controlBarWidth = 320;
+  const controlButtonWidth = 40;
+  const indicatorBorderWidth = 2;
+  const [sliderCaptcha, setSliderCaptcha] = useState<boolean>(false);
+  const sliderCaptchaActionRef = useRef<ActionType>();
+
   return (
     <div className={styles.container}>
       <Helmet>
@@ -169,7 +179,7 @@ const Login: React.FC = () => {
           {Settings.title && ` - ${Settings.title}`}
         </title>
       </Helmet>
-      <Lang />
+      {/* <Lang /> */}
       <div
         style={{
           flex: '1',
@@ -197,6 +207,10 @@ const Login: React.FC = () => {
             // <ActionIcons key="icons" />,
           ]}
           onFinish={async (values) => {
+            if (!sliderCaptcha) {
+              message.warning("拖动滑块验证");
+              return;
+            }
             await handleSubmit(values as API.LoginDTO);
           }}
         >
@@ -292,6 +306,31 @@ const Login: React.FC = () => {
                   },
                 ]}
               />
+              <ProFormItem>
+                <SliderCaptcha
+                  mode="slider"
+                  tipText={{
+                    default: '请按住滑块，拖动到最右边',
+                    moving: '请按住滑块，拖动到最右边',
+                    error: '验证失败，请重新操作',
+                    success: '验证成功'
+                  }}
+                  errorHoldDuration={1000}
+                  puzzleSize={{
+                    left: indicatorBorderWidth,
+                    width: controlButtonWidth
+                  }}
+                  onVerify={(data) => {
+                    if (data.x === controlBarWidth - controlButtonWidth - indicatorBorderWidth) {
+                      setSliderCaptcha(true);
+                      return Promise.resolve();
+                    }
+                    setSliderCaptcha(false);
+                    return Promise.reject();
+                  }}
+                  actionRef={sliderCaptchaActionRef}
+                />
+              </ProFormItem>
             </>
           )}
 

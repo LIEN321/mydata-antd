@@ -25,6 +25,8 @@ export type TaskItem = {
     pipelineId: number;
     /** 任务类型 */
     taskType: string;
+    /** 类型名称 */
+    typeName: string;
     /** 任务名称 */
     taskName: string;
     /** 关联应用 */
@@ -39,6 +41,8 @@ export type TaskItem = {
     warehouse?: string;
     /** 启禁用状态 */
     status: number;
+    /** 是否继续执行 */
+    preCondition: number;
 };
 
 const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
@@ -117,6 +121,10 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.QUERY_DATA.taskType,
                     label: TASK_TEMPLATE.QUERY_DATA.taskName,
+                },
+                {
+                    key: TASK_TEMPLATE.REMOVE_DATA.taskType,
+                    label: TASK_TEMPLATE.REMOVE_DATA.taskName,
                 }
             ],
         },
@@ -139,6 +147,10 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 {
                     key: TASK_TEMPLATE.TRIGGER_PIPELINE.taskType,
                     label: TASK_TEMPLATE.TRIGGER_PIPELINE.taskName,
+                },
+                {
+                    key: TASK_TEMPLATE.STOP_PIPELINE.taskType,
+                    label: TASK_TEMPLATE.STOP_PIPELINE.taskName,
                 },
             ],
         },
@@ -168,6 +180,7 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 const taskTemplate = structuredClone(TASK_TEMPLATE[task.taskType as TaskKey]);
                 if (!taskTemplate)
                     return;
+                task.typeName = taskTemplate.taskName;
                 const taskTemplateConfig = structuredClone(taskTemplate.taskConfig);
 
                 if (!task.taskConfig) {

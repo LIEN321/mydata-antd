@@ -201,7 +201,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
         return [
             <></>
             , <LoadingOutlined key="loading" style={{ color: token.blue }} title="执行中" onClick={() => openLogWindow(historyId)} />
-            , <StopOutlined key="stop" style={{ color: token.colorWarning }} title="手动停止" onClick={() => openLogWindow(historyId)} />
+            , <StopOutlined key="stop" style={{ color: token.colorWarning }} title="已停止" onClick={() => openLogWindow(historyId)} />
             , <CheckOutlined key="success" style={{ color: token.colorSuccess }} title="执行成功" onClick={() => openLogWindow(historyId)} />
             , <CloseOutlined key="error" style={{ color: token.colorError }} title="执行失败" onClick={() => openLogWindow(historyId)} />
         ][executionStatus];
