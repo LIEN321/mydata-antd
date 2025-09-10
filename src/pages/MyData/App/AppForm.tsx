@@ -53,7 +53,12 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                 { label: 'API Key', value: 'api_key' },
                             ]}
                             defaultValue={props.authType}
-                            onChange={props.setAuthType}
+                            onChange={(type) => {
+                                props.setAuthType(type);
+                                if ("api_key" === type && !props.authConfig?.key) {
+                                    props.setAuthConfig({ ...props.authConfig, key: 'Authorization', addTo: 'header' });
+                                }
+                            }}
                         />
                     </Splitter.Panel>
                     <Splitter.Panel>
