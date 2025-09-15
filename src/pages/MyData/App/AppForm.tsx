@@ -30,16 +30,6 @@ const AppForm: React.FC<AppFormProp> = (props) => {
     const tabItems: TabsProps['items'] = [
         {
             key: '1',
-            label: 'Headers',
-            children: (
-                <ApiParamsTable
-                    params={props.reqHeaders}
-                    handleUpdateParams={props.setReqHeaders}
-                />
-            ),
-        },
-        {
-            key: '2',
             label: '认证配置',
             children: (
                 <Splitter>
@@ -60,7 +50,7 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                     props.setAuthConfig({ ...props.authConfig?.api_key, key: 'Authorization', addTo: 'header' });
                                 }
                                 if ("jwt" === type && !props.authConfig?.jwt) {
-                                    props.setAuthConfig({ ...props.authConfig, jwt: { addTo: 'header', prefix: 'Bearer', param: 'token' } });
+                                    props.setAuthConfig({ ...props.authConfig, jwt: { addTo: 'header', key: 'Authorization', prefix: 'Bearer', param: 'token' } });
                                 }
                             }}
                         />
@@ -106,6 +96,15 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                         </Col>
                                         {/* header */}
                                         {props.authConfig?.jwt?.addTo === 'header' && <>
+                                            {/* header key */}
+                                            <Col span={6} style={{ textAlign: "right" }}>
+                                                Header key:
+                                            </Col>
+                                            <Col span={18}>
+                                                <Input defaultValue={props.authConfig?.jwt?.key || ""} onChange={(e) => {
+                                                    props.setAuthConfig({ ...props.authConfig, jwt: { ...props.authConfig.jwt, key: e.target.value } });
+                                                }} />
+                                            </Col>
                                             {/* prefix */}
                                             <Col span={6} style={{ textAlign: "right" }}>
                                                 Header prefix:
@@ -113,7 +112,7 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                             <Col span={18}>
                                                 <Input defaultValue={props.authConfig?.jwt?.prefix || ""} onChange={(e) => {
                                                     props.setAuthConfig({ ...props.authConfig, jwt: { ...props.authConfig.jwt, prefix: e.target.value } });
-                                                }} />
+                                                }} />（无需添加空格）
                                             </Col>
                                         </>}
                                         {/* query */}
@@ -188,6 +187,16 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                         </Row>
                     </Splitter.Panel>
                 </Splitter>
+            ),
+        },
+        {
+            key: '2',
+            label: 'Headers',
+            children: (
+                <ApiParamsTable
+                    params={props.reqHeaders}
+                    handleUpdateParams={props.setReqHeaders}
+                />
             ),
         },
     ];
