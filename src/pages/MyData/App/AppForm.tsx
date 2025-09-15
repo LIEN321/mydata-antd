@@ -56,11 +56,11 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                             defaultValue={props.authType}
                             onChange={(type) => {
                                 props.setAuthType(type);
-                                if ("api_key" === type && !props.authConfig?.key) {
-                                    props.setAuthConfig({ ...props.authConfig, key: 'Authorization', addTo: 'header' });
+                                if ("api_key" === type && !props.authConfig?.api_key) {
+                                    props.setAuthConfig({ ...props.authConfig?.api_key, key: 'Authorization', addTo: 'header' });
                                 }
-                                if ("jwt" === type && !props.authConfig?.api) {
-                                    props.setAuthConfig({ ...props.authConfig, addTo: 'header', prefix: 'Bearer', param: 'token' });
+                                if ("jwt" === type && !props.authConfig?.jwt) {
+                                    props.setAuthConfig({ ...props.authConfig, jwt: { addTo: 'header', prefix: 'Bearer', param: 'token' } });
                                 }
                             }}
                         />
@@ -80,9 +80,9 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                             <Select
                                                 style={{ width: 200 }}
                                                 options={apiList}
-                                                defaultValue={props.authConfig?.api}
+                                                defaultValue={props.authConfig?.jwt?.api}
                                                 onChange={(value) => {
-                                                    props.setAuthConfig({ ...props.authConfig, 'api': value })
+                                                    props.setAuthConfig({ ...props.authConfig, jwt: { ...props.authConfig.jwt, 'api': value } })
                                                 }}
                                             />
                                         </Col>
@@ -96,35 +96,35 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                                 optionType="button"
                                                 options={[
                                                     { label: "Header", value: "header" }
-                                                    , { label: "query", value: "query" }
+                                                    , { label: "Query", value: "query" }
                                                 ]}
-                                                defaultValue={props.authConfig?.addTo || "header"}
+                                                defaultValue={props.authConfig?.jwt?.addTo || "header"}
                                                 onChange={(e) => {
-                                                    props.setAuthConfig({ ...props.authConfig, addTo: e.target.value });
+                                                    props.setAuthConfig({ ...props.authConfig, jwt: { ...props.authConfig.jwt, addTo: e.target.value } });
                                                 }}
                                             />
                                         </Col>
                                         {/* header */}
-                                        {props.authConfig?.addTo === 'header' && <>
+                                        {props.authConfig?.jwt?.addTo === 'header' && <>
                                             {/* prefix */}
                                             <Col span={6} style={{ textAlign: "right" }}>
                                                 Header prefix:
                                             </Col>
                                             <Col span={18}>
-                                                <Input defaultValue={props.authConfig?.prefix || ""} onChange={(e) => {
-                                                    props.setAuthConfig({ ...props.authConfig, prefix: e.target.value });
+                                                <Input defaultValue={props.authConfig?.jwt?.prefix || ""} onChange={(e) => {
+                                                    props.setAuthConfig({ ...props.authConfig, jwt: { ...props.authConfig.jwt, prefix: e.target.value } });
                                                 }} />
                                             </Col>
                                         </>}
                                         {/* query */}
-                                        {props.authConfig?.addTo === 'query' && <>
+                                        {props.authConfig?.jwt?.addTo === 'query' && <>
                                             {/* param */}
                                             <Col span={6} style={{ textAlign: "right" }}>
                                                 Param name:
                                             </Col>
                                             <Col span={18}>
-                                                <Input defaultValue={props.authConfig?.param || ""} onChange={(e) => {
-                                                    props.setAuthConfig({ ...props.authConfig, param: e.target.value });
+                                                <Input defaultValue={props.authConfig?.jwt?.param || ""} onChange={(e) => {
+                                                    props.setAuthConfig({ ...props.authConfig, jwt: { ...props.authConfig.jwt, param: e.target.value } });
                                                 }} />
                                             </Col>
                                         </>}
