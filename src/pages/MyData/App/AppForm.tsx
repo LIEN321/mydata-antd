@@ -47,7 +47,7 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                             onChange={(type) => {
                                 props.setAuthType(type);
                                 if ("api_key" === type && !props.authConfig?.api_key) {
-                                    props.setAuthConfig({ ...props.authConfig?.api_key, key: 'Authorization', addTo: 'header' });
+                                    props.setAuthConfig({ ...props.authConfig, api_key: { key: 'Authorization', addTo: 'header' } });
                                 }
                                 if ("jwt" === type && !props.authConfig?.jwt) {
                                     props.setAuthConfig({ ...props.authConfig, jwt: { addTo: 'header', key: 'Authorization', prefix: 'Bearer', param: 'token' } });
@@ -134,9 +134,9 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                     选择API：<Select
                                         style={{ width: 200 }}
                                         options={apiList}
-                                        defaultValue={props.authConfig?.api}
+                                        defaultValue={props.authConfig?.cookie?.api}
                                         onChange={(value) => {
-                                            props.setAuthConfig({ 'api': value })
+                                            props.setAuthConfig({ ...props.authConfig, cookie: { api: value } })
                                         }}
                                     />
                                 </>}
@@ -149,8 +149,8 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                             Key:
                                         </Col>
                                         <Col span={20}>
-                                            <Input defaultValue={props.authConfig?.key || "Authorization"} onChange={(e) => {
-                                                props.setAuthConfig({ ...props.authConfig, key: e.target.value });
+                                            <Input defaultValue={props.authConfig?.api_key?.key || "Authorization"} onChange={(e) => {
+                                                props.setAuthConfig({ ...props.authConfig, api_key: { ...props.authConfig.api_key, key: e.target.value } });
                                             }} />
                                         </Col>
 
@@ -159,8 +159,8 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                             Value:
                                         </Col>
                                         <Col span={20}>
-                                            <Input defaultValue={props.authConfig?.value || ""} onChange={(e) => {
-                                                props.setAuthConfig({ ...props.authConfig, value: e.target.value });
+                                            <Input defaultValue={props.authConfig?.api_key?.value || ""} onChange={(e) => {
+                                                props.setAuthConfig({ ...props.authConfig, api_key: { ...props.authConfig.api_key, value: e.target.value } });
                                             }} />
                                         </Col>
 
@@ -175,9 +175,9 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                                     { label: "Header", value: "header" }
                                                     , { label: "query", value: "query" }
                                                 ]}
-                                                defaultValue={props.authConfig?.addTo || "header"}
+                                                defaultValue={props.authConfig?.api_key.addTo || "header"}
                                                 onChange={(e) => {
-                                                    props.setAuthConfig({ ...props.authConfig, addTo: e.target.value });
+                                                    props.setAuthConfig({ ...props.authConfig, api_key: { addTo: e.target.value } });
                                                 }}
                                             />
                                         </Col>
