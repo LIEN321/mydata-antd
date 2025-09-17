@@ -112,7 +112,7 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                                             <Col span={18}>
                                                 <Input defaultValue={props.authConfig?.jwt?.prefix || ""} onChange={(e) => {
                                                     props.setAuthConfig({ ...props.authConfig, jwt: { ...props.authConfig.jwt, prefix: e.target.value } });
-                                                }} />（无需添加空格）
+                                                }} />（若需空格间隔 请手动添加）
                                             </Col>
                                         </>}
                                         {/* query */}
@@ -191,7 +191,7 @@ const AppForm: React.FC<AppFormProp> = (props) => {
         },
         {
             key: '2',
-            label: 'Headers',
+            label: '全局Headers',
             children: (
                 <ApiParamsTable
                     params={props.reqHeaders}
