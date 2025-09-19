@@ -12,8 +12,10 @@ interface Item {
     key: string;
     /** 变量编号 */
     varCode: string;
-    /** 变量值 */
-    varValue: string;
+    /** json字段 */
+    jsonField: string;
+    /** 处理方式 */
+    op: string;
 }
 
 interface EditableRowProps {
@@ -78,6 +80,13 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
+        if (dataIndex === "op") {
+            return <Select
+                defaultValue={"="}
+                options={varOp}
+                onSelect={save}
+            />
+        }
         return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
     };
 
@@ -110,36 +119,38 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-export interface VarMappingDataType {
+export interface JsonVarMappingDataType {
     key: React.Key;
     /** 变量编号 */
     varCode: string;
-    /** 变量值 */
-    varValue: string;
+    /** json字段 */
+    jsonField: string;
+    /** 后续处理 */
+    op: string;
 }
 
-type ColumnTypes = Exclude<TableProps<VarMappingDataType>['columns'], undefined>;
+type ColumnTypes = Exclude<TableProps<JsonVarMappingDataType>['columns'], undefined>;
 
 // -------------------- 表格属性 --------------------
 export type EditableTableProps = {
     /** 业务数据字段 */
-    varMappings: VarMappingDataType[];
+    jsonVarMappings: JsonVarMappingDataType[];
     /** 更新属性列表 */
-    handleUpdateVarMappings: (varMappings: VarMappingDataType[]) => any;
+    handleUpdateJsonVarMappings: (varMappings: JsonVarMappingDataType[]) => any;
     /** 加载状态 */
     loading: boolean;
 };
 
 // -------------------- 表格 --------------------
-const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
+const JsonVarMapppingTable: React.FC<EditableTableProps> = (props) => {
 
-    const [varMappings, setVarMappings] = useState<VarMappingDataType[]>(props.varMappings || []);
-    const [count, setCount] = useState(varMappings.length);
+    const [jsonVarMappings, setVarMappings] = useState<JsonVarMappingDataType[]>(props.jsonVarMappings || []);
+    const [count, setCount] = useState(jsonVarMappings.length);
 
     useEffect(() => {
         let index = 0;
-        if (varMappings && varMappings.length > 0) {
-            varMappings.map(f => {
+        if (jsonVarMappings && jsonVarMappings.length > 0) {
+            jsonVarMappings.map(f => {
                 f.key = index;
                 index++;
             });
@@ -148,19 +159,20 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
 
     // 新增行
     const handleAdd = () => {
-        const newData: VarMappingDataType = {
+        const newData: JsonVarMappingDataType = {
             key: count
             , varCode: ''
-            , varValue: ''
+            , jsonField: ''
+            , op: ''
         };
 
-        setVarMappings([...varMappings, newData]);
+        setVarMappings([...jsonVarMappings, newData]);
         setCount(count + 1);
     };
 
     // 更新数据
-    const handleSave = (row: VarMappingDataType) => {
-        const newData = [...varMappings];
+    const handleSave = (row: JsonVarMappingDataType) => {
+        const newData = [...jsonVarMappings];
         const index = newData.findIndex((item) => row.key === item.key);
         const item = newData[index];
         newData.splice(index, 1, {
@@ -168,13 +180,13 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
             ...row,
         });
         setVarMappings(newData);
-        props.handleUpdateVarMappings(newData);
+        props.handleUpdateJsonVarMappings(newData);
     };
 
     const handleDelete = (key: React.Key) => {
-        const newData = varMappings.filter((item) => item.key !== key);
+        const newData = jsonVarMappings.filter((item) => item.key !== key);
         setVarMappings(newData);
-        props.handleUpdateVarMappings(newData);
+        props.handleUpdateJsonVarMappings(newData);
     };
 
     const components = {
@@ -193,9 +205,16 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
             editable: true,
         },
         {
-            title: '变量值',
-            dataIndex: 'varValue',
+            title: 'JSON字段',
+            dataIndex: 'jsonField',
             width: 200,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '后续处理',
+            dataIndex: 'op',
+            width: 150,
             align: 'center',
             editable: true,
         },
@@ -217,7 +236,7 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
         }
         return {
             ...col,
-            onCell: (record: VarMappingDataType) => ({
+            onCell: (record: JsonVarMappingDataType) => ({
                 record,
                 editable: col.editable,
                 dataIndex: col.dataIndex,
@@ -234,11 +253,11 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
                     添加变量
                 </Button>
             </Space>
-            <Table<VarMappingDataType>
+            <Table<JsonVarMappingDataType>
                 components={components}
                 rowClassName={() => 'editable-row'}
                 bordered
-                dataSource={varMappings}
+                dataSource={jsonVarMappings}
                 columns={columns as ColumnTypes}
                 pagination={{ pageSize: 100, position: ['none', 'none'] }}
                 scroll={{ y: 500 }}
@@ -249,4 +268,4 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
     );
 };
 
-export default VarMapppingTable;
+export default JsonVarMapppingTable;
