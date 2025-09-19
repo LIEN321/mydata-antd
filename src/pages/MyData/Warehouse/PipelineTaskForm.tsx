@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, Skeleton, Switch, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, REMOVE_DATA, WEBHOOK_GET_JSON, WRITE_EXCEL } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, REMOVE_DATA, WEBHOOK_GET_JSON, WRITE_EXCEL, SET_PIPELINE_VAR } from "../mydata";
 import { useEffect, useState } from "react";
 import { TaskItem } from "./PipelineTask";
 import { appSelect } from "@/services/zhiwei/app";
@@ -15,6 +15,7 @@ import DataProcessTable, { DataProcessDataType } from "./components/task_compone
 import { pipelineSelect } from "@/services/zhiwei/pipeline";
 import VarMapppingTable, { VarMappingDataType } from "./components/task_components/VarMapppingTable";
 import PipelineStopConditionTable, { ConditionType } from "./components/task_components/PipelineStopConditionTable";
+import JsonVarMapppingTable, { JsonVarMappingDataType } from "./components/task_components/JsonVarMapppingTable";
 
 export type TaskFormProp = {
     /** 任务信息 */
@@ -124,6 +125,11 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
 
     const handleUpdateDataProcesses = (dataProcesses: DataProcessDataType[]) => {
         task.taskConfig.DATA_PROCESS = dataProcesses;
+        updateTask();
+    };
+
+    const handleUpdateJsonVarMappings = (varMappings: JsonVarMappingDataType[]) => {
+        task.taskConfig.VAR_MAPPING = varMappings;
         updateTask();
     };
 
@@ -1633,6 +1639,29 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                         </ProFormItem>
                                     </Col>
                                 </Row>
+                                <Row gutter={24}>
+                                    <Col span={24}>
+                                        <ProFormItem
+                                            label="变量配置"
+                                        >
+                                            <Skeleton loading={loading} active>
+                                                {
+                                                    !loading && <JsonVarMapppingTable
+                                                        jsonVarMappings={task.taskConfig.VAR_MAPPING}
+                                                        handleUpdateJsonVarMappings={handleUpdateJsonVarMappings}
+                                                        loading={loading}
+                                                    />
+                                                }
+                                            </Skeleton>
+
+                                        </ProFormItem>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+                        {
+                            // ---------------------------------------- 设置流水线变量 ----------------------------------------
+                            (task.taskType === SET_PIPELINE_VAR) && <>
                                 <Row gutter={24}>
                                     <Col span={24}>
                                         <ProFormItem

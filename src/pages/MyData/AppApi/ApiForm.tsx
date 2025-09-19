@@ -260,7 +260,7 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                     />
                 </Col>
                 {
-                    opType === 1 && <Col span={6}>
+                    ([1,3].includes(opType)) && <Col span={6}>
                         <ProFormText
                             rules={[
                                 {

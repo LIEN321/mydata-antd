@@ -48,6 +48,7 @@ export const PROCESS_DATA = "PROCESS_DATA";
 export const WRITE_EXCEL = "WRITE_EXCEL";
 export const SEND_EMAIL = "SEND_EMAIL";
 export const JSON_TO_VAR = "JSON_TO_VAR";
+export const SET_PIPELINE_VAR = "SET_PIPELINE_VAR";
 export const STOP_PIPELINE = "STOP_PIPELINE";
 
 /**
@@ -235,6 +236,18 @@ export const TASK_TEMPLATE = {
         "taskName": "JSON值存入变量",
         "taskConfig": {
             "INPUT": { "PIPELINE_JSON": "PIPELINE_JSON" },
+            "OUTPUT": {},
+            "VAR_MAPPING": [],
+        },
+    },
+
+    // 设置流水线变量
+    SET_PIPELINE_VAR: {
+        "taskType": SET_PIPELINE_VAR,
+        "typeName": "设置流水线变量",
+        "taskName": "设置流水线变量",
+        "taskConfig": {
+            "INPUT": {},
             "OUTPUT": {},
             "VAR_MAPPING": [],
         },

@@ -160,6 +160,10 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
             label: '参数变量',
             children: [
                 {
+                    key: TASK_TEMPLATE.SET_PIPELINE_VAR.taskType,
+                    label: TASK_TEMPLATE.SET_PIPELINE_VAR.taskName,
+                },
+                {
                     key: TASK_TEMPLATE.JSON_TO_VAR.taskType,
                     label: TASK_TEMPLATE.JSON_TO_VAR.taskName,
                 },
