@@ -184,6 +184,7 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
             , fieldName: ''
             , fieldType: 'default'
             , defaultValue: ''
+            , displayMode: 1
         };
 
         setDataFields([...dataFields, newData]);
