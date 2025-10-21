@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import PipelineTask from "./PipelineTask";
 import { CopyOutlined } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
+import PipelineVariables from "./PipelineVariable";
 
 export type PipelineFormProp = {
     /** 表单显示状态 */
@@ -29,7 +30,8 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
     const [activeKey, setActiveKey] = useState(props.id ? "2" : "1");
     const [loading, setLoading] = useState(false);
 
-    const [tasks, setTasks] = useState<API.PipelineTaskVO[]>();
+    const [tasks, setTasks] = useState<API.PipelineTaskDTO[]>();
+    const [variables, setVariables] = useState<API.PipelineVarDTO[]>();
 
     // 初始时 加载流水线详情
     const loadPipeline = async (id: number) => {
@@ -38,6 +40,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
         if (response.success && response.data) {
             setPipeline(() => response.data || {});
             setTasks(response.data.tasks);
+            setVariables(response.data.variables);
         }
         setLoading(false);
     }
@@ -101,7 +104,11 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                 key: '3',
                 label: '参数设置',
                 forceRender: true,
-                children: <></>
+                children: <PipelineVariables 
+                    pipelineVariables={variables || []}
+                    handleUpdatePipelineVariables={setVariables}
+                    loading={loading}
+                />
             },
             {
                 key: '4',
@@ -374,6 +381,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                     params.projectId = props.projectId;
                     params.groupId = props.groupId;
                     params.tasks = tasks;
+                    params.variables = variables;
                     params.webhookAuthParams = pipeline.webhookAuthParams;
 
                     const response = await savePipeline(params);

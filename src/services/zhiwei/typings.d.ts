@@ -758,6 +758,8 @@ declare namespace API {
     emailReceiver?: string;
     /** 任务编排列表 */
     tasks?: PipelineTaskDTO[];
+    /** 任务变量列表 */
+    variables?: PipelineVarDTO[];
   };
 
   type pipelineGroupDetailParams = {
@@ -982,6 +984,40 @@ declare namespace API {
     preCondition?: number;
   };
 
+  type PipelineVarDTO = {
+    /** 所属流水线 */
+    pipelineId?: number;
+    /** 变量编号 */
+    varCode?: string;
+    /** 变量值 */
+    varValue?: string;
+    /** 变量值类型 */
+    varType?: string;
+    /** 变量描述 */
+    varDesc?: string;
+    /** 是否隐藏 */
+    isHide?: number;
+  };
+
+  type PipelineVarVO = {
+    /** id */
+    id?: number;
+    /** 业务状态 */
+    status?: number;
+    /** 所属流水线 */
+    pipelineId?: number;
+    /** 变量编号 */
+    varCode?: string;
+    /** 变量值 */
+    varValue?: string;
+    /** 变量值类型 */
+    varType?: string;
+    /** 变量描述 */
+    varDesc?: string;
+    /** 是否隐藏 */
+    isHide?: number;
+  };
+
   type PipelineVO = {
     /** id */
     id?: number;
@@ -1021,6 +1057,8 @@ declare namespace API {
     emailReceiver?: string;
     /** 流水线任务列表 */
     tasks?: PipelineTaskVO[];
+    /** 流水线变量列表 */
+    variables?: PipelineVarVO[];
     /** 下次执行时间 */
     nextFireTime?: string;
     latestHistory?: PipelineHistoryVO;
