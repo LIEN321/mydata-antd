@@ -86,7 +86,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     const getInput = () => {
         if (dataIndex === "fieldType") {
             return <Select
-                defaultValue="String"
+                defaultValue="default"
                 options={[
                     { value: "default", label: "默认" }
                     , { value: "number", label: "数值" }
