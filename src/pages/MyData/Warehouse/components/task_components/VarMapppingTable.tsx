@@ -14,6 +14,8 @@ interface Item {
     varCode: string;
     /** 变量值 */
     varValue: string;
+    /** 变量值类型 */
+    varType: string;
 }
 
 interface EditableRowProps {
@@ -78,6 +80,19 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
+        if (dataIndex === "varType") {
+            return <Select
+                defaultValue="String"
+                options={[
+                    { value: "string", label: "字符串" }
+                    , { value: "number", label: "数值" }
+                    , { value: "int", label: "整数" }
+                    , { value: "date", label: "日期时间" }
+                ]}
+                onSelect={save}
+            />
+        }
+
         return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
     };
 
@@ -116,6 +131,8 @@ export interface VarMappingDataType {
     varCode: string;
     /** 变量值 */
     varValue: string;
+    /** 变量值类型 */
+    varType: string;
 }
 
 type ColumnTypes = Exclude<TableProps<VarMappingDataType>['columns'], undefined>;
@@ -142,6 +159,9 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
             varMappings.map(f => {
                 f.key = index;
                 index++;
+                if (!f.varType) {
+                    f.varType = 'string';
+                }
             });
         }
     }, []);
@@ -152,6 +172,7 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
             key: count
             , varCode: ''
             , varValue: ''
+            , varType: 'string'
         };
 
         setVarMappings([...varMappings, newData]);
@@ -195,6 +216,13 @@ const VarMapppingTable: React.FC<EditableTableProps> = (props) => {
         {
             title: '变量值',
             dataIndex: 'varValue',
+            width: 200,
+            align: 'center',
+            editable: true,
+        },
+        {
+            title: '变量值i类型',
+            dataIndex: 'varType',
             width: 200,
             align: 'center',
             editable: true,
