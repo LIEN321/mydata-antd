@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import PipelineTask from "./PipelineTask";
 import { CopyOutlined } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
-import PipelineVariables from "./PipelineVariable";
+import PipelineVariables, { PipelineVariablesDataType } from "./PipelineVariable";
 
 export type PipelineFormProp = {
     /** 表单显示状态 */
@@ -102,10 +102,10 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
             },
             {
                 key: '3',
-                label: '参数设置',
+                label: '变量设置',
                 forceRender: true,
                 children: <PipelineVariables 
-                    pipelineVariables={variables || []}
+                    pipelineVariables={variables as PipelineVariablesDataType[] || []}
                     handleUpdatePipelineVariables={setVariables}
                     loading={loading}
                 />
