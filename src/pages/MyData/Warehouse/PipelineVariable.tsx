@@ -92,9 +92,9 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 ]}
                 onSelect={save}
             />
-        } else {
-            return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
         }
+
+        return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
     };
 
     if (editable) {
