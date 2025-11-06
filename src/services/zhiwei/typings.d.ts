@@ -114,6 +114,8 @@ declare namespace API {
     authType?: string;
     /** 认证配置 */
     authConfig?: Record<string, any>;
+    /** 响应配置 */
+    respConfig?: Record<string, any>;
   };
 
   type appPageParams = {
@@ -152,6 +154,8 @@ declare namespace API {
     authType?: string;
     /** 认证配置 */
     authConfig?: Record<string, any>;
+    /** 响应配置 */
+    respConfig?: Record<string, any>;
   };
 
   type authApiSelectParams = {

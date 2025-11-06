@@ -16,6 +16,9 @@ const App: React.FC = () => {
     // 认证配置
     const [authConfig, setAuthConfig] = useState<any>({});
 
+    // 响应配置
+    const [respConfig, setRespConfig] = useState<Record<string, any>>({});
+
     // 所选的应用id
     const [appId, setAppId] = useState<any>(null);
     // API管理显示开关
@@ -73,7 +76,10 @@ const App: React.FC = () => {
         authType={authType}
         setAuthType={setAuthType}
         authConfig={authConfig}
-        setAuthConfig={setAuthConfig} />;
+        setAuthConfig={setAuthConfig}
+        respConfig={respConfig}
+        setRespConfig={setRespConfig}
+    />;
 
     const tableRef = useRef<ActionType>();
 
@@ -82,6 +88,7 @@ const App: React.FC = () => {
         setReqHeaders([]);
         setAuthType('');
         setAuthConfig({});
+        setRespConfig({ isValidCode: true, codeValue: 200 });
     }
 
     const handleOnClickEditBtn = (record: any) => {
@@ -89,6 +96,7 @@ const App: React.FC = () => {
         setReqHeaders(record.reqHeaders);
         setAuthType(record.authType);
         setAuthConfig(record.authConfig);
+        setRespConfig(record.respConfig);
     }
 
     const handleSaveAppApi = async (formData: any) => {
@@ -97,6 +105,7 @@ const App: React.FC = () => {
             , reqHeaders
             , authType
             , authConfig
+            , respConfig
         };
         await saveApp(body);
     }
