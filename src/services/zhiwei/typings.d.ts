@@ -38,6 +38,8 @@ declare namespace API {
     respExample?: string;
     /** 数据结构模式，1-对象、2-集合 */
     dataMode?: number;
+    /** 响应配置 */
+    respConfig?: Record<string, any>;
   };
 
   type appApiPageParams = {
@@ -87,6 +89,8 @@ declare namespace API {
     respExample?: string;
     /** 数据结构模式，1-对象、2-集合 */
     dataMode?: number;
+    /** 响应配置 */
+    respConfig?: Record<string, any>;
   };
 
   type appDetailParams = {
