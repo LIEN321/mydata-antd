@@ -1,6 +1,6 @@
 import { appSelect } from "@/services/zhiwei/app";
 import { ProFormRadio, ProFormSelect, ProFormText } from "@ant-design/pro-components";
-import { Button, Col, Divider, Input, Radio, Row, Tabs, TabsProps } from "antd";
+import { Button, Col, Divider, Input, Radio, Row, Switch, Tabs, TabsProps } from "antd";
 import ApiParamsTable, { ApiParamDataType } from "./ApiParamsTable";
 import { useRef, useState } from "react";
 
@@ -23,6 +23,9 @@ export type ApiFormProp = {
     // 响应示例
     respExample: string,
     setRespExample: (reqParams: string) => void,
+    // 响应配置
+    respConfig: Record<string, any>,
+    setRespConfig: (respConfig: Record<string, any>) => void,
 
     /** 初始默认应用id */
     appId?: string;
@@ -126,11 +129,75 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
         },
         {
             key: '4',
-            label: '响应示例',
+            label: '响应配置',
             children: (
-                <Input.TextArea value={props.respExample} style={{ height: 400 }} onChange={(e) => {
-                    props.setRespExample(e.target.value);
-                }} />
+                <>
+                    <Row gutter={[12, 12]}>
+                        <Col span={24}>API响应成功规则：<Radio.Group
+                            options={[
+                                { label: '复用应用配置', value: 'reuse' }
+                                , { label: '自定义', value: 'custom' }
+                            ]}
+                            optionType="button"
+                            buttonStyle="solid"
+                            defaultValue={props.respConfig.mode}
+                            onChange={(e) => {
+                                props.setRespConfig({ ...props.respConfig, mode: e.target.value });
+                            }}
+                        /> <br />
+                        </Col>
+                        {props.respConfig.mode === 'custom' && <>
+                            <Col span={8}>
+                                <Switch
+                                    defaultChecked={props.respConfig.isValidCode || false}
+                                    onChange={(checked) => {
+                                        props.setRespConfig({ ...props.respConfig, isValidCode: checked })
+                                    }}
+                                />
+                                响应码=
+                                <Input
+                                    defaultValue={props.respConfig.codeValue}
+                                    onChange={(e) => {
+                                        props.setRespConfig({ ...props.respConfig, codeValue: Number(e.target.value) })
+                                    }}
+                                    style={{ width: 60 }}
+                                />
+                            </Col>
+                            <Col span={16}>
+                                <Switch
+                                    defaultChecked={props.respConfig.isValidBody || false}
+                                    onChange={(checked) => {
+                                        props.setRespConfig({ ...props.respConfig, isValidBody: checked })
+                                    }}
+                                />
+                                响应体：
+                                <Input
+                                    defaultValue={props.respConfig.bodyJsonPath}
+                                    onChange={(e) => {
+                                        props.setRespConfig({ ...props.respConfig, bodyJsonPath: e.target.value })
+                                    }}
+                                    placeholder="json path"
+                                    style={{ width: 120 }}
+                                />
+                                =
+                                <Input
+                                    defaultValue={props.respConfig.bodyValue}
+                                    onChange={(e) => {
+                                        props.setRespConfig({ ...props.respConfig, bodyValue: e.target.value })
+                                    }}
+                                    placeholder="value"
+                                    style={{ width: 120 }}
+                                />
+                            </Col>
+                        </>
+                        }
+                        <Col span={24}>
+                            响应示例：<Input.TextArea value={props.respExample} style={{ height: 200 }} onChange={(e) => {
+                                props.setRespExample(e.target.value);
+                            }} />
+                        </Col>
+                    </Row>
+                </>
             ),
         },
     ];
@@ -260,7 +327,7 @@ const ApiForm: React.FC<ApiFormProp> = (props) => {
                     />
                 </Col>
                 {
-                    ([1,3].includes(opType)) && <Col span={6}>
+                    ([1, 3].includes(opType)) && <Col span={6}>
                         <ProFormText
                             rules={[
                                 {

@@ -28,6 +28,8 @@ const AppApi: React.FC<AppApiProp> = (props) => {
     const [reqBodyRaw, setReqBodyRaw] = useState<string>("");
     // 响应示例
     const [respExample, setRespExample] = useState<string>("");
+    // 响应配置
+    const [respConfig, setRespConfig] = useState<Record<string, any>>({});
 
     // 编辑时的数据
     const [record, setRecord] = useState<API.AppApiVO>({});
@@ -88,6 +90,8 @@ const AppApi: React.FC<AppApiProp> = (props) => {
         setRespExample={setRespExample}
         record={record}
         appId={appId}
+        respConfig={respConfig}
+        setRespConfig={setRespConfig}
     />;
 
     const tableRef = useRef<ActionType>();
@@ -99,6 +103,10 @@ const AppApi: React.FC<AppApiProp> = (props) => {
         return appApiPage(params);
     }
 
+    const handleOnClickCreateBtn = () => {
+        setRespConfig({ mode: 'reuse', isValidCode: true, codeValue: 200 });
+    }
+
     const handleOnClickEditBtn = (record: any) => {
         setRecord(record);
         setReqParams(record.reqParams);
@@ -107,6 +115,7 @@ const AppApi: React.FC<AppApiProp> = (props) => {
         setReqBodyForm(record.reqBodyForm);
         setReqBodyRaw(record.reqBodyRaw);
         setRespExample(record.respExample);
+        setRespConfig(record.respConfig);
     }
 
     const handleSaveAppApi = async (formData: any) => {
@@ -118,6 +127,7 @@ const AppApi: React.FC<AppApiProp> = (props) => {
             , reqBodyForm: reqBodyForm
             , reqBodyRaw: reqBodyRaw
             , respExample: respExample
+            , respConfig: respConfig
         };
         await saveAppApi(body);
     }
@@ -139,6 +149,7 @@ const AppApi: React.FC<AppApiProp> = (props) => {
                 handleDelete={deleteAppApi}
                 handleBatchDelete={deleteAppApis}
 
+                onClickCreateBtn={handleOnClickCreateBtn}
                 onClickEditBtn={handleOnClickEditBtn}
             />
             }

@@ -1,8 +1,9 @@
 import { ProFormItem, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import ApiParamsTable, { ApiParamDataType } from "../AppApi/ApiParamsTable";
-import { Col, Input, Radio, Row, Select, Splitter, Tabs, TabsProps } from "antd";
+import { Col, Input, Radio, Row, Select, Splitter, Switch, Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
 import { authApiSelect } from "@/services/zhiwei/appApi";
+import { toNumber } from "lodash";
 
 export type AppFormProp = {
     appId?: number,
@@ -15,6 +16,9 @@ export type AppFormProp = {
     // 认证配置
     authConfig: any,
     setAuthConfig: (authConfig: any) => void,
+    // 响应配置
+    respConfig: Record<string, any>,
+    setRespConfig: (respConfig: Record<string, any>) => void,
 };
 
 const AppForm: React.FC<AppFormProp> = (props) => {
@@ -197,6 +201,59 @@ const AppForm: React.FC<AppFormProp> = (props) => {
                     params={props.reqHeaders}
                     handleUpdateParams={props.setReqHeaders}
                 />
+            ),
+        },
+        {
+            key: '3',
+            label: '响应配置',
+            children: (
+                <>
+                    <Row gutter={[12, 12]}>
+                        <Col span={24}>应用内全局API响应成功规则：<br /></Col>
+                        <Col span={8}>
+                            <Switch
+                                defaultChecked={props.respConfig.isValidCode || false}
+                                onChange={(checked) => {
+                                    props.setRespConfig({ ...props.respConfig, isValidCode: checked })
+                                }}
+                            />
+                            响应码=
+                            <Input
+                                defaultValue={props.respConfig.codeValue}
+                                onChange={(e) => {
+                                    props.setRespConfig({ ...props.respConfig, codeValue: Number(e.target.value) })
+                                }}
+                                style={{ width: 60 }}
+                            />
+                        </Col>
+                        <Col span={16}>
+                            <Switch
+                                defaultChecked={props.respConfig.isValidBody || false}
+                                onChange={(checked) => {
+                                    props.setRespConfig({ ...props.respConfig, isValidBody: checked })
+                                }}
+                            />
+                            响应体：
+                            <Input
+                                defaultValue={props.respConfig.bodyJsonPath}
+                                onChange={(e) => {
+                                    props.setRespConfig({ ...props.respConfig, bodyJsonPath: e.target.value })
+                                }}
+                                placeholder="json path"
+                                style={{ width: 120 }}
+                            />
+                            =
+                            <Input
+                                defaultValue={props.respConfig.bodyValue}
+                                onChange={(e) => {
+                                    props.setRespConfig({ ...props.respConfig, bodyValue: e.target.value })
+                                }}
+                                placeholder="value"
+                                style={{ width: 120 }}
+                            />
+                        </Col>
+                    </Row>
+                </>
             ),
         },
     ];

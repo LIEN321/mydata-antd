@@ -1,6 +1,7 @@
-import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { GetRef, InputRef, TableProps } from 'antd';
-import { Button, Form, Input, Popconfirm, Select, Switch, Table } from 'antd';
+import { Button, Form, Input, Popconfirm, Select, Space, Switch, Table } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
@@ -8,18 +9,14 @@ const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
 interface Item {
     key: string;
-    /** 字段编号 */
-    fieldCode: string;
-    /** 字段名称 */
-    fieldName: string;
-    /** 数据类型 */
-    fieldType: string;
-    /** 默认值 */
-    defaultValue: string;
-    /** 是否标识 */
-    isId?: boolean;
-    /** 显示模式 */
-    displayMode?: number;
+    /** 变量编号 */
+    varCode: string;
+    /** 变量值 */
+    varValue: string;
+    /** 变量值类型 */
+    varType: string;
+    /** 描述 */
+    varDesc: string;
 }
 
 interface EditableRowProps {
@@ -84,25 +81,20 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     let childNode = children;
 
     const getInput = () => {
-        if (dataIndex === "fieldType") {
+        if (dataIndex === "varType") {
             return <Select
-                defaultValue="default"
+                defaultValue="string"
                 options={[
-                    { value: "default", label: "默认" }
+                    { value: "string", label: "字符串" }
                     , { value: "number", label: "数值" }
                     , { value: "int", label: "整数" }
-                    , { value: "string", label: "字符串" }
                     , { value: "date", label: "日期时间" }
                 ]}
                 onSelect={save}
             />
-        } else if (dataIndex === "isId") {
-            return <Switch onChange={save} />
-        } else if (dataIndex === "displayMode") {
-            return <Switch onChange={save} />
-        } else {
-            return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
         }
+
+        return <Input ref={inputRef} onPressEnter={save} onBlur={save} />
     };
 
     if (editable) {
@@ -111,10 +103,12 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 style={{ margin: 0 }}
                 name={dataIndex}
                 rules={[{
-                    required: ["fieldCode", "fieldName"].indexOf(dataIndex) >= 0
+                    // required: ["code", "value"].indexOf(dataIndex) >= 0
+                    required: false
                     , message: ''
                 }]}
                 initialValue={record[dataIndex]}
+                layout="vertical"
             >
                 {getInput()}
             </Form.Item>
@@ -132,44 +126,38 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-export interface DataFieldDataType {
+export interface PipelineVariablesDataType {
     key: React.Key;
-    /** 字段编号 */
-    fieldCode: string;
-    /** 字段名称 */
-    fieldName: string;
-    /** 数据类型 */
-    fieldType: string;
-    /** 默认值 */
-    defaultValue: string;
-    /** 是否标识 */
-    isId?: boolean;
-    /** 显示模式 */
-    displayMode?: number;
+    /** 变量编号 */
+    varCode: string;
+    /** 变量值 */
+    varValue: string;
+    /** 变量值类型 */
+    varType: string;
 }
 
-type ColumnTypes = Exclude<TableProps<DataFieldDataType>['columns'], undefined>;
+type ColumnTypes = Exclude<TableProps<PipelineVariablesDataType>['columns'], undefined>;
 
 // -------------------- 表格属性 --------------------
 export type EditableTableProps = {
-    /** 用户自定义属性列表 */
-    dataFields: DataFieldDataType[];
+    /** 业务数据字段 */
+    pipelineVariables: PipelineVariablesDataType[];
     /** 更新属性列表 */
-    handleUpdateDataFields: (dataFields: DataFieldDataType[]) => any;
+    handleUpdatePipelineVariables: (pipelineVariables: PipelineVariablesDataType[]) => any;
     /** 加载状态 */
     loading: boolean;
 };
 
 // -------------------- 表格 --------------------
-const DataFieldTable: React.FC<EditableTableProps> = (props) => {
-    const [dataFields, setDataFields] = useState<DataFieldDataType[]>(props.dataFields);
+const PipelineVariables: React.FC<EditableTableProps> = (props) => {
 
-    const [count, setCount] = useState(props.dataFields.length);
+    const [pipelineVariables, setPipelineVariables] = useState<PipelineVariablesDataType[]>(props.pipelineVariables || []);
+    const [count, setCount] = useState(pipelineVariables.length);
 
     useEffect(() => {
         let index = 0;
-        if (dataFields && dataFields.length > 0) {
-            dataFields.map(f => {
+        if (pipelineVariables && pipelineVariables.length > 0) {
+            pipelineVariables.map(f => {
                 f.key = index;
                 index++;
             });
@@ -178,36 +166,34 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
 
     // 新增行
     const handleAdd = () => {
-        const newData: DataFieldDataType = {
+        const newData: PipelineVariablesDataType = {
             key: count
-            , fieldCode: ''
-            , fieldName: ''
-            , fieldType: 'default'
-            , defaultValue: ''
-            , displayMode: 1
+            , varCode: ''
+            , varValue: ''
+            , varType: 'string'
         };
 
-        setDataFields([...dataFields, newData]);
+        setPipelineVariables([...pipelineVariables, newData]);
         setCount(count + 1);
     };
 
     // 更新数据
-    const handleSave = (row: DataFieldDataType) => {
-        const newData = [...dataFields];
+    const handleSave = (row: PipelineVariablesDataType) => {
+        const newData = [...pipelineVariables];
         const index = newData.findIndex((item) => row.key === item.key);
         const item = newData[index];
         newData.splice(index, 1, {
             ...item,
             ...row,
         });
-        setDataFields(newData);
-        props.handleUpdateDataFields(newData);
+        setPipelineVariables(newData);
+        props.handleUpdatePipelineVariables(newData);
     };
 
     const handleDelete = (key: React.Key) => {
-        const newData = dataFields.filter((item) => item.key !== key);
-        setDataFields(newData);
-        props.handleUpdateDataFields(newData);
+        const newData = pipelineVariables.filter((item) => item.key !== key);
+        setPipelineVariables(newData);
+        props.handleUpdatePipelineVariables(newData);
     };
 
     const components = {
@@ -219,44 +205,30 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
 
     const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
         {
-            title: '字段编号',
-            dataIndex: 'fieldCode',
+            title: '变量名',
+            dataIndex: 'varCode',
             width: 200,
             align: 'center',
             editable: true,
         },
         {
-            title: '字段名称',
-            dataIndex: 'fieldName',
+            title: '变量值',
+            dataIndex: 'varValue',
             width: 200,
             align: 'center',
             editable: true,
         },
         {
-            title: '数据类型',
-            dataIndex: 'fieldType',
-            width: 130,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '默认值',
-            dataIndex: 'defaultValue',
+            title: '变量值i类型',
+            dataIndex: 'varType',
             width: 200,
             align: 'center',
             editable: true,
         },
         {
-            title: '是否标识',
-            dataIndex: 'isId',
-            width: 80,
-            align: 'center',
-            editable: true,
-        },
-        {
-            title: '显示',
-            dataIndex: 'displayMode',
-            width: 80,
+            title: '描述',
+            dataIndex: 'varDesc',
+            width: 200,
             align: 'center',
             editable: true,
         },
@@ -266,11 +238,9 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
             align: 'center',
             width: 60,
             render: (_, record) =>
-                dataFields.length >= 1 ? (
-                    <Popconfirm title="确认删除该字段?" onConfirm={() => handleDelete(record.key)}>
-                        <a>删除</a>
-                    </Popconfirm>
-                ) : null,
+                <Popconfirm title="确认删除吗?" onConfirm={() => handleDelete(record.key)}>
+                    <a>删除</a>
+                </Popconfirm>
         },
     ];
 
@@ -280,7 +250,7 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
         }
         return {
             ...col,
-            onCell: (record: DataFieldDataType) => ({
+            onCell: (record: PipelineVariablesDataType) => ({
                 record,
                 editable: col.editable,
                 dataIndex: col.dataIndex,
@@ -292,18 +262,16 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
 
     return (
         <div>
-            <Fragment>
-                <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-                    添加字段
+            <Space>
+                <Button icon={<PlusOutlined />} onClick={() => { handleAdd() }} type="primary" style={{ marginBottom: 16 }}>
+                    添加变量
                 </Button>
-                {/* <Divider type="vertical" />
-                <Switch /> 启用多字段组合标识 */}
-            </Fragment>
-            <Table<DataFieldDataType>
+            </Space>
+            <Table<PipelineVariablesDataType>
                 components={components}
                 rowClassName={() => 'editable-row'}
                 bordered
-                dataSource={dataFields}
+                dataSource={pipelineVariables}
                 columns={columns as ColumnTypes}
                 pagination={{ pageSize: 100, position: ['none', 'none'] }}
                 scroll={{ y: 500 }}
@@ -314,4 +282,4 @@ const DataFieldTable: React.FC<EditableTableProps> = (props) => {
     );
 };
 
-export default DataFieldTable;
+export default PipelineVariables;

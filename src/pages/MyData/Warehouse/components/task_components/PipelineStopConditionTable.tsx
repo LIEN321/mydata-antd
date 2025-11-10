@@ -232,7 +232,7 @@ const PipelineStopConditionTable: React.FC<EditableTableProps> = (props) => {
             editable: true,
         },
         {
-            title: '条件值',
+            title: '条件值（字符串请使用引号）',
             dataIndex: 'v',
             width: 200,
             align: 'center',
