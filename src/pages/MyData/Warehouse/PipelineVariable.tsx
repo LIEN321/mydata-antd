@@ -219,7 +219,7 @@ const PipelineVariables: React.FC<EditableTableProps> = (props) => {
             editable: true,
         },
         {
-            title: '变量值i类型',
+            title: '变量值类型',
             dataIndex: 'varType',
             width: 200,
             align: 'center',
