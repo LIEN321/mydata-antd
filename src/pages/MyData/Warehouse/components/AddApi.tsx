@@ -26,6 +26,8 @@ const AddApi: React.FC<AddApiProp> = (props) => {
     const [reqBodyRaw, setReqBodyRaw] = useState<string>("");
     // 响应示例
     const [respExample, setRespExample] = useState<string>("");
+    // 响应配置
+    const [respConfig, setRespConfig] = useState<Record<string, any>>({ mode: 'reuse', isValidCode: true, codeValue: 200 });
 
     const handleSaveAppApi = async (formData: any) => {
         const body = {
@@ -36,6 +38,7 @@ const AddApi: React.FC<AddApiProp> = (props) => {
             , reqBodyForm: reqBodyForm
             , reqBodyRaw: reqBodyRaw
             , respExample: respExample
+            , respConfig: respConfig
         };
         const response = await saveAppApi(body);
         if (response.success) {
@@ -58,7 +61,7 @@ const AddApi: React.FC<AddApiProp> = (props) => {
                 modalProps={{ destroyOnClose: true }}
             >
                 <ApiForm
-                    appId={props.appId}
+                    appId={props.appId.toString()}
                     reqParams={reqParams}
                     setReqParams={setReqParams}
                     reqHeaders={reqHeaders}
@@ -71,6 +74,8 @@ const AddApi: React.FC<AddApiProp> = (props) => {
                     setReqBodyRaw={setReqBodyRaw}
                     respExample={respExample}
                     setRespExample={setRespExample}
+                    respConfig={respConfig}
+                    setRespConfig={setRespConfig}
                 />
             </ModalForm>
         </>
