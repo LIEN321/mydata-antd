@@ -14,6 +14,12 @@ export type AddAppProp = {
 const AddApp: React.FC<AddAppProp> = (props) => {
     // 请求Header
     const [reqHeaders, setReqHeaders] = useState<ApiParamDataType[]>([]);
+    // 认证类型
+    const [authType, setAuthType] = useState<string>('');
+    // 认证配置
+    const [authConfig, setAuthConfig] = useState<any>({});
+    // 响应配置
+    const [respConfig, setRespConfig] = useState<Record<string, any>>({ isValidCode: true, codeValue: 200 });
 
     return (
         <>
@@ -25,6 +31,9 @@ const AddApp: React.FC<AddAppProp> = (props) => {
                     const body = {
                         ...value
                         , reqHeaders: reqHeaders
+                        , authType
+                        , authConfig
+                        , respConfig
                     };
                     const response = await saveApp(body);
                     if (response.success) {
@@ -39,6 +48,12 @@ const AddApp: React.FC<AddAppProp> = (props) => {
                 <AppForm
                     reqHeaders={reqHeaders}
                     setReqHeaders={setReqHeaders}
+                    authType={authType}
+                    setAuthType={setAuthType}
+                    authConfig={authConfig}
+                    setAuthConfig={setAuthConfig}
+                    respConfig={respConfig}
+                    setRespConfig={setRespConfig}
                 />
             </ModalForm>
         </>
