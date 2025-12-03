@@ -121,7 +121,7 @@ const PipelineHistoryLog: React.FC = () => {
                         })}
                     </Card>
                 </Splitter.Panel>
-                <Splitter.Panel defaultSize={"70%"}>
+                <Splitter.Panel>
                     <Input.TextArea
                         title="流水线日志"
                         variant="borderless"
