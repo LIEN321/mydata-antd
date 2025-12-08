@@ -1,10 +1,10 @@
 import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
-import { ApiOutlined, ApiTwoTone, CheckOutlined, ClockCircleOutlined, CloseOutlined, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, QuestionCircleOutlined, StarOutlined, StopOutlined, UserOutlined } from "@ant-design/icons";
+import { ApiOutlined, ApiTwoTone, CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, CloseOutlined, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, QuestionCircleOutlined, StarOutlined, StopOutlined, UserOutlined } from "@ant-design/icons";
 import { ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space, theme } from "antd";
 import { Fragment, useEffect, useState } from "react";
 import PipelineForm from "./PipelineForm";
-import { clonePipeline, deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
+import { clonePipeline, deletePipeline, disablePipeline, enablePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
 import { timeAgo, timeDesc } from "@/util/DateUtil";
 import PipelineHistory from "./PipelineHistory";
 import { STATUS_RUNNING, openLogWindow, timeout } from "../mydata";
@@ -145,29 +145,35 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
     const [form] = Form.useForm();
 
     // 流水线卡片···的下拉按钮
-    const dropdownItems: MenuProps['items'] = [
-        {
+    const dropdownItems = (status?: number): MenuProps['items'] => {
+        const items = [];
+        items.push({
             key: 'edit',
             label: '编辑',
             icon: <EditOutlined />
-        },
-        {
+        });
+        items.push({
             key: 'clone',
             label: '复制',
             icon: <CopyOutlined />,
-        },
-        {
-            key: '3',
+        });
+        items.push(status === 1 ? {
+            key: 'disable',
             label: '禁用',
             icon: <StopOutlined />,
-            disabled: true,
-        },
-        {
+        } : {
+            key: 'enable',
+            label: '启用',
+            icon: <CheckCircleOutlined />,
+        });
+        items.push({
             key: 'delete',
             label: '删除',
             icon: <DeleteOutlined />,
-        },
-    ];
+        });
+
+        return items;
+    };
 
     // const handleDropdownClick: MenuProps['onClick'] = ({key}) => {
     const handleDropdownClick = (key: string, pipeline: API.PipelineVO) => {
@@ -210,6 +216,24 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                     }
                 }
             });
+        }
+        if (key === 'enable') {
+            (async () => {
+                if (pipeline.id) {
+                    await enablePipeline({ id: pipeline.id });
+                    message.success("已启用！");
+                    loadPipelineGroups();
+                }
+            })();
+        }
+        if (key === 'disable') {
+            (async () => {
+                if (pipeline.id) {
+                    await disablePipeline({ id: pipeline.id });
+                    message.success("已禁用！");
+                    loadPipelineGroups();
+                }
+            })();
         }
     };
 
@@ -317,6 +341,10 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                         {
                                             group.pipelines && group.pipelines.length > 0 && group.pipelines.map(pipeline => (
                                                 <Card
+                                                    style={{
+                                                        opacity: pipeline.status === 0 ? 0.6 : 1,
+                                                        cursor: pipeline.status === 0 ? 'not-allowed' : 'default',
+                                                    }}
                                                     key={pipeline.id}
                                                     title={pipeline.pipelineName}
                                                     type="inner"
@@ -357,7 +385,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                                         , <Button type="text" icon={<PipelineHistory key="history" pipeline={pipeline} />} title="执行历史" />
                                                         , <Button type="text" disabled icon={<StarOutlined key="star" />} title="收藏流水线（暂不可用）" />
                                                         , <Dropdown key="more" menu={{
-                                                            items: dropdownItems, onClick: (info) => {
+                                                            items: dropdownItems(pipeline.status), onClick: (info) => {
                                                                 setGroup(() => group);
                                                                 setPipeline(() => pipeline);
                                                                 handleDropdownClick(info.key, pipeline);

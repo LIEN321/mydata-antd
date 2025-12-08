@@ -560,6 +560,14 @@ declare namespace API {
     uiCodePath?: string;
   };
 
+  type disablePipelineParams = {
+    id: number;
+  };
+
+  type enablePipelineParams = {
+    id: number;
+  };
+
   type executePipelineParams = {
     id: number;
   };
