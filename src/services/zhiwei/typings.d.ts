@@ -215,6 +215,10 @@ declare namespace API {
     confirmPassword?: string;
   };
 
+  type clonePipelineParams = {
+    id: number;
+  };
+
   type dataDetailParams = {
     /** 记录id */
     id: number;

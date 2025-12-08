@@ -1,10 +1,10 @@
 import { deletePipelineGroup, pipelineGroupList, savePipelineGroup } from "@/services/zhiwei/pipelineGroup";
-import { ApiOutlined, ApiTwoTone, CheckOutlined, ClockCircleOutlined, CloseOutlined, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, StarOutlined, StopOutlined, UserOutlined } from "@ant-design/icons";
+import { ApiOutlined, ApiTwoTone, CheckOutlined, ClockCircleOutlined, CloseOutlined, CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, HourglassTwoTone, LoadingOutlined, PauseOutlined, PlayCircleOutlined, PlusOutlined, QuestionCircleOutlined, StarOutlined, StopOutlined, UserOutlined } from "@ant-design/icons";
 import { ModalForm, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Button, Card, Col, Dropdown, Form, MenuProps, message, Modal, Popconfirm, Row, Skeleton, Space, theme } from "antd";
 import { Fragment, useEffect, useState } from "react";
 import PipelineForm from "./PipelineForm";
-import { deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
+import { clonePipeline, deletePipeline, executePipeline, stopPipeline } from "@/services/zhiwei/pipeline";
 import { timeAgo, timeDesc } from "@/util/DateUtil";
 import PipelineHistory from "./PipelineHistory";
 import { STATUS_RUNNING, openLogWindow, timeout } from "../mydata";
@@ -152,10 +152,9 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
             icon: <EditOutlined />
         },
         {
-            key: '2',
+            key: 'clone',
             label: '复制',
             icon: <CopyOutlined />,
-            disabled: true,
         },
         {
             key: '3',
@@ -180,7 +179,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                 return;
             modal.confirm({
                 title: '是否确认删除',
-                icon: <ExclamationCircleOutlined />,
+                icon: <QuestionCircleOutlined />,
                 content: `您确认删除流水线 ${pipeline.pipelineName} 吗？`,
                 okType: 'danger',
                 okText: '删除',
@@ -190,6 +189,23 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                         await deletePipeline({ id: pipeline.id });
                         hide();
                         message.success("删除成功");
+                        loadPipelineGroups();
+                    }
+                }
+            });
+        }
+        if (key === 'clone') {
+            modal.confirm({
+                title: '是否确认复制',
+                icon: <QuestionCircleOutlined />,
+                content: `您确认复制流水线 ${pipeline.pipelineName} 吗？`,
+                okText: '复制',
+                onOk: async () => {
+                    if (pipeline.id) {
+                        const hide = message.loading("开始复制...");
+                        await clonePipeline({ id: pipeline.id });
+                        hide();
+                        message.success("复制成功，定时、webhook 需手动开启！");
                         loadPipelineGroups();
                     }
                 }
