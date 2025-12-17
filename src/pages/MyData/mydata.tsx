@@ -317,8 +317,8 @@ export const varOp = [
         label: "字符串", title: "字符串", options: [
             { label: "md5", value: "md5" },
             { label: "base64", value: "base64" },
-            { label: "前置添加", value: "prepend" },
-            { label: "后置追加", value: "append" },
+            // { label: "前置添加", value: "prepend" },
+            // { label: "后置追加", value: "append" },
             { label: "置空(empty)", value: "empty" },
             { label: "无效时置空(emptyIfNull)", value: "emptyIfNull" },
         ]
