@@ -1,6 +1,6 @@
 import { pipelineDetail, savePipeline } from "@/services/zhiwei/pipeline";
-import { DrawerForm, ProFormCheckbox, ProFormItem, ProFormRadio, ProFormSwitch, ProFormText, ProFormTextArea, ProFormTimePicker } from "@ant-design/pro-components";
-import { Button, Col, message, Row, Tabs, TabsProps } from "antd";
+import { DrawerForm, ProFormCheckbox, ProFormDigit, ProFormItem, ProFormRadio, ProFormSwitch, ProFormText, ProFormTextArea, ProFormTimePicker } from "@ant-design/pro-components";
+import { Button, Col, Input, message, Row, Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
 import PipelineTask from "./PipelineTask";
 import { CopyOutlined } from "@ant-design/icons";
@@ -104,7 +104,7 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                 key: '3',
                 label: '变量设置',
                 forceRender: true,
-                children: <PipelineVariables 
+                children: <PipelineVariables
                     pipelineVariables={variables as PipelineVariablesDataType[] || []}
                     handleUpdatePipelineVariables={setVariables}
                     loading={loading}
@@ -346,6 +346,24 @@ const PipelineForm: React.FC<PipelineFormProp> = (props) => {
                                     , { label: "执行成功", value: 1 }
                                 ]}
                                 initialValue={[0]}
+                            />
+                        </Col>
+                    </Row>
+                    {/* 重试次数 */}
+                    <Row gutter={24}>
+                        <Col span={6}></Col>
+                        <Col span={2}>
+                            <ProFormItem
+                                label="异常处理"
+                            />
+                        </Col>
+                        <Col span={3}>
+                            <ProFormDigit
+                                label="重试次数"
+                                name="retry"
+                                min={0}
+                                max={10}
+                                tooltip="流水线执行异常时，重新执行的次数，默认0不重试"
                             />
                         </Col>
                     </Row>

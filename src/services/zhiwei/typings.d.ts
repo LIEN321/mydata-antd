@@ -780,6 +780,8 @@ declare namespace API {
     tasks?: PipelineTaskDTO[];
     /** 任务变量列表 */
     variables?: PipelineVarDTO[];
+    /** 失败重试次数，默认0：不重试 */
+    retry?: number;
   };
 
   type pipelineGroupDetailParams = {
@@ -1084,6 +1086,8 @@ declare namespace API {
     latestHistory?: PipelineHistoryVO;
     /** webhook标识编号 */
     webhookCode?: string;
+    /** 失败重试次数，默认0：不重试 */
+    retry?: number;
   };
 
   type PListAppApiVO = {
