@@ -862,6 +862,8 @@ declare namespace API {
     pipelineVars?: string;
     /** 执行状态 */
     executionStatus?: number;
+    /** 执行次数 */
+    executionCount?: number;
   };
 
   type pipelineLogDetailParams = {
@@ -928,6 +930,8 @@ declare namespace API {
     executionTime?: number;
     /** 执行状态 */
     executionStatus?: number;
+    /** 执行次数 */
+    executionCount?: number;
   };
 
   type pipelinePageParams = {
