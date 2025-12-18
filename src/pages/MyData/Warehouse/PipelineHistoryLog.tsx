@@ -136,9 +136,11 @@ const PipelineHistoryLog: React.FC = () => {
                         }}
                         readOnly
                         value={
-                            "本任务共执行了 " + log?.executionCount + " 次\n"
-                            + "--------------------------------------------------------------------------------\n"
-                            + log?.taskLog
+                            log ?
+                                "本任务共执行了 " + log.executionCount + " 次\n"
+                                + "--------------------------------------------------------------------------------\n"
+                                + log.taskLog
+                                : ""
                         }
                     />
                 </Splitter.Panel>
