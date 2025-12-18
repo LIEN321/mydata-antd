@@ -88,6 +88,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                     , { value: "number", label: "数值" }
                     , { value: "int", label: "整数" }
                     , { value: "date", label: "日期时间" }
+                    , { value: "", label: "对象（原类型不变）" }
                 ]}
                 onSelect={save}
             />
