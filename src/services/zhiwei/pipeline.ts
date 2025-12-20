@@ -54,6 +54,48 @@ export async function deletePipeline(
   });
 }
 
+/** 复制流水线 POST /pipeline/clone/${param0} */
+export async function clonePipeline(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.clonePipelineParams,
+  options?: { [key: string]: any },
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.RBoolean>(`/api/pipeline/clone/${param0}`, {
+    method: 'POST',
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
+/** 禁用流水线 POST /pipeline/disable/${param0} */
+export async function disablePipeline(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.disablePipelineParams,
+  options?: { [key: string]: any },
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.RBoolean>(`/api/pipeline/disable/${param0}`, {
+    method: 'POST',
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
+/** 启用流水线 POST /pipeline/enable/${param0} */
+export async function enablePipeline(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.enablePipelineParams,
+  options?: { [key: string]: any },
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.RBoolean>(`/api/pipeline/enable/${param0}`, {
+    method: 'POST',
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
 /** 执行流水线 GET /pipeline/execute/${param0} */
 export async function executePipeline(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

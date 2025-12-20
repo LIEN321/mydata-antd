@@ -215,6 +215,10 @@ declare namespace API {
     confirmPassword?: string;
   };
 
+  type clonePipelineParams = {
+    id: number;
+  };
+
   type dataDetailParams = {
     /** 记录id */
     id: number;
@@ -556,6 +560,14 @@ declare namespace API {
     uiCodePath?: string;
   };
 
+  type disablePipelineParams = {
+    id: number;
+  };
+
+  type enablePipelineParams = {
+    id: number;
+  };
+
   type executePipelineParams = {
     id: number;
   };
@@ -768,6 +780,8 @@ declare namespace API {
     tasks?: PipelineTaskDTO[];
     /** 任务变量列表 */
     variables?: PipelineVarDTO[];
+    /** 失败重试次数，默认0：不重试 */
+    retry?: number;
   };
 
   type pipelineGroupDetailParams = {
@@ -848,6 +862,8 @@ declare namespace API {
     pipelineVars?: string;
     /** 执行状态 */
     executionStatus?: number;
+    /** 执行次数 */
+    executionCount?: number;
   };
 
   type pipelineLogDetailParams = {
@@ -914,6 +930,8 @@ declare namespace API {
     executionTime?: number;
     /** 执行状态 */
     executionStatus?: number;
+    /** 执行次数 */
+    executionCount?: number;
   };
 
   type pipelinePageParams = {
@@ -955,6 +973,8 @@ declare namespace API {
     status?: number;
     /** 后续的前提条件 */
     preCondition?: number;
+    /** 失败重试次数，默认0：不重试 */
+    retry?: number;
   };
 
   type pipelineTaskPageParams = {
@@ -990,6 +1010,8 @@ declare namespace API {
     taskConfig?: Record<string, any>;
     /** 后续的前提条件 */
     preCondition?: number;
+    /** 失败重试次数，默认0：不重试 */
+    retry?: number;
   };
 
   type PipelineVarDTO = {
@@ -1072,6 +1094,8 @@ declare namespace API {
     latestHistory?: PipelineHistoryVO;
     /** webhook标识编号 */
     webhookCode?: string;
+    /** 失败重试次数，默认0：不重试 */
+    retry?: number;
   };
 
   type PListAppApiVO = {

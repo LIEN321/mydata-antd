@@ -1685,27 +1685,48 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
 
 
                         {/* 通用配置 */}
-                        <Row gutter={24}>
-                            <ProFormRadio.Group
-                                label="失败后是否继续运行"
-                                rules={[{ required: true, message: "请选择" }]}
-                                name="preCondition"
-                                radioType="button"
-                                options={[
-                                    { label: "是", value: 0 }
-                                    , { label: "否", value: 1 }
-                                ]}
-                                initialValue={1}
-                                fieldProps={{
-                                    buttonStyle: "solid",
-                                    onChange: (e) => {
-                                        task.preCondition = e.target.value;
-                                        updateTask();
-                                    },
-                                }}
-                            />
-                            <Col span={12}></Col>
-                        </Row>
+                        <ProFormItem label="异常处理" >
+                            <Row gutter={24}>
+                                <Col span={2}></Col>
+                                <Col span={4}>
+                                    <ProFormDigit
+                                        label="重试次数"
+                                        name="retry"
+                                        min={0}
+                                        max={10}
+                                        tooltip="任务执行异常时，重新执行的次数，默认0不重试"
+                                        fieldProps={{
+                                            onChange: (value) => {
+                                                if(value){
+                                                    task.retry = value;
+                                                }
+                                            },
+                                        }}
+                                    />
+                                </Col>
+                                <Col span={2}></Col>
+                                <Col span={10}>
+                                    <ProFormRadio.Group
+                                        label="失败后是否继续运行"
+                                        rules={[{ required: true, message: "请选择" }]}
+                                        name="preCondition"
+                                        radioType="button"
+                                        options={[
+                                            { label: "是", value: 0 }
+                                            , { label: "否", value: 1 }
+                                        ]}
+                                        initialValue={1}
+                                        fieldProps={{
+                                            buttonStyle: "solid",
+                                            onChange: (e) => {
+                                                task.preCondition = e.target.value;
+                                                updateTask();
+                                            },
+                                        }}
+                                    />
+                                </Col>
+                            </Row>
+                        </ProFormItem>
                     </ProForm>
                 </ProCard >
             }

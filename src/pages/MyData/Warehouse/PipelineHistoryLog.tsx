@@ -2,12 +2,14 @@ import { pipelineLogList } from "@/services/zhiwei/pipelineLog";
 import { CheckOutlined, ClockCircleOutlined, CloseOutlined, LoadingOutlined, MinusCircleOutlined, StopOutlined } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
 import { useLocation } from "@umijs/max";
-import { Card, Col, Input, Row, Splitter, theme, Typography } from "antd";
+import { Card, Col, Input, Row, Skeleton, Splitter, theme, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { DownwardArrowLine } from "../Icons";
 import { STATUS_FAILED, STATUS_READY, STATUS_RUNNING, STATUS_STOPPED, timeout } from "../mydata";
 
 const PipelineHistoryLog: React.FC = () => {
+    // 加载状态
+    const [loading, setLoading] = useState<boolean>(true);
 
     // 从请求参数中 获取historyId
     const location = useLocation();
@@ -63,6 +65,7 @@ const PipelineHistoryLog: React.FC = () => {
                 checkIsRefresh(logs);
             }
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -97,31 +100,33 @@ const PipelineHistoryLog: React.FC = () => {
             <Splitter>
                 <Splitter.Panel defaultSize={350}>
                     <Card bordered={false}>
-                        {logs.map((l, index) => {
-                            return <>
-                                <ProCard
-                                    size="small"
-                                    hoverable
-                                    onClick={() => setLog(l)}
-                                    boxShadow={l === log}
-                                    type="inner"
-                                >
-                                    <Row>
-                                        <Col span={18}>
-                                            <Typography.Title level={5}>{statusIcons[l.executionStatus || 0]} {index + 1}. {l.taskName}</Typography.Title>
-                                        </Col>
-                                        <Col span={6} style={{ textAlign: "right" }}>
-                                            {l.executionTime ? l.executionTime + 's' : '--'}
-                                        </Col>
-                                    </Row>
-                                </ProCard>
-                                {/* 向下箭头连线 */}
-                                {index !== (logs.length - 1) && DownwardArrowLine}
-                            </>
-                        })}
+                        <Skeleton active loading={loading}>
+                            {logs.map((l, index) => {
+                                return <>
+                                    <ProCard
+                                        size="small"
+                                        hoverable
+                                        onClick={() => setLog(l)}
+                                        boxShadow={l === log}
+                                        type="inner"
+                                    >
+                                        <Row>
+                                            <Col span={18}>
+                                                <Typography.Title level={5}>{statusIcons[l.executionStatus || 0]} {index + 1}. {l.taskName}</Typography.Title>
+                                            </Col>
+                                            <Col span={6} style={{ textAlign: "right" }}>
+                                                {l.executionTime ? l.executionTime + 's' : '--'}
+                                            </Col>
+                                        </Row>
+                                    </ProCard>
+                                    {/* 向下箭头连线 */}
+                                    {index !== (logs.length - 1) && DownwardArrowLine}
+                                </>
+                            })}
+                        </Skeleton>
                     </Card>
                 </Splitter.Panel>
-                <Splitter.Panel defaultSize={"70%"}>
+                <Splitter.Panel>
                     <Input.TextArea
                         title="流水线日志"
                         variant="borderless"
@@ -135,7 +140,13 @@ const PipelineHistoryLog: React.FC = () => {
                             fontSize: 14,
                         }}
                         readOnly
-                        value={log?.taskLog}
+                        value={
+                            log ?
+                                "本任务共执行了 " + log.executionCount + " 次\n"
+                                + "--------------------------------------------------------------------------------\n"
+                                + log.taskLog
+                                : ""
+                        }
                     />
                 </Splitter.Panel>
             </Splitter>

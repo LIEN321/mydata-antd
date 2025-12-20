@@ -43,6 +43,8 @@ export type TaskItem = {
     status: number;
     /** 是否继续执行 */
     preCondition: number;
+    /** 重试次数 */
+    retry: number;
 };
 
 const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
