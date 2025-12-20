@@ -342,7 +342,7 @@ const Pipeline: React.FC<PipelineProp> = (props) => {
                                             group.pipelines && group.pipelines.length > 0 && group.pipelines.map(pipeline => (
                                                 <Card
                                                     style={{
-                                                        opacity: pipeline.status === 0 ? 0.6 : 1,
+                                                        opacity: pipeline.status === 0 ? 0.3 : 1,
                                                         cursor: pipeline.status === 0 ? 'not-allowed' : 'default',
                                                     }}
                                                     key={pipeline.id}
