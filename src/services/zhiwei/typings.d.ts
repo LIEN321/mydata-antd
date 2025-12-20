@@ -973,6 +973,8 @@ declare namespace API {
     status?: number;
     /** 后续的前提条件 */
     preCondition?: number;
+    /** 失败重试次数，默认0：不重试 */
+    retry?: number;
   };
 
   type pipelineTaskPageParams = {
@@ -1008,6 +1010,8 @@ declare namespace API {
     taskConfig?: Record<string, any>;
     /** 后续的前提条件 */
     preCondition?: number;
+    /** 失败重试次数，默认0：不重试 */
+    retry?: number;
   };
 
   type PipelineVarDTO = {
