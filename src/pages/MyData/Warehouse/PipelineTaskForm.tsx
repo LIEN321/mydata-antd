@@ -1400,6 +1400,25 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     </Col>
                                     <Col span={12}></Col>
                                 </Row>
+                                <Row gutter={24}>
+                                    <Col span={24}>
+                                        <ProFormTextArea
+                                            label="自定义过滤条件（若空 则会删除全部数据）"
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                }
+                                            ]}
+                                            fieldProps={{
+                                                onChange: (e) => {
+                                                    task.taskConfig.CONDITION = e.target.value.trim();
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.CONDITION || "",
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
                             </>)
                         }
 
@@ -1697,7 +1716,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                         tooltip="任务执行异常时，重新执行的次数，默认0不重试"
                                         fieldProps={{
                                             onChange: (value) => {
-                                                if(value){
+                                                if (value) {
                                                     task.retry = value;
                                                 }
                                             },
