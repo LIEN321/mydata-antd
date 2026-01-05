@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, Skeleton, Switch, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, REMOVE_DATA, WEBHOOK_GET_JSON, WRITE_EXCEL, SET_PIPELINE_VAR } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, REMOVE_DATA, WEBHOOK_GET_JSON, WRITE_EXCEL, SET_PIPELINE_VAR, SCRIPT_JS } from "../mydata";
 import { useEffect, useState } from "react";
 import { TaskItem } from "./PipelineTask";
 import { appSelect } from "@/services/zhiwei/app";
@@ -1697,6 +1697,34 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                             </Skeleton>
 
                                         </ProFormItem>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+
+
+                        {/* ######################################## 脚本 ######################################## */}
+                        {
+                            // ---------------------------------------- JS脚本 ----------------------------------------
+                            (task.taskType === SCRIPT_JS) && <>
+                                <Row gutter={24}>
+                                    <Col span={24}>
+                                        <ProFormTextArea
+                                            label="JS脚本"
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                }
+                                            ]}
+                                            fieldProps={{
+                                                onChange: (e) => {
+                                                    task.taskConfig.SCRIPT = e.target.value;
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.SCRIPT || "",
+                                                style: { height: 500 }
+                                            }}
+                                        />
                                     </Col>
                                 </Row>
                             </>

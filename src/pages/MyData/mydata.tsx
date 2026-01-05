@@ -50,6 +50,7 @@ export const SEND_EMAIL = "SEND_EMAIL";
 export const JSON_TO_VAR = "JSON_TO_VAR";
 export const SET_PIPELINE_VAR = "SET_PIPELINE_VAR";
 export const STOP_PIPELINE = "STOP_PIPELINE";
+export const SCRIPT_JS = "SCRIPT_JS";
 
 /**
  * 任务类型对应的配置模板
@@ -250,6 +251,18 @@ export const TASK_TEMPLATE = {
             "INPUT": {},
             "OUTPUT": {},
             "VAR_MAPPING": [],
+        },
+    },
+
+    // js脚本
+    SCRIPT_JS: {
+        "taskType": SCRIPT_JS,
+        "typeName": "JS脚本",
+        "taskName": "JS脚本",
+        "taskConfig": {
+            "INPUT": {},
+            "OUTPUT": {},
+            "SCRIPT": "",
         },
     },
 }
