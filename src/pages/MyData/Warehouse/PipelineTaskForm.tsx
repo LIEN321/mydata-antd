@@ -153,24 +153,16 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         initialValues={task}
                         clearOnDestroy
                     >
-                        <Row>
-                            <Col span={24}>
-                                <ProFormItem
-                                    label="步骤类型">
-                                    {task.typeName}
-                                </ProFormItem>
-                            </Col>
-                        </Row>
                         <Row gutter={24}>
-                            {/* 步骤名称 */}
+                            {/* 任务名称 */}
                             <Col span={12}>
                                 <ProFormText
                                     name="taskName"
-                                    label="步骤名称"
+                                    label="任务名称"
                                     rules={[
                                         {
                                             required: true,
-                                            message: '请输入步骤名称！',
+                                            message: '请输入任务名称！',
                                         }
                                     ]}
                                     fieldProps={{
@@ -181,7 +173,12 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     }}
                                 />
                             </Col>
-                            <Col span={12}></Col>
+                            <Col span={12}>
+                                <ProFormItem
+                                    label="任务类型">
+                                    {task.typeName}
+                                </ProFormItem>
+                            </Col>
                         </Row>
 
 
