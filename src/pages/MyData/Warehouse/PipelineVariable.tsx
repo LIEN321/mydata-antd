@@ -85,10 +85,10 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
             return <Select
                 defaultValue="string"
                 options={[
-                    { value: "string", label: "字符串" }
-                    , { value: "number", label: "数值" }
-                    , { value: "int", label: "整数" }
-                    , { value: "date", label: "日期时间" }
+                    { value: "string", label: "字符串（String）" }
+                    , { value: "number", label: "数值（BigDecimal）" }
+                    , { value: "int", label: "整数（Integer）" }
+                    , { value: "date", label: "日期时间（Date）" }
                 ]}
                 onSelect={save}
             />
