@@ -17,6 +17,8 @@ import VarMapppingTable, { VarMappingDataType } from "./components/task_componen
 import PipelineStopConditionTable, { ConditionType } from "./components/task_components/PipelineStopConditionTable";
 import JsonVarMapppingTable, { JsonVarMappingDataType } from "./components/task_components/JsonVarMapppingTable";
 
+const { Text } = Typography;
+
 export type TaskFormProp = {
     /** 任务信息 */
     task: TaskItem,
@@ -1705,7 +1707,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                             // ---------------------------------------- JS脚本 ----------------------------------------
                             (task.taskType === SCRIPT_JS) && <>
                                 <Row gutter={24}>
-                                    <Col span={24}>
+                                    <Col span={16}>
                                         <ProFormTextArea
                                             label="JS脚本"
                                             rules={[
@@ -1722,6 +1724,15 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                                 style: { height: 500 }
                                             }}
                                         />
+                                    </Col>
+                                    <Col span={8}>
+                                        <Text>脚本说明</Text>
+                                        <div>
+                                            基于GraalJs引擎实现，支持ES6；<br />
+                                            1. 变量context：操作上下文数据；<br />
+                                            2. 获取数据：context.get("k");<br />
+                                            3. 写入数据：context.put("k",v);<br />
+                                        </div>
                                     </Col>
                                 </Row>
                             </>
