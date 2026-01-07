@@ -1726,12 +1726,15 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                         />
                                     </Col>
                                     <Col span={8}>
-                                        <Text>脚本说明</Text>
+                                        <Text>脚本说明：</Text>
                                         <div>
                                             基于GraalJs引擎实现，支持ES6；<br />
                                             1. 变量context：操作上下文数据；<br />
                                             2. 获取数据：context.get("k");<br />
                                             3. 写入数据：context.put("k",v);<br />
+                                            * 涉及安全，其他操作待扩展...<br/>
+                                            <br />
+                                            <Text type="danger">注：脚本运行时长限制在5秒内！！！</Text>
                                         </div>
                                     </Col>
                                 </Row>
