@@ -1,6 +1,6 @@
 import { ProCard, ProForm, ProFormDigit, ProFormItem, ProFormRadio, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, Skeleton, Switch, Typography } from "antd";
-import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, REMOVE_DATA, WEBHOOK_GET_JSON, WRITE_EXCEL, SET_PIPELINE_VAR } from "../mydata";
+import { API_GET_JSON, API_SEND_DATA, DATA_TO_JSON, FILTER_DATA, JSON_TO_DATA, JSON_TO_VAR, PROCESS_DATA, QUERY_DATA, SAVE_DATA, SEND_EMAIL, STOP_PIPELINE, TRIGGER_PIPELINE, REMOVE_DATA, WEBHOOK_GET_JSON, WRITE_EXCEL, SET_PIPELINE_VAR, SCRIPT_JS } from "../mydata";
 import { useEffect, useState } from "react";
 import { TaskItem } from "./PipelineTask";
 import { appSelect } from "@/services/zhiwei/app";
@@ -16,6 +16,8 @@ import { pipelineSelect } from "@/services/zhiwei/pipeline";
 import VarMapppingTable, { VarMappingDataType } from "./components/task_components/VarMapppingTable";
 import PipelineStopConditionTable, { ConditionType } from "./components/task_components/PipelineStopConditionTable";
 import JsonVarMapppingTable, { JsonVarMappingDataType } from "./components/task_components/JsonVarMapppingTable";
+
+const { Text } = Typography;
 
 export type TaskFormProp = {
     /** 任务信息 */
@@ -153,24 +155,16 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         initialValues={task}
                         clearOnDestroy
                     >
-                        <Row>
-                            <Col span={24}>
-                                <ProFormItem
-                                    label="步骤类型">
-                                    {task.typeName}
-                                </ProFormItem>
-                            </Col>
-                        </Row>
                         <Row gutter={24}>
-                            {/* 步骤名称 */}
+                            {/* 任务名称 */}
                             <Col span={12}>
                                 <ProFormText
                                     name="taskName"
-                                    label="步骤名称"
+                                    label="任务名称"
                                     rules={[
                                         {
                                             required: true,
-                                            message: '请输入步骤名称！',
+                                            message: '请输入任务名称！',
                                         }
                                     ]}
                                     fieldProps={{
@@ -181,7 +175,12 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     }}
                                 />
                             </Col>
-                            <Col span={12}></Col>
+                            <Col span={12}>
+                                <ProFormItem
+                                    label="任务类型">
+                                    {task.typeName}
+                                </ProFormItem>
+                            </Col>
                         </Row>
 
 
@@ -1400,6 +1399,25 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                     </Col>
                                     <Col span={12}></Col>
                                 </Row>
+                                <Row gutter={24}>
+                                    <Col span={24}>
+                                        <ProFormTextArea
+                                            label="自定义过滤条件（若空 则会删除全部数据）"
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                }
+                                            ]}
+                                            fieldProps={{
+                                                onChange: (e) => {
+                                                    task.taskConfig.CONDITION = e.target.value.trim();
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.CONDITION || "",
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
                             </>)
                         }
 
@@ -1684,6 +1702,46 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                         }
 
 
+                        {/* ######################################## 脚本 ######################################## */}
+                        {
+                            // ---------------------------------------- JS脚本 ----------------------------------------
+                            (task.taskType === SCRIPT_JS) && <>
+                                <Row gutter={24}>
+                                    <Col span={16}>
+                                        <ProFormTextArea
+                                            label="JS脚本"
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                }
+                                            ]}
+                                            fieldProps={{
+                                                onChange: (e) => {
+                                                    task.taskConfig.SCRIPT = e.target.value;
+                                                    updateTask();
+                                                },
+                                                value: task.taskConfig.SCRIPT || "",
+                                                style: { height: 500 }
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col span={8}>
+                                        <Text>脚本说明：</Text>
+                                        <div>
+                                            基于GraalJs引擎实现，支持ES6；<br />
+                                            1. 变量context：操作上下文数据；<br />
+                                            2. 获取数据：context.get("k");<br />
+                                            3. 写入数据：context.put("k",v);<br />
+                                            * 涉及安全，其他操作待扩展...<br/>
+                                            <br />
+                                            <Text type="danger">注：脚本运行时长限制在5秒内！！！</Text>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+
+
                         {/* 通用配置 */}
                         <ProFormItem label="异常处理" >
                             <Row gutter={24}>
@@ -1697,7 +1755,7 @@ const PipelineTaskForm: React.FC<TaskFormProp> = (props) => {
                                         tooltip="任务执行异常时，重新执行的次数，默认0不重试"
                                         fieldProps={{
                                             onChange: (value) => {
-                                                if(value){
+                                                if (value) {
                                                     task.retry = value;
                                                 }
                                             },

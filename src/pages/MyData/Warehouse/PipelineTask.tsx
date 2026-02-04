@@ -171,6 +171,17 @@ const PipelineTask: React.FC<PipelineTaskProp> = (props) => {
                 },
             ],
         },
+        {
+            key: 'group_script',
+            type: 'group',
+            label: '脚本',
+            children: [
+                {
+                    key: TASK_TEMPLATE.SCRIPT_JS.taskType,
+                    label: TASK_TEMPLATE.SCRIPT_JS.taskName,
+                },
+            ],
+        },
     ];
 
     useEffect(() => {

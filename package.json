@@ -1,6 +1,6 @@
 {
   "name": "mydata",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "private": true,
   "description": "An out-of-box UI solution for enterprise applications",
   "repository": "git@github.com:ant-design/ant-design-pro.git",
